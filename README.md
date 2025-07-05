@@ -32,6 +32,10 @@ Crear una plataforma integral que permita a los participantes del AWS Community 
 - Agenda completa con sesiones, horarios y speakers
 - Sistema de asistencia y control de entregas
 - Galería de fotos con procesamiento automático
+- **Reconocimiento facial con AWS Rekognition**
+- Detección automática de caras en fotos
+- Indexación de rostros para búsqueda
+- Galería personalizada por asistente
 - QR codes únicos por sesión
 
 ### Evaluación y Feedback
@@ -55,6 +59,7 @@ Crear una plataforma integral que permita a los participantes del AWS Community 
 - **Base de Datos**: DynamoDB
 - **Notificaciones**: Amazon SQS
 - **Procesamiento de Imágenes**: AWS Lambda
+- **Reconocimiento Facial**: AWS Rekognition
 - **Storage**: Amazon S3
 
 ## 📋 Estructura del Proyecto
