@@ -27,3 +27,8 @@ output "cognito_domain" {
   description = "Cognito domain URL"
   value       = module.auth.cognito_domain
 }
+
+output "api_gateway_url" {
+  description = "API Gateway URL"
+  value       = module.api.api_gateway_url
+}

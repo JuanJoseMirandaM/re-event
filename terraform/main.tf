@@ -21,3 +21,12 @@ module "auth" {
   cognito_callback_urls = var.cognito_callback_urls
   cognito_logout_urls   = var.cognito_logout_urls
 }
+
+# API Module
+module "api" {
+  source = "./modules/api"
+
+  environment      = var.environment
+  users_table_name = module.database.table_name
+  users_table_arn  = module.database.table_arn
+}

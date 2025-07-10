@@ -1,0 +1,19 @@
+# Lambda deployment packages
+*.zip
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# AWS SAM
+.aws-sam/
+
+# Build artifacts
+dist/
+build/
+
+# Logs
+*.log
