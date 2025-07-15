@@ -26,7 +26,10 @@ module "auth" {
 module "api" {
   source = "./modules/api"
 
-  environment      = var.environment
-  users_table_name = module.database.table_name
-  users_table_arn  = module.database.table_arn
+  project_name          = var.project_name
+  environment           = var.environment
+  common_tags           = var.common_tags
+  users_table_name      = module.database.table_name
+  users_table_arn       = module.database.table_arn
+  cognito_user_pool_arn = module.auth.user_pool_arn
 }

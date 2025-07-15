@@ -1,10 +1,18 @@
 # API Gateway
 resource "aws_api_gateway_rest_api" "main" {
-  name = "${var.environment}-re-event-api"
+  name = "${var.project_name}-api-${var.environment}"
   
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+}
+
+# Cognito Authorizer
+resource "aws_api_gateway_authorizer" "cognito" {
+  name          = "${var.project_name}-cognito-authorizer-${var.environment}"
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  type          = "COGNITO_USER_POOLS"
+  provider_arns = [var.cognito_user_pool_arn]
 }
 
 # Users resource
@@ -25,7 +33,8 @@ resource "aws_api_gateway_method" "get_user" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
   resource_id   = aws_api_gateway_resource.user_id.id
   http_method   = "GET"
-  authorization = "AWS_IAM"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
 }
 
 resource "aws_api_gateway_integration" "get_user" {
@@ -43,7 +52,8 @@ resource "aws_api_gateway_method" "update_user" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
   resource_id   = aws_api_gateway_resource.user_id.id
   http_method   = "PUT"
-  authorization = "AWS_IAM"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
 }
 
 resource "aws_api_gateway_integration" "update_user" {
@@ -100,4 +110,13 @@ resource "aws_api_gateway_deployment" "main" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id
+}
+
+# Stage
+resource "aws_api_gateway_stage" "main" {
+  deployment_id = aws_api_gateway_deployment.main.id
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  stage_name    = var.environment
+
+  tags = var.common_tags
 }

@@ -1,6 +1,6 @@
 # Lambda execution role
 resource "aws_iam_role" "lambda_role" {
-  name = "${var.environment}-lambda-execution-role"
+  name = "${var.project_name}-api-lambda-role-${var.environment}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -14,6 +14,8 @@ resource "aws_iam_role" "lambda_role" {
       }
     ]
   })
+
+  tags = var.common_tags
 }
 
 # Lambda basic execution policy
@@ -24,7 +26,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 
 # DynamoDB access policy
 resource "aws_iam_role_policy" "lambda_dynamodb" {
-  name = "${var.environment}-lambda-dynamodb-policy"
+  name = "${var.project_name}-api-dynamodb-policy-${var.environment}"
   role = aws_iam_role.lambda_role.id
 
   policy = jsonencode({

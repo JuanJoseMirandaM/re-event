@@ -23,12 +23,6 @@ variable "dynamodb_table_arn" {
   type        = string
 }
 
-variable "lambda_zip_path" {
-  description = "Path to Lambda function ZIP file"
-  type        = string
-  default     = "../backend/lambdas/user/auth-post-confirmation.zip"
-}
-
 variable "google_client_id" {
   description = "Google OAuth Client ID"
   type        = string

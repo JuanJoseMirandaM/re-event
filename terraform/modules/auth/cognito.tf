@@ -1,81 +1,3 @@
-# IAM Role for Lambda
-resource "aws_iam_role" "lambda_role" {
-  name = "ReEventLambdaRole-${var.environment}"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = var.common_tags
-}
-
-# Attach AWS Lambda Basic Execution Role
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
-# DynamoDB Write Policy
-resource "aws_iam_policy" "dynamodb_write_access" {
-  name = "DynamoDBWriteAccess-${var.environment}"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "dynamodb:PutItem"
-        ]
-        Resource = var.dynamodb_table_arn
-      }
-    ]
-  })
-
-  tags = var.common_tags
-}
-
-# Attach DynamoDB Write Policy to Lambda Role
-resource "aws_iam_role_policy_attachment" "lambda_dynamodb_write" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.dynamodb_write_access.arn
-}
-
-# Lambda trigger for post-confirmation
-resource "aws_lambda_function" "post_confirmation" {
-  filename      = var.lambda_zip_path
-  function_name = "${var.project_name}-auth-post-confirmation-${var.environment}"
-  role         = aws_iam_role.lambda_role.arn
-  handler      = "auth-post-confirmation.handler"
-  runtime      = "nodejs18.x"
-  timeout      = 30
-
-  environment {
-    variables = {
-      USERS_TABLE = var.dynamodb_table_name
-    }
-  }
-
-  tags = var.common_tags
-}
-
-# Lambda permission for Cognito
-resource "aws_lambda_permission" "cognito_post_confirmation" {
-  statement_id  = "AllowCognitoInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.post_confirmation.function_name
-  principal     = "cognito-idp.amazonaws.com"
-}
-
 # Cognito User Pool
 resource "aws_cognito_user_pool" "main" {
   name = "${var.project_name}-user-pool-${var.environment}"
@@ -173,8 +95,8 @@ resource "aws_cognito_user_pool_client" "main" {
   allowed_oauth_scopes                 = ["email", "openid", "profile"]
   allowed_oauth_flows_user_pool_client = true
 
-  access_token_validity  = 1
-  id_token_validity     = 1
+  access_token_validity  = 10
+  id_token_validity     = 10
   refresh_token_validity = 30
 
   token_validity_units {

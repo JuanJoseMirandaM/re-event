@@ -18,4 +18,7 @@ output "lambda_role_arn" {
   value       = aws_iam_role.lambda_role.arn
 }
 
-data "aws_region" "current" {}
+output "user_pool_arn" {
+  description = "ARN of the Cognito User Pool"
+  value       = aws_cognito_user_pool.main.arn
+}

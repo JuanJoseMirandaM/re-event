@@ -1,7 +1,7 @@
 # Get User Lambda
 resource "aws_lambda_function" "get_user" {
   filename         = "${path.module}/../../../backend/lambdas/user/get-user.zip"
-  function_name    = "${var.environment}-get-user"
+  function_name    = "${var.project_name}-get-user-${var.environment}"
   role            = aws_iam_role.lambda_role.arn
   handler         = "get-user.handler"
   runtime         = "nodejs18.x"
@@ -14,12 +14,13 @@ resource "aws_lambda_function" "get_user" {
   }
 
   depends_on = [data.archive_file.get_user_zip]
+  tags = var.common_tags
 }
 
 # Update User Lambda
 resource "aws_lambda_function" "update_user" {
   filename         = "${path.module}/../../../backend/lambdas/user/update-user.zip"
-  function_name    = "${var.environment}-update-user"
+  function_name    = "${var.project_name}-update-user-${var.environment}"
   role            = aws_iam_role.lambda_role.arn
   handler         = "update-user.handler"
   runtime         = "nodejs18.x"
@@ -32,6 +33,7 @@ resource "aws_lambda_function" "update_user" {
   }
 
   depends_on = [data.archive_file.update_user_zip]
+  tags = var.common_tags
 }
 
 # ZIP files
