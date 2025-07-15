@@ -23,6 +23,16 @@ variable "users_table_arn" {
   type        = string
 }
 
+variable "events_table_name" {
+  description = "DynamoDB events table name"
+  type        = string
+}
+
+variable "events_table_arn" {
+  description = "DynamoDB events table ARN"
+  type        = string
+}
+
 variable "cognito_user_pool_arn" {
   description = "Cognito User Pool ARN for API Gateway authorization"
   type        = string

@@ -101,12 +101,125 @@ resource "aws_api_gateway_integration_response" "users_options" {
   status_code = aws_api_gateway_method_response.users_options.status_code
 }
 
+# Events resource
+resource "aws_api_gateway_resource" "events" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "events"
+}
+
+resource "aws_api_gateway_resource" "event_id" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.events.id
+  path_part   = "{eventId}"
+}
+
+# POST /events
+resource "aws_api_gateway_method" "create_event" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.events.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "create_event" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.events.id
+  http_method = aws_api_gateway_method.create_event.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.create_event.invoke_arn
+}
+
+# GET /events
+resource "aws_api_gateway_method" "list_events" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.events.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "list_events" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.events.id
+  http_method = aws_api_gateway_method.list_events.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.list_events.invoke_arn
+}
+
+# GET /events/{eventId}
+resource "aws_api_gateway_method" "get_event" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.event_id.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "get_event" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.event_id.id
+  http_method = aws_api_gateway_method.get_event.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.get_event.invoke_arn
+}
+
+# PUT /events/{eventId}
+resource "aws_api_gateway_method" "update_event" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.event_id.id
+  http_method   = "PUT"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "update_event" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.event_id.id
+  http_method = aws_api_gateway_method.update_event.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.update_event.invoke_arn
+}
+
+# DELETE /events/{eventId}
+resource "aws_api_gateway_method" "delete_event" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.event_id.id
+  http_method   = "DELETE"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "delete_event" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.event_id.id
+  http_method = aws_api_gateway_method.delete_event.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.delete_event.invoke_arn
+}
+
 # Deployment
 resource "aws_api_gateway_deployment" "main" {
   depends_on = [
     aws_api_gateway_integration.get_user,
     aws_api_gateway_integration.update_user,
-    aws_api_gateway_integration.users_options
+    aws_api_gateway_integration.users_options,
+    aws_api_gateway_integration.create_event,
+    aws_api_gateway_integration.list_events,
+    aws_api_gateway_integration.get_event,
+    aws_api_gateway_integration.update_event,
+    aws_api_gateway_integration.delete_event
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id

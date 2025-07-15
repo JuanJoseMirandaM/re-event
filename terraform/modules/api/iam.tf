@@ -37,9 +37,16 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
         Action = [
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
-          "dynamodb:PutItem"
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
         ]
-        Resource = var.users_table_arn
+        Resource = [
+          var.users_table_arn,
+          var.events_table_arn,
+          "${var.events_table_arn}/index/*"
+        ]
       }
     ]
   })

@@ -63,6 +63,74 @@ Content-Type: application/json
 }
 ```
 
+## Events APIs
+
+### POST /events
+Crea un nuevo evento.
+
+**Headers:**
+```
+Authorization: Bearer {jwt_token}
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "titulo": "string",
+  "descripcion": "string",
+  "fecha": "YYYY-MM-DD",
+  "hora": "HH:MM" | null,
+  "lugar": "string",
+  "link_lugar": "url" | null,
+  "expositores": [
+    {
+      "nombre": "string",
+      "avatar": "url" | null
+    }
+  ]
+}
+```
+
+### GET /events
+Lista eventos con paginación y filtros.
+
+**Query Parameters:**
+- `limit`: Número de eventos (default: 20)
+- `lastKey`: Clave para paginación
+- `fecha`: Filtrar por fecha específica (YYYY-MM-DD)
+- `upcoming`: Solo eventos futuros (true/false)
+- `past`: Solo eventos pasados (true/false)
+
+**Examples:**
+```bash
+# Todos los eventos
+GET /events
+
+# Eventos futuros
+GET /events?upcoming=true
+
+# Eventos pasados
+GET /events?past=true
+
+# Eventos de una fecha específica
+GET /events?fecha=2025-03-15
+
+# Paginación
+GET /events?limit=10&lastKey=eyJldmVudElkIjoiZXZ0LTAwMSJ9
+```
+
+### GET /events/{eventId}
+Obtiene un evento específico.
+
+### PUT /events/{eventId}
+Actualiza un evento existente.
+
+**Body:** Mismo formato que POST /events
+
+### DELETE /events/{eventId}
+Elimina un evento.
+
 ## Auth Flow (Cognito)
 
 ### 1. Get Authorization Code
@@ -96,4 +164,26 @@ curl --location --request PUT 'https://xd8pegmhrk.execute-api.us-east-1.amazonaw
   "company": "AWS Community",
   "phone": "+591 12345678"
 }'
+
+# Create Event
+curl --location --request POST 'https://xd8pegmhrk.execute-api.us-east-1.amazonaws.com/dev/events' \
+--header 'Authorization: Bearer YOUR_JWT_TOKEN' \
+--header 'Content-Type: application/json' \
+--data '{
+  "titulo": "Serverless en AWS",
+  "descripcion": "Aprende a construir aplicaciones serverless",
+  "fecha": "2025-03-15",
+  "hora": "10:00",
+  "lugar": "Auditorio Principal",
+  "expositores": [
+    {
+      "nombre": "Juan Pérez",
+      "avatar": "https://example.com/avatar.jpg"
+    }
+  ]
+}'
+
+# List Events
+curl --location 'https://xd8pegmhrk.execute-api.us-east-1.amazonaws.com/dev/events?upcoming=true&limit=10' \
+--header 'Authorization: Bearer YOUR_JWT_TOKEN'
 ```
