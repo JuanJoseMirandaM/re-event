@@ -32,7 +32,7 @@ export interface AuthResponse {
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  
+
   private tokenSubject = new BehaviorSubject<string | null>(null);
   public token$ = this.tokenSubject.asObservable();
 
@@ -41,13 +41,13 @@ export class AuthService {
   }
 
   private loadStoredAuth(): void {
-    const token = localStorage.getItem('auth_token');
-    const user = localStorage.getItem('current_user');
-    
-    if (token && user) {
-      this.tokenSubject.next(token);
-      this.currentUserSubject.next(JSON.parse(user));
-    }
+    // const token = localStorage.getItem('auth_token');
+    // const user = localStorage.getItem('current_user');
+    //
+    // if (token && user) {
+    //   this.tokenSubject.next(token);
+    //   this.currentUserSubject.next(JSON.parse(user));
+    // }
   }
 
   register(userData: {
@@ -73,28 +73,28 @@ export class AuthService {
     );
   }
 
-  verifyCode(code: string): Observable<any> {
-    const userEmail = this.currentUserSubject.value?.email;
-    return this.http.post(`${environment.apiUrl}/auth/verify-code`, {
-      code,
-      userEmail
-    }).pipe(
-      tap(response => {
-        if (response.success) {
-          const currentUser = this.currentUserSubject.value;
-          if (currentUser) {
-            const updatedUser = {
-              ...currentUser,
-              verified: true,
-              role: response.data.role
-            };
-            this.currentUserSubject.next(updatedUser);
-            localStorage.setItem('current_user', JSON.stringify(updatedUser));
-          }
-        }
-      })
-    );
-  }
+  // verifyCode(code: string): Observable<any> {
+  //   const userEmail = this.currentUserSubject.value?.email;
+  //   return this.http.post(`${environment.apiUrl}/auth/verify-code`, {
+  //     code,
+  //     userEmail
+  //   }).pipe(
+  //     tap(response => {
+  //       if (response.success) {
+  //         const currentUser = this.currentUserSubject.value;
+  //         if (currentUser) {
+  //           const updatedUser = {
+  //             ...currentUser,
+  //             verified: true,
+  //             role: response.data.role
+  //           };
+  //           this.currentUserSubject.next(updatedUser);
+  //           localStorage.setItem('current_user', JSON.stringify(updatedUser));
+  //         }
+  //       }
+  //     })
+  //   );
+  // }
 
   logout(): void {
     localStorage.removeItem('auth_token');
