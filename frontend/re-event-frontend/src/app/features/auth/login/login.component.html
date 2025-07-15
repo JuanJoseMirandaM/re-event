@@ -1,0 +1,46 @@
+<h1 class="re-h1-title re-txt-center login-title">Sign In</h1>
+
+@if (errorMessage()) {
+  <div class="re-error-message re-txt-center re-txt-bold re-mb-2-4">
+    {{ errorMessage() }}
+  </div>
+}
+
+<form class="login-form-container" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <input type="text" class="re-input re-w-100 re-mb-1-6"
+           placeholder="Email"
+           id="email"
+           formControlName="email">
+    @if (lf['email'].invalid && lf['email'].dirty || lf['email'].touched) {
+      <div class="invalid-feedback">
+        @if (lf['email'].errors?.['required']) {
+          <small class="re-small-font re-error-message">Email is required.</small>
+        }
+
+        @if (lf['email'].errors?.['email']) {
+          <small class="re-small-font re-error-message">Invalid Email</small>
+        }
+      </div>
+    }
+  </div>
+
+  <div>
+    <input type="password"
+           class="re-input re-w-100 re-mb-1-6"
+           placeholder="Password"
+           id="password"
+           formControlName="password">
+    @if (lf['email'].invalid && lf['email'].dirty || lf['email'].touched) {
+      <div class="invalid-feedback">
+        @if (lf['email'].errors?.['required']) {
+          <small class="re-small-font re-error-message">Password is required.</small>
+        }
+      </div>
+    }
+  </div>
+
+  <button class="re-primary-btn" (click)="onSubmit()">Sign In</button>
+</form>
+
+<small class="create-account-text">Don't have an account? <span>Sign Up</span></small>
