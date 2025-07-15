@@ -22,3 +22,29 @@ resource "aws_dynamodb_table" "users" {
 
   tags = var.common_tags
 }
+
+# DynamoDB Table for Events
+resource "aws_dynamodb_table" "events" {
+  name         = "${var.project_name}-events-${var.environment}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "eventId"
+
+  attribute {
+    name = "eventId"
+    type = "S"
+  }
+
+  attribute {
+    name = "fecha"
+    type = "S"
+  }
+
+  # GSI para consultar eventos por fecha
+  global_secondary_index {
+    name            = "FechaIndex"
+    hash_key        = "fecha"
+    projection_type = "ALL"
+  }
+
+  tags = var.common_tags
+}

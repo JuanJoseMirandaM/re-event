@@ -14,8 +14,8 @@ module "auth" {
   project_name         = var.project_name
   environment          = var.environment
   common_tags          = var.common_tags
-  dynamodb_table_name  = module.database.table_name
-  dynamodb_table_arn   = module.database.table_arn
+  dynamodb_table_name  = module.database.users_table_name
+  dynamodb_table_arn   = module.database.users_table_arn
   google_client_id     = var.google_client_id
   google_client_secret = var.google_client_secret
   cognito_callback_urls = var.cognito_callback_urls
@@ -29,7 +29,7 @@ module "api" {
   project_name          = var.project_name
   environment           = var.environment
   common_tags           = var.common_tags
-  users_table_name      = module.database.table_name
-  users_table_arn       = module.database.table_arn
+  users_table_name      = module.database.users_table_name
+  users_table_arn       = module.database.users_table_arn
   cognito_user_pool_arn = module.auth.user_pool_arn
 }

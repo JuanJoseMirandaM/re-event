@@ -1,11 +1,11 @@
 output "users_table_name" {
   description = "Name of the Users DynamoDB table"
-  value       = module.database.table_name
+  value       = module.database.users_table_name
 }
 
 output "users_table_arn" {
   description = "ARN of the Users DynamoDB table"
-  value       = module.database.table_arn
+  value       = module.database.users_table_arn
 }
 
 output "lambda_role_arn" {
@@ -36,4 +36,14 @@ output "api_gateway_url" {
 output "api_gateway_id" {
   description = "API Gateway ID"
   value       = module.api.api_gateway_id
+}
+
+output "events_table_name" {
+  description = "Name of the Events DynamoDB table"
+  value       = module.database.events_table_name
+}
+
+output "events_table_arn" {
+  description = "ARN of the Events DynamoDB table"
+  value       = module.database.events_table_arn
 }
