@@ -21,8 +21,14 @@
   text-align: center;
   width: 100%;
 
-  span{
+  a {
     cursor: pointer;
     text-decoration: underline;
+
+    &:active,
+    &:focus {
+      text-decoration: none;
+      outline: none;
+    }
   }
 }
