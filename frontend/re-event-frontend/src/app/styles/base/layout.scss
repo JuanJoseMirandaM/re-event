@@ -27,5 +27,19 @@
   font-size: var(--small-font-size);
 }
 
+.re-font-500{
+  font-weight: 500;
+}
 
+.re-normal-font {
+  font-size: var(--normal-font-size);
+}
+
+.re-flex {
+  display: flex;
+}
+
+.re-flex-column {
+  flex-direction: column;
+}
 
