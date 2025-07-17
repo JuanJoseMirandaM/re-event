@@ -1,0 +1,13 @@
+:host{
+  display: flex;
+  padding: var(--mb-1-6);
+  background-color: var(--color-bg-secure);
+  color: var(--color-text-secure);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  justify-content: space-between
+}
+
+.re-icon-header {
+  color: var(--text-color-light);
+}

@@ -35,6 +35,14 @@
   font-size: var(--normal-font-size);
 }
 
+.re-big-font {
+  font-size: var(--big-font-size);
+}
+
+.re-inline-block {
+  display: inline-block;
+}
+
 .re-flex {
   display: flex;
 }
@@ -43,3 +51,21 @@
   flex-direction: column;
 }
 
+.re-flex-jc-center {
+  justify-content: center;
+}
+
+.re-flex-jc-sp {
+  justify-content: space-between;
+}
+
+.re-btn{
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+}
