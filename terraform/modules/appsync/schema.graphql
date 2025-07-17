@@ -1,0 +1,38 @@
+type Notification {
+  notificationId: ID!
+  title: String!
+  description: String
+  createdAt: String!
+  author: String!
+  link: String
+  targetRole: String!
+  userId: String
+  read: Boolean!
+}
+
+input NotificationInput {
+  title: String!
+  description: String
+  author: String!
+  link: String
+  targetRole: String!
+  userId: String
+}
+
+type Query {
+  getNotifications(role: String!, limit: Int): [Notification]
+  getUserNotifications(userId: String!, limit: Int): [Notification]
+}
+
+type Mutation {
+  createNotification(input: NotificationInput!): Notification
+  markNotificationAsRead(notificationId: ID!, createdAt: String!): Notification
+}
+
+type Subscription {
+  onCreateNotification(targetRole: String!): Notification
+    @aws_subscribe(mutations: ["createNotification"])
+  
+  onCreateUserNotification(userId: String!): Notification
+    @aws_subscribe(mutations: ["createNotification"])
+}

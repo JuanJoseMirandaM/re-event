@@ -47,3 +47,13 @@ output "events_table_arn" {
   description = "ARN of the Events DynamoDB table"
   value       = module.database.events_table_arn
 }
+
+output "graphql_api_url" {
+  description = "URL of the AppSync GraphQL API"
+  value       = module.appsync.graphql_api_url
+}
+
+output "graphql_api_id" {
+  description = "ID of the AppSync GraphQL API"
+  value       = module.appsync.graphql_api_id
+}
