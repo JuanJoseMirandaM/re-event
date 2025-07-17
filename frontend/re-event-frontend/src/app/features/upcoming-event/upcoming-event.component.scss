@@ -1,0 +1,33 @@
+.re-agenda {
+  gap: 1.4rem;
+
+  .re-agenda__event {
+    padding: 1.4rem;
+    gap: 1.2rem;
+    box-shadow: var(--general-box-shadow);
+    border-radius: var(--general-border-radius);
+
+    .agenda__event__time {
+      flex-basis: auto;
+      text-align: center;
+      color: var(--text-color);
+    }
+  }
+
+  .re-agenda__event__details {
+    flex: 1;
+    gap: 0.6rem;
+
+    .agenda__event__title {
+      font-size: var(--small-font-size);
+    }
+
+    .agenda__event__description {
+      font-size: var(--very-small-font-size);
+    }
+
+    .agenda__event__speaker {
+      font-size: var(--small-font-size);
+    }
+  }
+}
