@@ -26,12 +26,14 @@ module "auth" {
 module "api" {
   source = "./modules/api"
 
-  project_name          = var.project_name
-  environment           = var.environment
-  common_tags           = var.common_tags
-  users_table_name      = module.database.users_table_name
-  users_table_arn       = module.database.users_table_arn
-  events_table_name     = module.database.events_table_name
-  events_table_arn      = module.database.events_table_arn
-  cognito_user_pool_arn = module.auth.user_pool_arn
+  project_name             = var.project_name
+  environment              = var.environment
+  common_tags              = var.common_tags
+  users_table_name         = module.database.users_table_name
+  users_table_arn          = module.database.users_table_arn
+  events_table_name        = module.database.events_table_name
+  events_table_arn         = module.database.events_table_arn
+  notifications_table_name = module.database.notifications_table_name
+  notifications_table_arn  = module.database.notifications_table_arn
+  cognito_user_pool_arn    = module.auth.user_pool_arn
 }

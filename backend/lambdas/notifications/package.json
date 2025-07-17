@@ -1,0 +1,5 @@
+{
+  "name": "notifications-lambdas",
+  "version": "1.0.0",
+  "description": "Lambda functions for notifications management"
+}

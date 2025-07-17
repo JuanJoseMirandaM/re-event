@@ -45,7 +45,9 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
         Resource = [
           var.users_table_arn,
           var.events_table_arn,
-          "${var.events_table_arn}/index/*"
+          "${var.events_table_arn}/index/*",
+          var.notifications_table_arn,
+          "${var.notifications_table_arn}/index/*"
         ]
       }
     ]
