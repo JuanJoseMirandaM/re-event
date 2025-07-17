@@ -1,11 +1,14 @@
 :host {
-  display: flex;
-  padding: var(--mb-1-6);
-  margin-bottom: var(--mb-1-2);
+  background: var(--body-color);
   border-top: 2px solid var(--first-color-alt);
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   justify-content: space-between;
-  flex-wrap: wrap;
+  padding: var(--mb-1-6);
+  position: fixed;
+  width: 100%;
 }
 
 .re-icon-footer {

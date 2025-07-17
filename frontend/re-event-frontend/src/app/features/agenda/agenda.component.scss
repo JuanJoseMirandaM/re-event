@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: var(--general-padding);
+}
+
+.re-agenda-routes {
+  padding: 0.4rem;
+  border-radius: var(--general-border-radius);
+  box-shadow: var(--general-box-shadow);
+
+
+  .re-agenda-routes__active {
+    background-color: var(--first-color);
+  }
+
+  button {
+    padding: 0.3rem;
+    flex: 1;
+    border-radius: var(--general-border-radius);
+  }
+}

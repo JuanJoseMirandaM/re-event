@@ -9,14 +9,29 @@ export const routes: Routes = [
     loadComponent: () => import('./features/secure/secure.component'),
     children: [
       {
+        path: 'notifications',
+        loadComponent: () => import('./features/notifications/notifications.component')
+      },
+      {
+        path: 'agenda',
+        loadComponent: () => import('./features/agenda/agenda.component'),
+        children: [
+          {
+            path: 'upcoming',
+            loadComponent: () => import('./features/upcoming-event/upcoming-event.component'),
+          },
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'upcoming'
+          }
+        ]
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'notifications'
       },
-      {
-        path: 'notifications',
-        loadComponent: () => import('./features/notifications/notifications.component')
-      }
     ]
   },
   {
