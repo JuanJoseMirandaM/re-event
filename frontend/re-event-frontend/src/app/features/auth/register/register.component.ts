@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {passwordMatcherValidator} from '../../../utils/passwordMatcher.validator';
 
@@ -6,7 +6,8 @@ import {passwordMatcherValidator} from '../../../utils/passwordMatcher.validator
   selector: 'app-register',
   imports: [],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class RegisterComponent {
   #formBuilder = inject(FormBuilder);
