@@ -10,6 +10,7 @@
   --body-font: 'Work Sans', sans-serif;
 
   /*Font-size*/
+  --very-small-font-size: 1.2rem;
   --small-font-size: 1.4rem;
   --normal-font-size: 1.6rem;
   --big-font-size: 2.3rem;
@@ -17,6 +18,7 @@
   --h1-font-size: 1.8rem;
 
   /* Padding */
+  --min-padding: 1.4rem;
   --general-padding: 1.6rem;
 
   --general-border-radius: 1.2rem;
@@ -28,4 +30,7 @@
   --mb-1-6: 1.6rem;
   --mb-2: 2rem;
   --mb-2-4: 2.4rem;
+
+  /*BOX SHADOW*/
+  --general-box-shadow: 0 1rem 1.2rem rgba(0,0,0,0.1);
 }
