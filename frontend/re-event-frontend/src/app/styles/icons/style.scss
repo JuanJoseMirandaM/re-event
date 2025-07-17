@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?jd4htu');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?jd4htu#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?jd4htu') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?jd4htu') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?jd4htu##{$icomoon-font-family}') format('svg');
+  src: url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?zbnw56');
+  src: url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?zbnw56#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?zbnw56') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?zbnw56') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?zbnw56##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -29,37 +29,61 @@
 
 .re-icon-menu {
   &:before {
-    content: $re-icon-menu; 
+    content: $re-icon-menu;
   }
 }
+
 .re-icon-person {
   &:before {
-    content: $re-icon-person; 
+    content: $re-icon-person;
   }
 }
+
 .re-icon-notification {
   &:before {
-    content: $re-icon-notification; 
+    content: $re-icon-notification;
   }
 }
+
 .re-icon-calendar {
   &:before {
-    content: $re-icon-calendar; 
+    content: $re-icon-calendar;
   }
 }
+
 .re-icon-home {
   &:before {
-    content: $re-icon-home; 
+    content: $re-icon-home;
   }
 }
+
 .re-icon-settings {
   &:before {
-    content: $re-icon-settings; 
+    content: $re-icon-settings;
   }
 }
+
 .re-icon-arrow {
   &:before {
-    content: $re-icon-arrow; 
+    content: $re-icon-arrow;
+  }
+}
+
+.re-icon-launch {
+  &:before {
+    content: $re-icon-launch;
+  }
+}
+
+.re-icon-speaker {
+  &:before {
+    content: $re-icon-speaker;
+  }
+}
+
+.re-icon-goal {
+  &:before {
+    content: $re-icon-goal;
   }
 }
 

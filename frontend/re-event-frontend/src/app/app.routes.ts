@@ -6,7 +6,20 @@ export const routes: Routes = [
   {path: 'register', loadComponent: () => import('./features/auth/register/register.component')},
   {
     path: 'secure',
-    loadComponent: () => import('./features/secure/secure.component')
+    loadComponent: () => import('./features/secure/secure.component'),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'notifications'
+      },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./features/notifications/notifications.component')
+      }
+    ]
   },
-  {path: '**', redirectTo: '/login'}
+  {
+    path: '**', redirectTo: '/login'
+  }
 ];
