@@ -6,6 +6,8 @@ Todas las APIs requieren autenticación con token JWT de Cognito en el header:
 Authorization: Bearer {jwt_token}
 ```
 
+> **NOTA IMPORTANTE**: El sistema de notificaciones ahora se implementa exclusivamente a través de AppSync GraphQL API. Ver la sección "Notification GraphQL API" al final de este documento.
+
 ## User APIs
 
 ### GET /users/{userId}
@@ -186,4 +188,105 @@ curl --location --request POST 'https://xd8pegmhrk.execute-api.us-east-1.amazona
 # List Events
 curl --location 'https://xd8pegmhrk.execute-api.us-east-1.amazonaws.com/dev/events?upcoming=true&limit=10' \
 --header 'Authorization: Bearer YOUR_JWT_TOKEN'
+```
+
+## Notification GraphQL API
+
+El sistema de notificaciones se implementa exclusivamente a través de AppSync GraphQL API.
+
+### Endpoint
+```
+https://[appsync-id].appsync-api.us-east-1.amazonaws.com/graphql
+```
+
+### Autenticación
+Utiliza el mismo token JWT de Cognito:
+```
+Authorization: Bearer {jwt_token}
+```
+
+### Operaciones Disponibles
+
+#### Queries
+```graphql
+# Obtener notificaciones por rol
+query GetNotifications {
+  getNotifications(role: "asistente", limit: 10) {
+    notificationId
+    title
+    description
+    createdAt
+    author
+    link
+    read
+  }
+}
+
+# Obtener notificaciones de un usuario específico
+query GetUserNotifications {
+  getUserNotifications(userId: "usr-001", limit: 10) {
+    notificationId
+    title
+    description
+    createdAt
+    author
+    link
+    read
+  }
+}
+```
+
+#### Mutations
+```graphql
+# Crear una notificación
+mutation CreateNotification {
+  createNotification(input: {
+    title: "Nuevo anuncio",
+    description: "Detalles del anuncio",
+    author: "Organizador",
+    link: "/anuncios/123",
+    targetRole: "ALL"
+  }) {
+    notificationId
+    createdAt
+  }
+}
+
+# Marcar notificación como leída
+mutation MarkAsRead {
+  markNotificationAsRead(
+    notificationId: "notif-001",
+    createdAt: "2025-03-01T08:00:00Z"
+  ) {
+    notificationId
+    read
+  }
+}
+```
+
+#### Subscriptions
+```graphql
+# Suscribirse a notificaciones por rol
+subscription OnCreateNotification {
+  onCreateNotification(targetRole: "asistente") {
+    notificationId
+    title
+    description
+    createdAt
+    author
+    link
+  }
+}
+
+# Suscribirse a notificaciones personales
+subscription OnCreateUserNotification {
+  onCreateUserNotification(userId: "usr-001") {
+    notificationId
+    title
+    description
+    createdAt
+    author
+    link
+  }
+}
 ```

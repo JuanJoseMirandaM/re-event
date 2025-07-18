@@ -11,6 +11,13 @@ resource "aws_appsync_datasource" "notifications" {
   }
 }
 
+# None Data Source para suscripciones
+resource "aws_appsync_datasource" "none" {
+  api_id = aws_appsync_graphql_api.main.id
+  name   = "NONE"
+  type   = "NONE"
+}
+
 # Resolvers
 resource "aws_appsync_resolver" "get_notifications" {
   api_id      = aws_appsync_graphql_api.main.id
@@ -142,6 +149,7 @@ resource "aws_appsync_resolver" "on_create_notification" {
   api_id      = aws_appsync_graphql_api.main.id
   type        = "Subscription"
   field       = "onCreateNotification"
+  data_source = aws_appsync_datasource.none.name
   
   request_template = <<EOF
 {
@@ -159,6 +167,7 @@ resource "aws_appsync_resolver" "on_create_user_notification" {
   api_id      = aws_appsync_graphql_api.main.id
   type        = "Subscription"
   field       = "onCreateUserNotification"
+  data_source = aws_appsync_datasource.none.name
   
   request_template = <<EOF
 {

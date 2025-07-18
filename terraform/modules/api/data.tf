@@ -50,25 +50,3 @@ data "archive_file" "delete_event_zip" {
   output_path = "${path.module}/../../../backend/lambdas/agenda/delete-event.zip"
   excludes    = ["create-event.js", "get-event.js", "update-event.js", "list-events.js", "*.zip"]
 }
-
-# Notifications Lambda ZIPs
-data "archive_file" "create_notification_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/notifications"
-  output_path = "${path.module}/../../../backend/lambdas/notifications/create-notification.zip"
-  excludes    = ["list-notifications.js", "mark-notification-read.js", "*.zip"]
-}
-
-data "archive_file" "list_notifications_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/notifications"
-  output_path = "${path.module}/../../../backend/lambdas/notifications/list-notifications.zip"
-  excludes    = ["create-notification.js", "mark-notification-read.js", "*.zip"]
-}
-
-data "archive_file" "mark_notification_read_zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/notifications"
-  output_path = "${path.module}/../../../backend/lambdas/notifications/mark-notification-read.zip"
-  excludes    = ["create-notification.js", "list-notifications.js", "*.zip"]
-}
