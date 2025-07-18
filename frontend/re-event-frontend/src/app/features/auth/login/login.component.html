@@ -40,7 +40,15 @@
     }
   </div>
 
-  <button class="re-primary-btn" (click)="onSubmit()">Sign In</button>
+  <button class="re-primary-btn" type="submit" aria-label="Sign In">Sign In</button>
+  <div class="re-flex re-flex-jc-center re-gap-flex-1-2">
+    <button class="re-secondary-btn re-media-button" type="button" aria-label="Sign in with Google">
+      <span aria-hidden="true">G</span>
+    </button>
+    <button class="re-secondary-btn re-media-button" type="button" aria-label="Sign in with Facebook">
+      <span aria-hidden="true">F</span>
+    </button>
+  </div>
 </form>
 
 <small class="create-account-text">Don't have an account? <a routerLink="/register">Sign Up</a></small>

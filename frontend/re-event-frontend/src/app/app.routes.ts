@@ -21,6 +21,10 @@ export const routes: Routes = [
             loadComponent: () => import('./features/upcoming-event/upcoming-event.component'),
           },
           {
+            path: 'past',
+            loadComponent: () => import('./features/past-event/past-event.component'),
+          },
+          {
             path: '',
             pathMatch: 'full',
             redirectTo: 'upcoming'

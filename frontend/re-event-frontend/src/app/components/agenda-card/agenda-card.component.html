@@ -1,0 +1,18 @@
+<div class="agenda-card__time">
+  <span class="re-block agenda__event__time__start re-txt-bold">10:00</span>
+  <span class="re-block agenda__event__time__start re-ver-small-font re-font-500">30 minutes</span>
+</div>
+
+<div class="re-agenda-card__details re-flex re-flex-column">
+  <h3 class="agenda-card__title">Opening Keynote</h3>
+  <div>
+    <span class="agenda-card__speaker re-font-500">Speaker: John Doe</span>
+  </div>
+  <small class="re-ver-small-font">Main Hall</small>
+
+  @if (isPastEvent()) {
+    <div class="re-flex">
+      <button class="agenda-card-btn re-secondary-btn re-ver-small-font">Rated &starf;</button>
+    </div>
+  }
+</div>
