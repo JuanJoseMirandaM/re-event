@@ -10,6 +10,10 @@
   &::placeholder {
     color: var(--text-color-light);
   }
+
+  &:focus {
+    outline: 2px solid var(--first-color);
+  }
 }
 
 /*TITLE*/
@@ -28,9 +32,11 @@
   text-decoration: none;
   text-align: center;
   padding: 1.2rem 1.6rem;
+  cursor: pointer;
 }
 
 .re-secondary-btn {
+  cursor: pointer;
   background-color: var(--first-color-alt);
   color: var(--text-color);
   border-radius: var(--general-border-radius);
@@ -39,5 +45,12 @@
   text-decoration: none;
   text-align: center;
   padding: 1.2rem 1.6rem;
+
+  &:focus {
+    outline: 2px solid var(--first-color);
+  }
 }
 
+.re-media-button {
+  width: fit-content;
+}
