@@ -1,7 +1,6 @@
 # Database Module
 module "database" {
   source = "./modules/database"
-
   project_name = var.project_name
   environment  = var.environment
   common_tags  = var.common_tags
@@ -10,7 +9,6 @@ module "database" {
 # Auth Module
 module "auth" {
   source = "./modules/auth"
-
   project_name         = var.project_name
   environment          = var.environment
   common_tags          = var.common_tags
@@ -25,7 +23,6 @@ module "auth" {
 # API Module
 module "api" {
   source = "./modules/api"
-
   project_name                 = var.project_name
   environment                  = var.environment
   common_tags                  = var.common_tags
@@ -41,7 +38,6 @@ module "api" {
 # AppSync Module
 module "appsync" {
   source = "./modules/appsync"
-
   project_name            = var.project_name
   environment             = var.environment
   common_tags             = var.common_tags
