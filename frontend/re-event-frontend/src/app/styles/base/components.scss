@@ -1,0 +1,56 @@
+/*INPUT*/
+.re-input {
+  display: inline-block;
+  padding: 1.6rem;
+  background-color: var(--first-color-alt);
+  border-radius: var(--general-border-radius);
+  border: none;
+  color: var(--text-color);
+
+  &::placeholder {
+    color: var(--text-color-light);
+  }
+
+  &:focus {
+    outline: 2px solid var(--first-color);
+  }
+}
+
+/*TITLE*/
+.re-h1-title {
+  font-size: var(--h1-font-size);
+}
+
+/*Buttons*/
+
+.re-primary-btn {
+  background-color: var(--first-color);
+  color: var(--text-color);
+  border-radius: var(--general-border-radius);
+  border: none;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  padding: 1.2rem 1.6rem;
+  cursor: pointer;
+}
+
+.re-secondary-btn {
+  cursor: pointer;
+  background-color: var(--first-color-alt);
+  color: var(--text-color);
+  border-radius: var(--general-border-radius);
+  border: none;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  padding: 1.2rem 1.6rem;
+
+  &:focus {
+    outline: 2px solid var(--first-color);
+  }
+}
+
+.re-media-button {
+  width: fit-content;
+}

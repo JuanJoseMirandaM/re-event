@@ -1,0 +1,10 @@
+@use './variables';
+@use './base/normalize';
+@use "./base/components";
+@use "./base/layout";
+@use "./icons/style";
+
+/*Change this to Global Component Styles*/
+.re-agenda {
+  gap: 1.4rem;
+}

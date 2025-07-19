@@ -1,0 +1,49 @@
+:host {
+  display: flex;
+  padding: var(--mb-1-6);
+  background-color: var(--color-bg-secure);
+  color: var(--color-text-secure);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  justify-content: space-between
+}
+
+.re-icon-header {
+  color: var(--text-color-light);
+  border-radius: var(--general-border-radius);
+
+  button {
+    position: relative;
+
+    .re-icon-header__number {
+      align-items: center;
+      animation: appear-notification 2.5s ease-in-out infinite;
+      background: var(--first-color);
+      border-radius: 50%;
+      color: var(--text-color);
+      display: flex;
+      font-size: var(--very-small-font-size);
+      height: 0.7rem;
+      position: absolute;
+      right: -0.2rem;
+      top: -0.2rem;
+      width: 0.7rem;
+    }
+
+    @keyframes appear-notification {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      20%,
+      80% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+    }
+  }
+}

@@ -25,7 +25,6 @@ module "auth" {
 # API Module
 module "api" {
   source = "./modules/api"
-
   project_name                 = var.project_name
   environment                  = var.environment
   common_tags                  = var.common_tags

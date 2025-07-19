@@ -1,0 +1,94 @@
+.re-txt-center {
+  text-align: center;
+}
+
+.re-w-100 {
+  width: 100%;
+}
+
+.re-error-message {
+  color: var(--error-text-color);
+}
+
+.re-txt-bold {
+  font-weight: bold;
+}
+
+.re-mb-1-6 {
+  margin-bottom: var(--mb-1-6);
+}
+
+.re-mb-2 {
+  margin-bottom: var(--mb-2);
+}
+
+.re-mb-2-4 {
+  margin-bottom: var(--mb-2-4);
+}
+
+.re-ver-small-font {
+  font-size: var(--very-small-font-size);
+}
+
+.re-small-font {
+  font-size: var(--small-font-size);
+}
+
+.re-font-500 {
+  font-weight: 500;
+}
+
+.re-normal-font {
+  font-size: var(--normal-font-size);
+}
+
+.re-big-font {
+  font-size: var(--big-font-size);
+}
+
+.re-block {
+  display: block;
+}
+
+.re-inline-block {
+  display: inline-block;
+}
+
+.re-flex {
+  display: flex;
+}
+
+.re-flex-column {
+  flex-direction: column;
+}
+
+.re-flex-jc-center {
+  justify-content: center;
+}
+
+.re-flex-jc-sp {
+  justify-content: space-between;
+}
+
+.re-flex-jc-sa {
+  justify-content: space-around;
+}
+
+.re-gap-flex-1-2 {
+  gap: var(--sp-1-2);
+}
+
+.re-btn {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+
+.re-overflow-hidden {
+  overflow: hidden;
+}

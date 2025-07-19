@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  padding: var(--general-padding);
+  min-height: 100dvh;
+}
+
+.login-title {
+  margin-bottom: var(--mb-2-4);
+}
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.create-account-text {
+  color: var(--text-color-light);
+  display: inline-block;
+  margin-top: var(--mb-2);
+  text-align: center;
+  width: 100%;
+
+  a {
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:active,
+    &:focus {
+      text-decoration: none;
+      outline: none;
+    }
+  }
+}

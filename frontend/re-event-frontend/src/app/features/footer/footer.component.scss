@@ -1,0 +1,21 @@
+:host {
+  background: var(--body-color);
+  border-top: 2px solid var(--first-color-alt);
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  padding: var(--mb-1-6);
+  position: fixed;
+  width: 100%;
+}
+
+.re-icon-footer {
+  @extend .re-big-font !optional;
+  color: var(--text-color-light);
+}
+
+.re-footer-text {
+  color: var(--text-color-light);
+}

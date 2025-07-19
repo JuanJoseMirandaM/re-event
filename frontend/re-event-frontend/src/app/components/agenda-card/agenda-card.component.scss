@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  padding: 1.4rem;
+  gap: 1.2rem;
+  box-shadow: var(--general-box-shadow);
+  border-radius: var(--general-border-radius);
+}
+
+.agenda-card__time {
+  color: var(--text-color);
+  flex-basis: auto;
+  text-align: center;
+}
+
+.re-agenda-card__details {
+  flex: 1;
+  gap: 0.6rem;
+
+  .agenda-card__title {
+    font-size: var(--small-font-size);
+  }
+
+  .agenda-card__speaker {
+    font-size: var(--small-font-size);
+  }
+
+  .agenda-card-btn {
+    margin-left: auto;
+  }
+}

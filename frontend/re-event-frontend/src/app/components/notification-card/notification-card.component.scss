@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  padding: var(--min-padding);
+  gap: 1.4rem;
+  border-radius: var(--general-border-radius);
+  border-left-color: var(--first-color);
+  border-left-style: solid;
+  box-shadow: var(--general-box-shadow);
+}
+
+.re-type-icon {
+  width: 15%;
+  display: flex;
+  align-items: center;
+
+  span {
+    background-color: var(--first-color-alt);
+    padding: 0.7rem;
+    font-size: var(--big-font-size);
+    color: var(--first-color);
+    border-radius: var(--general-border-radius);
+  }
+}
+
+.re-notification-desc {
+  gap: 1rem;
+
+  .re-title-notification {
+    font-size: var(--small-font-size);
+  }
+
+  .re-dsc-notification {
+    font-size: var(--small-font-size);
+  }
+
+  .re-time {
+    font-size: var(--very-small-font-size);
+  }
+}
