@@ -5,21 +5,35 @@ const client = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    };
+
     try {
         const eventId = event.pathParameters.eventId;
 
-        const result = await dynamodb.send(new GetCommand({
+        if (!eventId) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ error: 'eventId is required' })
+            };
+        }
+
+        const command = new GetCommand({
             TableName: process.env.EVENTS_TABLE,
             Key: { eventId }
-        }));
+        });
+
+        const result = await dynamodb.send(command);
 
         if (!result.Item) {
             return {
                 statusCode: 404,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                headers,
                 body: JSON.stringify({
                     message: 'Event not found'
                 })
@@ -28,19 +42,13 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify(result.Item)
         };
     } catch (error) {
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 message: 'Error retrieving event',
                 error: error.message

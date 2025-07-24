@@ -10,6 +10,13 @@ function generateUUID() {
 }
 
 exports.handler = async (event) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    };
+
     try {
         const body = JSON.parse(event.body);
         const eventId = generateUUID();
@@ -17,40 +24,38 @@ exports.handler = async (event) => {
 
         const eventItem = {
             eventId,
-            titulo: body.titulo,
-            descripcion: body.descripcion,
-            fecha: body.fecha,
-            hora: body.hora || null,
-            lugar: body.lugar,
-            link_lugar: body.link_lugar || null,
-            expositores: body.expositores || [],
+            title: body.title,
+            description: body.description,
+            startDate: body.startDate,
+            endDate: body.endDate || null,
+            time: body.time || null,
+            location: body.location,
+            locationLink: body.locationLink || null,
+            speakers: body.speakers || [],
+            tags: body.tags || [],
             createdAt: now,
             updatedAt: now
         };
 
-        await dynamodb.send(new PutCommand({
+        const command = new PutCommand({
             TableName: process.env.EVENTS_TABLE,
             Item: eventItem
-        }));
+        });
+
+        const result = await dynamodb.send(command);
 
         return {
             statusCode: 201,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 message: 'Event created successfully',
-                event: eventItem
+                event: result.Attributes
             })
         };
     } catch (error) {
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 message: 'Error creating event',
                 error: error.message

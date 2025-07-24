@@ -13,21 +13,14 @@ exports.handler = async (event) => {
     };
 
     try {
-        const userId = event.pathParameters?.userId;
-        const body = JSON.parse(event.body || '{}');
-        
-        if (!userId) {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ error: 'userId is required' })
-            };
-        }
+        const eventId = event.pathParameters.eventId;
+        const body = JSON.parse(event.body);
+        const now = new Date().toISOString();
 
-        const allowedFields = ['name', 'company', 'phoneNumber', 'avatar'];
+        const allowedFields = ['title', 'description', 'startDate', 'endDate', 'time', 'location', 'locationLink', 'speakers', 'tags'];
         const updateExpression = [];
-        const expressionAttributeNames = {};
         const expressionAttributeValues = {};
+        const expressionAttributeNames = {};
 
         Object.keys(body).forEach(key => {
             if (allowedFields.includes(key) && body[key] !== undefined) {
@@ -45,13 +38,13 @@ exports.handler = async (event) => {
             };
         }
 
-        expressionAttributeValues[':updatedAt'] = new Date().toISOString();
+        expressionAttributeValues[':updatedAt'] = now;
         updateExpression.push('#updatedAt = :updatedAt');
         expressionAttributeNames['#updatedAt'] = 'updatedAt';
-
+        
         const command = new UpdateCommand({
-            TableName: process.env.USERS_TABLE,
-            Key: { userId },
+            TableName: process.env.EVENTS_TABLE,
+            Key: { eventId },
             UpdateExpression: `SET ${updateExpression.join(', ')}`,
             ExpressionAttributeNames: expressionAttributeNames,
             ExpressionAttributeValues: expressionAttributeValues,
@@ -63,15 +56,20 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify(result.Attributes)
+            body: JSON.stringify({
+                message: 'Event updated successfully',
+                event: result.Attributes
+            })
         };
-
     } catch (error) {
         console.error('Error:', error);
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Internal server error' })
+            body: JSON.stringify({
+                message: 'Error updating event',
+                error: error.message
+            })
         };
     }
 };

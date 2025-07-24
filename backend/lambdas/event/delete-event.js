@@ -5,6 +5,13 @@ const client = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    };
+
     try {
         const eventId = event.pathParameters.eventId;
 
@@ -17,27 +24,23 @@ exports.handler = async (event) => {
         if (!getResult.Item) {
             return {
                 statusCode: 404,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                headers,
                 body: JSON.stringify({
                     message: 'Event not found'
                 })
             };
         }
 
-        await dynamodb.send(new DeleteCommand({
+        const command = new DeleteCommand({
             TableName: process.env.EVENTS_TABLE,
             Key: { eventId }
-        }));
+        });
+
+        await dynamodb.send(command);
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 message: 'Event deleted successfully',
                 eventId
@@ -46,10 +49,7 @@ exports.handler = async (event) => {
     } catch (error) {
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 message: 'Error deleting event',
                 error: error.message

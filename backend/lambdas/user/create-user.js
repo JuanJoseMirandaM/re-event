@@ -22,10 +22,12 @@ exports.handler = async (event) => {
             name: userAttributes.name,
             company: userAttributes['custom:company'] || '',
             phoneNumber: userAttributes.phone_number || '',
+            avatar: null,
+            role: 'GUEST',
+            points: 0,
+            verified: false,
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            role: 'guest',
-            points: 0
+            updatedAt: new Date().toISOString()
         };
 
         await dynamodb.send(new PutCommand({

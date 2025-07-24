@@ -5,11 +5,17 @@ const client = new DynamoDBClient({});
 const dynamodb = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    };
+
     try {
         const queryParams = event.queryStringParameters || {};
         const limit = parseInt(queryParams.limit) || 20;
         const lastKey = queryParams.lastKey ? JSON.parse(decodeURIComponent(queryParams.lastKey)) : undefined;
-        const fecha = queryParams.fecha;
         const upcoming = queryParams.upcoming === 'true';
         const past = queryParams.past === 'true';
         
@@ -22,19 +28,11 @@ exports.handler = async (event) => {
             params.ExclusiveStartKey = lastKey;
         }
 
-        // Filter by specific date
-        if (fecha) {
-            params.IndexName = 'FechaIndex';
-            params.KeyConditionExpression = 'fecha = :fecha';
-            params.ExpressionAttributeValues = {
-                ':fecha': fecha
-            };
-        }
         // Filter upcoming events
         else if (upcoming) {
             const today = new Date().toISOString().split('T')[0];
-            params.IndexName = 'FechaIndex';
-            params.KeyConditionExpression = 'fecha >= :today';
+            params.IndexName = 'DateIndex';
+            params.KeyConditionExpression = 'startDate >= :today';
             params.ExpressionAttributeValues = {
                 ':today': today
             };
@@ -43,8 +41,8 @@ exports.handler = async (event) => {
         // Filter past events
         else if (past) {
             const today = new Date().toISOString().split('T')[0];
-            params.IndexName = 'FechaIndex';
-            params.KeyConditionExpression = 'fecha < :today';
+            params.IndexName = 'DateIndex';
+            params.KeyConditionExpression = 'startDate < :today';
             params.ExpressionAttributeValues = {
                 ':today': today
             };
@@ -56,12 +54,9 @@ exports.handler = async (event) => {
             
             return {
                 statusCode: 200,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
+                headers,
                 body: JSON.stringify({
-                    events: result.Items.sort((a, b) => a.fecha.localeCompare(b.fecha)),
+                    events: result.Items.sort((a, b) => a.startDate.localeCompare(b.startDate)),
                     lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
                     count: result.Items.length
                 })
@@ -72,12 +67,9 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
-                events: result.Items,
+                items: result.Items,
                 lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
                 count: result.Items.length
             })
@@ -85,10 +77,7 @@ exports.handler = async (event) => {
     } catch (error) {
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 message: 'Error listing events',
                 error: error.message
