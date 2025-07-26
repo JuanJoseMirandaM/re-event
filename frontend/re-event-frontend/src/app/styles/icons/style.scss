@@ -87,3 +87,8 @@
   }
 }
 
+.re-icon-stonks {
+  &:before {
+    content: $re-icon-stonks;
+  }
+}

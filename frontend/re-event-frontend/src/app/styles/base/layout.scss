@@ -74,8 +74,20 @@
   justify-content: space-around;
 }
 
+.re-align-items-center{
+  align-items: center;
+}
+
+.re-flex-1 {
+  flex: 1;
+}
+
 .re-gap-flex-1-2 {
   gap: var(--sp-1-2);
+}
+
+.re-gap-flex-0-8 {
+  gap: var(--sp-0-8);
 }
 
 .re-btn {
@@ -91,4 +103,15 @@
 
 .re-overflow-hidden {
   overflow: hidden;
+}
+
+.re-general-padding {
+  padding: var(--general-padding);
+}
+
+.re-card {
+  padding: var(--min-padding);
+  gap: 1.4rem;
+  border-radius: var(--general-border-radius);
+  box-shadow: var(--general-box-shadow);
 }
