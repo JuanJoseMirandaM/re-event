@@ -34,7 +34,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ error: 'No valid fields to update' })
+                body: JSON.stringify({ 
+                    success: false,
+                    error: 'No valid fields to update' 
+                })
             };
         }
 
@@ -57,8 +60,8 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers,
             body: JSON.stringify({
-                message: 'Event updated successfully',
-                event: result.Attributes
+                success: true,
+                data: result.Attributes
             })
         };
     } catch (error) {
@@ -67,7 +70,7 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                message: 'Error updating event',
+                success: false,
                 error: error.message
             })
         };

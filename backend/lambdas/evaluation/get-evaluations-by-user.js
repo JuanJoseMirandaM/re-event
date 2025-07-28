@@ -19,7 +19,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ error: 'userId is required' })
+                body: JSON.stringify({ 
+                    success: false,
+                    error: 'userId is required' 
+                })
             };
         }
 
@@ -36,9 +39,12 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers,
             body: JSON.stringify({
-              items: result.Items,
-              lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
-              count: result.Items.length
+                success: true,
+                data: {
+                    items: result.Items,
+                    lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
+                    count: result.Items.length
+                }
             })
         };
     } catch (error) {
@@ -46,7 +52,7 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                message: 'Error listing evaluations',
+                success: false,
                 error: error.message
             })
         };

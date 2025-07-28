@@ -20,7 +20,10 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'userId and sessionId are required' })
+        body: JSON.stringify({ 
+          success: false,
+          error: 'userId and sessionId are required' 
+        })
       };
     }
 
@@ -37,14 +40,17 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(result.Items[0] || {})
+      body: JSON.stringify({
+        success: true,
+        data: result.Items[0] || {}
+      })
     };
   } catch (error) {
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
-        message: 'Error retrieving evaluation',
+        success: false,
         error: error.message
       })
     };

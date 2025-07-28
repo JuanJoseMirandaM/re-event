@@ -19,7 +19,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers,
-                body: JSON.stringify({ error: 'eventId is required' })
+                body: JSON.stringify({ 
+                    success: false,
+                    error: 'eventId is required' 
+                })
             };
         }
 
@@ -35,7 +38,8 @@ exports.handler = async (event) => {
                 statusCode: 404,
                 headers,
                 body: JSON.stringify({
-                    message: 'Event not found'
+                    success: false,
+                    error: 'Event not found'
                 })
             };
         }
@@ -43,14 +47,17 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify(result.Item)
+            body: JSON.stringify({
+                success: true,
+                data: result.Item
+            })
         };
     } catch (error) {
         return {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                message: 'Error retrieving event',
+                success: false,
                 error: error.message
             })
         };

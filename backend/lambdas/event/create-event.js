@@ -48,8 +48,8 @@ exports.handler = async (event) => {
             statusCode: 201,
             headers,
             body: JSON.stringify({
-                message: 'Event created successfully',
-                event: result.Attributes
+                success: true,
+                data: eventItem
             })
         };
     } catch (error) {
@@ -57,7 +57,7 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                message: 'Error creating event',
+                success: false,
                 error: error.message
             })
         };

@@ -44,8 +44,8 @@ exports.handler = async (evaluation) => {
             statusCode: 201,
             headers,
             body: JSON.stringify({
-                message: 'Evaluation created successfully',
-                event: result.Attributes
+                success: true,
+                event: evaluationItem
             })
         };
     } catch (error) {
@@ -53,7 +53,7 @@ exports.handler = async (evaluation) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                message: 'Error creating evaluation',
+                success: false,
                 error: error.message
             })
         };

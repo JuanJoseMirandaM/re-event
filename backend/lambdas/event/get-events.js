@@ -56,9 +56,12 @@ exports.handler = async (event) => {
                 statusCode: 200,
                 headers,
                 body: JSON.stringify({
-                    events: result.Items.sort((a, b) => a.startDate.localeCompare(b.startDate)),
-                    lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
-                    count: result.Items.length
+                    success: true,
+                    data: {
+                        items: result.Items.sort((a, b) => a.startDate.localeCompare(b.startDate)),
+                        lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
+                        count: result.Items.length
+                    }
                 })
             };
         }
@@ -69,9 +72,12 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers,
             body: JSON.stringify({
-                items: result.Items,
-                lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
-                count: result.Items.length
+                success: true,
+                data: {
+                    items: result.Items,
+                    lastKey: result.LastEvaluatedKey ? encodeURIComponent(JSON.stringify(result.LastEvaluatedKey)) : null,
+                    count: result.Items.length
+                }
             })
         };
     } catch (error) {
@@ -79,7 +85,7 @@ exports.handler = async (event) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                message: 'Error listing events',
+                success: false,
                 error: error.message
             })
         };
