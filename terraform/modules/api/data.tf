@@ -5,48 +5,77 @@ data "archive_file" "get_user_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../../../backend/lambdas/user"
   output_path = "${path.module}/../../../backend/lambdas/user/get-user.zip"
-  excludes    = ["update-user.js", "auth-post-confirmation.js", "*.zip"]
+  excludes    = ["update-user.js", "create-user.js", "*.zip"]
 }
 
 data "archive_file" "update_user_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../../../backend/lambdas/user"
   output_path = "${path.module}/../../../backend/lambdas/user/update-user.zip"
-  excludes    = ["get-user.js", "auth-post-confirmation.js", "*.zip"]
+  excludes    = ["get-user.js", "create-user.js", "*.zip"]
 }
 
-# Agenda Lambda ZIPs
+# Event Lambda ZIPs
 data "archive_file" "create_event_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/agenda"
-  output_path = "${path.module}/../../../backend/lambdas/agenda/create-event.zip"
-  excludes    = ["get-event.js", "update-event.js", "list-events.js", "delete-event.js", "*.zip"]
+  source_dir  = "${path.module}/../../../backend/lambdas/event"
+  output_path = "${path.module}/../../../backend/lambdas/event/create-event.zip"
+  excludes    = ["get-event.js", "update-event.js", "get-events.js", "delete-event.js", "*.zip"]
 }
 
 data "archive_file" "get_event_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/agenda"
-  output_path = "${path.module}/../../../backend/lambdas/agenda/get-event.zip"
-  excludes    = ["create-event.js", "update-event.js", "list-events.js", "delete-event.js", "*.zip"]
+  source_dir  = "${path.module}/../../../backend/lambdas/event"
+  output_path = "${path.module}/../../../backend/lambdas/event/get-event.zip"
+  excludes    = ["create-event.js", "update-event.js", "get-events.js", "delete-event.js", "*.zip"]
 }
 
 data "archive_file" "update_event_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/agenda"
-  output_path = "${path.module}/../../../backend/lambdas/agenda/update-event.zip"
-  excludes    = ["create-event.js", "get-event.js", "list-events.js", "delete-event.js", "*.zip"]
+  source_dir  = "${path.module}/../../../backend/lambdas/event"
+  output_path = "${path.module}/../../../backend/lambdas/event/update-event.zip"
+  excludes    = ["create-event.js", "get-event.js", "get-events.js", "delete-event.js", "*.zip"]
 }
 
-data "archive_file" "list_events_zip" {
+data "archive_file" "get_events_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/agenda"
-  output_path = "${path.module}/../../../backend/lambdas/agenda/list-events.zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/event"
+  output_path = "${path.module}/../../../backend/lambdas/event/get-events.zip"
   excludes    = ["create-event.js", "get-event.js", "update-event.js", "delete-event.js", "*.zip"]
 }
 
 data "archive_file" "delete_event_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../backend/lambdas/agenda"
-  output_path = "${path.module}/../../../backend/lambdas/agenda/delete-event.zip"
-  excludes    = ["create-event.js", "get-event.js", "update-event.js", "list-events.js", "*.zip"]
+  source_dir  = "${path.module}/../../../backend/lambdas/event"
+  output_path = "${path.module}/../../../backend/lambdas/event/delete-event.zip"
+  excludes    = ["create-event.js", "get-event.js", "update-event.js", "get-events.js", "*.zip"]
+}
+
+# Evaluation Lambda ZIPs
+data "archive_file" "create_evaluation_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/evaluation"
+  output_path = "${path.module}/../../../backend/lambdas/evaluation/create-evaluation.zip"
+  excludes    = ["get-evaluation.js", "get-evaluations-by-session.js", "get-evaluations-by-user.js", "*.zip"]
+}
+
+data "archive_file" "get_evaluation_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/evaluation"
+  output_path = "${path.module}/../../../backend/lambdas/evaluation/get-evaluation.zip"
+  excludes    = ["create-evaluation.js", "get-evaluations-by-session.js", "get-evaluations-by-user.js", "*.zip"]
+}
+
+data "archive_file" "get_evaluations_by_session_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/evaluation"
+  output_path = "${path.module}/../../../backend/lambdas/evaluation/get-evaluations-by-session.zip"
+  excludes    = ["get-evaluation.js", "create-evaluation.js", "get-evaluations-by-user.js", "*.zip"]
+}
+
+data "archive_file" "get_evaluations_by_user_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/evaluation"
+  output_path = "${path.module}/../../../backend/lambdas/evaluation/get-evaluations-by-user.zip"
+  excludes    = ["get-evaluation.js", "create-evaluation.js", "get-evaluations-by-session.js", "*.zip"]
 }

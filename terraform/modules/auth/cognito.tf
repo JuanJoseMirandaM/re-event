@@ -3,7 +3,7 @@ resource "aws_cognito_user_pool" "main" {
   name = "${var.project_name}-user-pool-${var.environment}"
 
   lambda_config {
-    post_confirmation = aws_lambda_function.post_confirmation.arn
+    post_confirmation = aws_lambda_function.create_user.arn
   }
 
   password_policy {

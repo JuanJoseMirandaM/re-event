@@ -33,6 +33,16 @@ variable "events_table_arn" {
   type        = string
 }
 
+variable "evaluations_table_name" {
+  description = "DynamoDB evaluations table name"
+  type        = string
+}
+
+variable "evaluations_table_arn" {
+  description = "DynamoDB evaluations table ARN"
+  type        = string
+}
+
 variable "notifications_table_name" {
   description = "DynamoDB notifications table name"
   type        = string

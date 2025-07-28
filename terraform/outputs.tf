@@ -48,6 +48,26 @@ output "events_table_arn" {
   value       = module.database.events_table_arn
 }
 
+output "evaluations_table_name" {
+  description = "Name of the Evaluations DynamoDB table"
+  value       = module.database.evaluations_table_name
+}
+
+output "evaluations_table_arn" {
+  description = "ARN of the Evaluations DynamoDB table"
+  value       = module.database.evaluations_table_arn
+}
+
+output "notifications_table_name" {
+  description = "Name of the Notifications DynamoDB table"
+  value       = module.database.notifications_table_name
+}
+
+output "notifications_table_arn" {
+  description = "ARN of the Notifications DynamoDB table"
+  value       = module.database.notifications_table_arn
+}
+
 output "graphql_api_url" {
   description = "URL of the AppSync GraphQL API"
   value       = module.appsync.graphql_api_url

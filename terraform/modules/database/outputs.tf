@@ -18,6 +18,16 @@ output "events_table_arn" {
   value       = aws_dynamodb_table.events.arn
 }
 
+output "evaluations_table_name" {
+  description = "Name of the Evaluations DynamoDB table"
+  value       = aws_dynamodb_table.evaluations.name
+}
+
+output "evaluations_table_arn" {
+  description = "ARN of the evaluations DynamoDB table"
+  value       = aws_dynamodb_table.evaluations.arn
+}
+
 output "notifications_table_name" {
   description = "Name of the Notifications DynamoDB table"
   value       = aws_dynamodb_table.notifications.name
