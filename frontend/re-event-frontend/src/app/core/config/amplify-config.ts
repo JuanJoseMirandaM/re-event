@@ -8,6 +8,15 @@ export function configureAmplify() {
         userPoolId: environment.cognitoConfig.userPoolId,
         userPoolClientId: environment.cognitoConfig.userPoolClientId,
       }
+    },
+    API: {
+      REST: {
+        events: {
+          service: 'events',
+          endpoint: environment.apiUrl,
+          region: 'us-east-1',
+        }
+      }
     }
   });
 }

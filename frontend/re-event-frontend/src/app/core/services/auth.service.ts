@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {catchError, from, map, Observable, of, throwError} from 'rxjs';
+import {catchError, filter, from, map, Observable, of, throwError} from 'rxjs';
 import {
   signIn,
   signOut,
@@ -92,6 +92,13 @@ export class AuthService {
     return from(fetchAuthSession()).pipe(
       map((session: AuthSession) => !!session.tokens?.idToken),
       catchError(() => of(false))
+    );
+  }
+
+  getAuthToken(): Observable<string> {
+    return from(fetchAuthSession()).pipe(
+      map((session: AuthSession) => session.tokens?.idToken?.toString() ?? ''),
+      catchError(() => of(''))
     );
   }
 }

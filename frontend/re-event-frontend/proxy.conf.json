@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev",
+    "secure": false,
+    "logLevel": "info",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}
