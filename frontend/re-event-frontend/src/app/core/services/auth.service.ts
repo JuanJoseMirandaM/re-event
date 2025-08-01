@@ -1,7 +1,19 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {catchError, from, map, Observable, of, throwError} from 'rxjs';
+import {
+  signIn,
+  signOut,
+  signUp,
+  confirmSignUp,
+  getCurrentUser,
+  fetchUserAttributes,
+  fetchAuthSession,
+  type SignInOutput,
+  type SignUpOutput,
+  type ConfirmSignUpOutput,
+  type AuthUser,
+  type AuthSession,
+} from 'aws-amplify/auth';
 
 export interface User {
   email: string;
@@ -30,99 +42,56 @@ export interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
 
-  private tokenSubject = new BehaviorSubject<string | null>(null);
-  public token$ = this.tokenSubject.asObservable();
-
-  constructor(private http: HttpClient) {
-    this.loadStoredAuth();
-  }
-
-  private loadStoredAuth(): void {
-    // const token = localStorage.getItem('auth_token');
-    // const user = localStorage.getItem('current_user');
-    //
-    // if (token && user) {
-    //   this.tokenSubject.next(token);
-    //   this.currentUserSubject.next(JSON.parse(user));
-    // }
-  }
-
-  register(userData: {
-    email: string;
-    password: string;
-    name: string;
-    company: string;
-    phone: string;
-  }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, userData);
-  }
-
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
-      email,
-      password
-    }).pipe(
-      tap(response => {
-        if (response.success && response.data) {
-          this.setAuth(response.data.accessToken, response.data.user);
-        }
-      })
+  signIn(email: string, password: string): Observable<SignInOutput> {
+    return from(signIn({ username: email, password })).pipe(
+      catchError(error => throwError(() => error))
     );
   }
 
-  // verifyCode(code: string): Observable<any> {
-  //   const userEmail = this.currentUserSubject.value?.email;
-  //   return this.http.post(`${environment.apiUrl}/auth/verify-code`, {
-  //     code,
-  //     userEmail
-  //   }).pipe(
-  //     tap(response => {
-  //       if (response.success) {
-  //         const currentUser = this.currentUserSubject.value;
-  //         if (currentUser) {
-  //           const updatedUser = {
-  //             ...currentUser,
-  //             verified: true,
-  //             role: response.data.role
-  //           };
-  //           this.currentUserSubject.next(updatedUser);
-  //           localStorage.setItem('current_user', JSON.stringify(updatedUser));
-  //         }
-  //       }
-  //     })
-  //   );
-  // }
-
-  logout(): void {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('current_user');
-    this.tokenSubject.next(null);
-    this.currentUserSubject.next(null);
+  signOut(): Observable<void> {
+    return from(signOut()).pipe(
+      catchError(error => throwError(() => error))
+    );
   }
 
-  private setAuth(token: string, user: User): void {
-    localStorage.setItem('auth_token', token);
-    localStorage.setItem('current_user', JSON.stringify(user));
-    this.tokenSubject.next(token);
-    this.currentUserSubject.next(user);
+  signUp(email: string, password: string, fullName: string): Observable<SignUpOutput> {
+    return from(signUp({
+      username: email,
+      password,
+      options: {
+        userAttributes: {
+          email,
+          name: fullName
+        }
+      }
+    })).pipe(
+      catchError(error => throwError(() => error))
+    );
   }
 
-  isAuthenticated(): boolean {
-    return !!this.tokenSubject.value;
+  confirmSignUp(email: string, code: string): Observable<ConfirmSignUpOutput> {
+    return from(confirmSignUp({ username: email, confirmationCode: code })).pipe(
+      catchError(error => throwError(() => error))
+    );
   }
 
-  isVerified(): boolean {
-    return this.currentUserSubject.value?.verified || false;
+  getCurrentUser(): Observable<AuthUser | null> {
+    return from(getCurrentUser()).pipe(
+      catchError(() => of(null))
+    );
   }
 
-  getToken(): string | null {
-    return this.tokenSubject.value;
+  getUserAttributes(): Observable<Partial<Record<string, string>>> {
+    return from(fetchUserAttributes()).pipe(
+      catchError(() => of({}))
+    );
   }
 
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
+  isAuthenticated(): Observable<boolean> {
+    return from(fetchAuthSession()).pipe(
+      map((session: AuthSession) => !!session.tokens?.idToken),
+      catchError(() => of(false))
+    );
   }
 }

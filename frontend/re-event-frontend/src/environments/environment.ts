@@ -1,9 +1,9 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev',
   cognitoConfig: {
     region: 'us-east-1',
-    userPoolId: 'us-east-1_XXXXXXXXX',
-    userPoolWebClientId: 'XXXXXXXXXXXXXXXXXXXXXXXXXX',
+    userPoolId: 'us-east-1_koSnqucA2',
+    userPoolClientId: '162d0f9irj230mhiuhhh2t3o8m',
   }
 };
