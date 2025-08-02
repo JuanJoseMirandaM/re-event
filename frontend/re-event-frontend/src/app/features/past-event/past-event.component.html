@@ -1,6 +1,10 @@
 <div class="re-agenda re-flex re-flex-column">
-  <app-agenda-card [isPastEvent]="true"></app-agenda-card>
-  <app-agenda-card [isPastEvent]="true"></app-agenda-card>
-  <app-agenda-card [isPastEvent]="true"></app-agenda-card>
-  <app-agenda-card [isPastEvent]="true"></app-agenda-card>
+  @for (dayGroup of eventsByDate(); track dayGroup.date) {
+    <div class="date-header">
+      <h3>{{ formatDate(dayGroup.date) }}</h3>
+    </div>
+    @for (event of dayGroup.events; track event.eventId) {
+      <app-agenda-card [event]="event"></app-agenda-card>
+    }
+  }
 </div>
