@@ -1,42 +1,19 @@
 import {Injectable} from '@angular/core';
-import {catchError, filter, from, map, Observable, of, throwError} from 'rxjs';
+import {catchError, from, map, Observable, of, throwError} from 'rxjs';
 import {
+  type AuthSession,
+  type AuthUser,
+  confirmSignUp,
+  type ConfirmSignUpOutput,
+  fetchAuthSession,
+  fetchUserAttributes,
+  getCurrentUser,
   signIn,
+  type SignInOutput,
   signOut,
   signUp,
-  confirmSignUp,
-  getCurrentUser,
-  fetchUserAttributes,
-  fetchAuthSession,
-  type SignInOutput,
   type SignUpOutput,
-  type ConfirmSignUpOutput,
-  type AuthUser,
-  type AuthSession,
 } from 'aws-amplify/auth';
-
-export interface User {
-  email: string;
-  name: string;
-  company: string;
-  phone: string;
-  role: 'ATTENDEE' | 'SPEAKER' | 'SPONSOR' | 'VOLUNTEER' | 'ORGANIZER';
-  verified: boolean;
-  points: number;
-}
-
-export interface AuthResponse {
-  success: boolean;
-  data?: {
-    accessToken: string;
-    refreshToken: string;
-    user: User;
-  };
-  error?: {
-    code: string;
-    message: string;
-  };
-}
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +21,7 @@ export interface AuthResponse {
 export class AuthService {
 
   signIn(email: string, password: string): Observable<SignInOutput> {
-    return from(signIn({ username: email, password })).pipe(
+    return from(signIn({username: email, password})).pipe(
       catchError(error => throwError(() => error))
     );
   }
@@ -71,7 +48,7 @@ export class AuthService {
   }
 
   confirmSignUp(email: string, code: string): Observable<ConfirmSignUpOutput> {
-    return from(confirmSignUp({ username: email, confirmationCode: code })).pipe(
+    return from(confirmSignUp({username: email, confirmationCode: code})).pipe(
       catchError(error => throwError(() => error))
     );
   }

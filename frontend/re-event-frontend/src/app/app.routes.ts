@@ -1,4 +1,5 @@
 import {Routes} from '@angular/router';
+import {isAuthGuard} from './core/guards/is-auth.guard';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -44,7 +45,8 @@ export const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'notifications'
       },
-    ]
+    ],
+    canMatch: [isAuthGuard]
   },
   {
     path: '**', redirectTo: '/login'

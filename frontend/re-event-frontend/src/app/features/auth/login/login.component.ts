@@ -1,7 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from "../../../core/services/auth.service";
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
+import {catchError, map, of, switchMap} from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +18,32 @@ import {AuthService} from "../../../core/services/auth.service";
 export default class LoginComponent {
   #formGroup = inject(FormBuilder);
   #authService = inject(AuthService);
+  #router = inject(Router);
+  #loginTrigger = signal<{ email: string; password: string } | null>(null);
+
+  loginState = toSignal(
+    toObservable(this.#loginTrigger).pipe(
+      switchMap(credentials => {
+        if (!credentials) {
+          return of({status: 'idle', error: null})
+        }
+
+        return this.#authService.signIn(credentials.email, credentials.password).pipe(
+          map(() => ({status: 'success', error: null})),
+          catchError(err => {
+            const msg = err?.message ?? 'An unexpected error occurred.';
+            return of({status: 'error', error: msg});
+          }))
+      })
+    ), {initialValue: {status: 'idle', error: null}}
+  );
+
+  loginStateEffect = effect(() => {
+    if (this.loginState().status === 'success') {
+      this.#router.navigate(['/secure/agenda']);
+    }
+  });
+
 
   errorMessage = signal('');
   loginForm = this.#formGroup.group({
@@ -23,22 +51,11 @@ export default class LoginComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   })
 
-  constructor() {
-    const router = inject(Router);
-
-    this.#authService.isAuthenticated().subscribe(isAuthenticated => {
-      console.log(isAuthenticated);
-      if (isAuthenticated) {
-        router.navigate(['/secure/agenda']);
-      }
-    });
-  }
-
   get lf() {
     return this.loginForm.controls;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.loginForm.invalid) {
       return;
     }
@@ -46,17 +63,6 @@ export default class LoginComponent {
     const email = this.loginForm.get('email')?.value ?? '';
     const password = this.loginForm.get('password')?.value ?? '';
 
-    this.errorMessage.set('');
-
-    this.#authService.signIn(email, password).subscribe({
-      next: (response) => {
-        console.log(response);
-      },
-      error: (err) => {
-        const msg = err?.message ?? 'An unexpected error occurred. Please try again.';
-        this.errorMessage.set(msg);
-        console.error('Login error:', err);
-      }
-    });
+    this.#loginTrigger.set({email, password});
   }
 }
