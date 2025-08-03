@@ -1,1 +1,12 @@
-<app-notification-card/>
+<div class="re-notifications re-flex re-flex-column">
+  @for (notification of notifications(); track notification.notificationId) {
+    <app-notification-card 
+      [notification]="notification" 
+      (markAsRead)="markAsRead($event)">
+    </app-notification-card>
+  } @empty {
+    <div class="no-notifications">
+      <p>No hay notificaciones</p>
+    </div>
+  }
+</div>

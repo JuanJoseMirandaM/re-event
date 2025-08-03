@@ -16,6 +16,11 @@ resource "aws_appsync_graphql_api" "main" {
     field_log_level          = "ERROR"
   }
 
+  # Enable real-time subscriptions
+  additional_authentication_provider {
+    authentication_type = "AWS_IAM"
+  }
+
   tags = var.common_tags
 }
 

@@ -1,23 +1,21 @@
-import {ChangeDetectionStrategy, Component, signal, WritableSignal} from '@angular/core';
-import {Notification} from '../../core/notification.interface';
-import {TypeNotificationClassPipe} from '../../pipes/type-notification-class.pipe';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {Notification} from '../../core/services/notifications.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-notification-card',
   imports: [
-    TypeNotificationClassPipe
+    DatePipe
   ],
   templateUrl: './notification-card.component.html',
   styleUrl: './notification-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCardComponent {
-  notification: WritableSignal<Notification> = signal({
-    id: '',
-    title: '',
-    description: '',
-    timestamp: new Date(),
-    read: false,
-    type: 'launch'
-  })
+  notification = input.required<Notification>();
+  markAsRead = output<string>();
+
+  onMarkAsRead() {
+    this.markAsRead.emit(this.notification().notificationId);
+  }
 }

@@ -10,12 +10,10 @@ export function configureAmplify() {
       }
     },
     API: {
-      REST: {
-        events: {
-          service: 'events',
-          endpoint: environment.apiUrl,
-          region: 'us-east-1',
-        }
+      GraphQL: {
+        endpoint: 'https://b65pumrqendyhkpg2o2k6tto4a.appsync-api.us-east-1.amazonaws.com/graphql',
+        region: environment.cognitoConfig.region,
+        defaultAuthMode: 'userPool'
       }
     }
   });
