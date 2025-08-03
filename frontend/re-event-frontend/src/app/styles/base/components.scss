@@ -1,7 +1,7 @@
 /*INPUT*/
 .re-input {
   display: inline-block;
-  padding: 1.6rem;
+  padding: 0.8rem 1.6rem;
   background-color: var(--first-color-alt);
   border-radius: var(--general-border-radius);
   border: none;
@@ -24,6 +24,8 @@
 /*Buttons*/
 
 .re-primary-btn {
+  @extend .re-btn !optional;
+
   background-color: var(--first-color);
   color: var(--text-color);
   border-radius: var(--general-border-radius);
@@ -33,15 +35,20 @@
   text-align: center;
   padding: 1.2rem 1.6rem;
   cursor: pointer;
+
+  &:focus {
+    outline: 2px solid var(--first-color-alt);
+  }
 }
 
 .re-secondary-btn {
+  @extend .re-btn !optional;
+
   cursor: pointer;
   background-color: var(--first-color-alt);
   color: var(--text-color);
   border-radius: var(--general-border-radius);
   border: none;
-  font-weight: bold;
   text-decoration: none;
   text-align: center;
   padding: 1.2rem 1.6rem;
@@ -50,6 +57,24 @@
     outline: 2px solid var(--first-color);
   }
 }
+
+.re-error-btn {
+  @extend .re-btn !optional;
+
+  cursor: pointer;
+  background-color: var(--error-alert);
+  color: var(--text-color-white);
+  border-radius: var(--general-border-radius);
+  border: none;
+  text-decoration: none;
+  text-align: center;
+  padding: 1.2rem 1.6rem;
+
+  &:focus {
+    outline: 2px solid var(--first-color);
+  }
+}
+
 
 .re-media-button {
   width: fit-content;

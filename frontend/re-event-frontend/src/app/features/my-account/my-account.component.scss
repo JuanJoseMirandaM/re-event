@@ -1,0 +1,31 @@
+.re-profile-pic__container {
+  border-radius: var(--general-border-radius);
+  box-shadow: var(--general-box-shadow);
+
+  .re-profile-pic__frame {
+    img {
+      height: 100%;
+      max-height: 10rem;
+      max-width: 10rem;
+      width: 100%;
+      background-color: var(--first-color-alt);
+      border-radius: 50%;
+    }
+  }
+}
+
+.re-profile__body{
+  border-radius: var(--general-border-radius);
+  box-shadow: var(--general-box-shadow);
+
+  .re-profile__body-header{
+    .re-secondary-btn{
+      padding: 0.8rem 1.6rem;
+    }
+  }
+}
+
+.re-profile__footer{
+  border-radius: var(--general-border-radius);
+  box-shadow: var(--general-box-shadow);
+}

@@ -7,7 +7,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   styleUrl: './points-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 're-flex re-gap-flex-1-2 re-flex-jc-center re-align-items-center'
+    class: 're-flex re-gap-flex-1-2 re-flex-jc-center re-align-items-center re-flex-column'
   }
 })
 export class PointsCardComponent {

@@ -36,6 +36,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/points/points.component')
       },
       {
+        path: 'account',
+        loadComponent: () => import('./features/my-account/my-account.component')
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'notifications'

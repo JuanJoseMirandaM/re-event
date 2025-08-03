@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.re-w-80 {
+  width: 80%;
+}
+
 .re-error-message {
   color: var(--error-text-color);
 }
@@ -80,6 +84,10 @@
 
 .re-flex-1 {
   flex: 1;
+}
+
+.re-gap-flex-1-6 {
+  gap: var(--sp-1-6);
 }
 
 .re-gap-flex-1-2 {
