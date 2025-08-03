@@ -1,0 +1,99 @@
+import { Injectable } from '@angular/core';
+import { map, Observable, switchMap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from './auth.service';
+
+export enum UserRole {
+  ALL = 'ALL',
+  GUEST = 'GUEST',
+  ATTENDEE = 'ATTENDEE',
+  SPEAKER = 'SPEAKER',
+  SPONSOR = 'SPONSOR',
+  VOLUNTEER = 'VOLUNTEER',
+  ORGANIZER = 'ORGANIZER',
+}
+
+export interface User {
+  userId: string;
+  email: string;
+  name: string;
+  company?: string;
+  phone?: string;
+  avatar?: string;
+  role: UserRole;
+  points: number;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApiResponse {
+  success: boolean;
+  data: User;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+  private readonly baseUrl = '/api';
+
+  constructor(
+    private readonly http: HttpClient,
+    private readonly authService: AuthService
+  ) {}
+
+  getCurrentUser(): Observable<User> {
+    return this.authService.getUserAttributes().pipe(
+      switchMap(attributes => {
+        const userId = attributes?.['sub'];
+        if (!userId) {
+          throw new Error('User ID not found');
+        }
+        return this.getUser(userId);
+      })
+    );
+  }
+
+  getUser(userId: string): Observable<User> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+        
+        return this.http.get<ApiResponse>(`${this.baseUrl}/users/${userId}`, { headers }).pipe(
+          map(response => response.data)
+        );
+      })
+    );
+  }
+
+  updateCurrentUser(userData: Partial<User>): Observable<User> {
+    return this.authService.getUserAttributes().pipe(
+      switchMap(attributes => {
+        const userId = attributes?.['sub'];
+        if (!userId) {
+          throw new Error('User ID not found');
+        }
+        return this.updateUser(userId, userData);
+      })
+    );
+  }
+
+  updateUser(userId: string, userData: Partial<User>): Observable<User> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+        
+        return this.http.put<ApiResponse>(`${this.baseUrl}/users/${userId}`, userData, { headers }).pipe(
+          map(response => response.data)
+        );
+      })
+    );
+  }
+}

@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {RouterLink} from '@angular/router';
+import {NotificationsService} from "../../core/services/notifications.service";
 
 @Component({
   selector: 'app-header',
@@ -11,4 +12,7 @@ import {RouterLink} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
+  #notificationsService = inject(NotificationsService);
+  
+  unreadCount = this.#notificationsService.unreadCount;
 }

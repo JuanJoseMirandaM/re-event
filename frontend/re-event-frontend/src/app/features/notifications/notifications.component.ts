@@ -11,19 +11,15 @@ import {NotificationsService} from '../../core/services/notifications.service';
   styleUrl: './notifications.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export default class NotificationsComponent implements OnInit, OnDestroy {
+export default class NotificationsComponent implements OnInit {
   #notificationsService = inject(NotificationsService);
   
   notifications = this.#notificationsService.notifications;
 
   async ngOnInit() {
-    await this.#notificationsService.connect();
+    await this.#notificationsService.loadNotifications();
     this.#notificationsService.requestNotificationPermission();
-    // this.#notificationsService.markAllAsRead();
-  }
-
-  ngOnDestroy() {
-    this.#notificationsService.disconnect();
+    this.#notificationsService.markAllAsRead();
   }
 
   markAsRead(notificationId: string) {

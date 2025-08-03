@@ -1,6 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { AuthService } from './auth.service';
-import { generateClient } from 'aws-amplify/api';
+import {inject, Injectable, signal} from '@angular/core';
+import {AuthService} from './auth.service';
+import {generateClient} from 'aws-amplify/api';
+import {filter, forkJoin, of, switchMap, take} from "rxjs";
+import {UserRole, UserService} from "./user.service";
 
 export interface Notification {
   notificationId: string;
@@ -20,20 +22,35 @@ const client = generateClient();
   providedIn: 'root'
 })
 export class NotificationsService {
-  private subscription: any;
-  #authService = inject(AuthService);
+  private subscriptions: any[] = [];
+  #userService = inject(UserService);
 
   notifications = signal<Notification[]>([]);
   unreadCount = signal<number>(0);
   hasNewNotifications = signal<boolean>(false);
 
-
   async connect() {
-    // Test HTTP query first
-    await this.testHttpQuery();
+    this.#userService.getCurrentUser().pipe(
+      take(1),
+      switchMap(user => {
+        const userId = user.userId;
+        const userRole = user.role;
+
+        return forkJoin([
+          this.subscribeToRole(UserRole.ALL),
+          userId ? this.subscribeToUser(userId) : of(null),
+          userRole ? this.subscribeToRole(userRole) : of(null)
+        ]);
+      })
+    ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
+      console.log({ allNotifs, userNotifs, roleNotifs });
+    });
+  }
+
+  private async subscribeToRole(targetRole: string) {
     const subscriptionQuery = `
-      subscription OnCreateNotification {
-        onCreateNotification(targetRole: "ALL") {
+      subscription OnCreateNotification($targetRole: String!) {
+        onCreateNotification(targetRole: $targetRole) {
           notificationId
           title
           description
@@ -45,22 +62,166 @@ export class NotificationsService {
 
     try {
       const subscription = client.graphql({
-        query: subscriptionQuery
+        query: subscriptionQuery,
+        variables: {targetRole}
       }) as any;
 
-      subscription.subscribe({
-        next: ({ data }: any) => {
-          console.warn(data)
+      const sub = subscription.subscribe({
+        next: ({data}: any) => {
           if (data?.onCreateNotification) {
             this.addNotification(data.onCreateNotification);
           }
         },
         error: (error: any) => {
-          console.error('Subscription error:', error);
+          console.error(`Subscription error for role ${targetRole}:`, error);
         }
       });
+
+      this.subscriptions.push(sub);
     } catch (error) {
-      console.error('Subscription error:', error);
+      console.error(`Subscription error for role ${targetRole}:`, error);
+    }
+  }
+
+  private async subscribeToUser(userId: string) {
+    const subscriptionQuery = `
+      subscription OnCreateUserNotification($userId: String!) {
+        onCreateUserNotification(userId: $userId) {
+          notificationId
+          title
+          description
+          createdAt
+          author
+        }
+      }
+    `;
+
+    try {
+      const subscription = client.graphql({
+        query: subscriptionQuery,
+        variables: {userId}
+      }) as any;
+
+      const sub = subscription.subscribe({
+        next: ({data}: any) => {
+          if (data?.onCreateUserNotification) {
+            this.addNotification(data.onCreateUserNotification);
+          }
+        },
+        error: (error: any) => {
+          console.error(`Subscription error for user ${userId}:`, error);
+        }
+      });
+
+      this.subscriptions.push(sub);
+    } catch (error) {
+      console.error(`Subscription error for user ${userId}:`, error);
+    }
+  }
+
+  async loadNotifications() {
+    this.#userService.getCurrentUser().pipe(
+      take(1),
+      switchMap(user => {
+        const userId = user.userId;
+        const userRole = user.role;
+
+        return forkJoin([
+          this.loadNotificationsByRole(UserRole.ALL),
+          userId ? this.loadNotificationsByUser(userId) : of(null),
+          userRole ? this.loadNotificationsByRole(userRole) : of(null)
+        ]);
+      })
+    ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
+      console.log({ allNotifs, userNotifs, roleNotifs });
+    });
+  }
+
+  private async loadNotificationsByRole(role: UserRole) {
+    const query = `
+      query GetNotifications($role: String!, $limit: Int) {
+        getNotifications(role: $role, limit: $limit) {
+          notificationId
+          title
+          description
+          createdAt
+          author
+          targetRole
+          userId
+          read
+        }
+      }
+    `;
+
+    try {
+      const result: any = await client.graphql({
+        query,
+        variables: {role, limit: 20}
+      });
+
+      if (result.data?.getNotifications) {
+        const notifications = result.data.getNotifications.map((notification: any) => ({
+          ...notification,
+          link: notification.link ?? undefined,
+          userId: notification.userId ?? undefined,
+          read: true
+        }));
+
+        this.notifications.update(existing => {
+          const combined = [...existing, ...notifications];
+          return combined.filter((n, i, arr) =>
+            arr.findIndex(x => x.notificationId === n.notificationId) === i
+          ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        });
+
+        this.updateUnreadCount();
+      }
+    } catch (error) {
+      console.error(`Error loading notifications for role ${role}:`, error);
+    }
+  }
+
+  private async loadNotificationsByUser(userId: string) {
+    const query = `
+      query GetUserNotifications($userId: String!, $limit: Int) {
+        getUserNotifications(userId: $userId, limit: $limit) {
+          notificationId
+          title
+          description
+          createdAt
+          author
+          targetRole
+          userId
+          read
+        }
+      }
+    `;
+
+    try {
+      const result: any = await client.graphql({
+        query,
+        variables: {userId, limit: 20}
+      });
+
+      if (result.data?.getUserNotifications) {
+        const notifications = result.data.getUserNotifications.map((notification: any) => ({
+          ...notification,
+          link: notification.link ?? undefined,
+          userId: notification.userId ?? undefined,
+          read: true
+        }));
+
+        this.notifications.update(existing => {
+          const combined = [...existing, ...notifications];
+          return combined.filter((n, i, arr) =>
+            arr.findIndex(x => x.notificationId === n.notificationId) === i
+          ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        });
+
+        this.updateUnreadCount();
+      }
+    } catch (error) {
+      console.error(`Error loading notifications for user ${userId}:`, error);
     }
   }
 
@@ -68,7 +229,7 @@ export class NotificationsService {
     const newNotification: Notification = {
       ...notification,
       read: false,
-      targetRole: 'ALL',
+      targetRole: notification.targetRole || 'ALL',
       link: notification.link || undefined,
       userId: notification.userId || undefined
     };
@@ -98,14 +259,14 @@ export class NotificationsService {
 
   markAsRead(notificationId: string) {
     this.notifications.update(notifications =>
-      notifications.map(n => n.notificationId === notificationId ? { ...n, read: true } : n)
+      notifications.map(n => n.notificationId === notificationId ? {...n, read: true} : n)
     );
     this.updateUnreadCount();
   }
 
   markAllAsRead() {
     this.notifications.update(notifications =>
-      notifications.map(n => ({ ...n, read: true }))
+      notifications.map(n => ({...n, read: true}))
     );
     this.unreadCount.set(0);
     this.hasNewNotifications.set(false);
@@ -117,47 +278,8 @@ export class NotificationsService {
     this.hasNewNotifications.set(unread > 0);
   }
 
-  private async testHttpQuery() {
-    const query = `
-      query GetNotifications($role: String!, $limit: Int) {
-        getNotifications(role: $role, limit: $limit) {
-          notificationId
-          title
-          description
-          createdAt
-          author
-        }
-      }
-    `;
-
-    try {
-      const result: any = await client.graphql({
-        query,
-        variables: { role: 'ALL', limit: 10 }
-      });
-      
-      console.log('HTTP Query successful:', result);
-      
-      // Load existing notifications
-      if (result.data?.getNotifications) {
-        const existingNotifications = result.data.getNotifications.map((notification: any) => ({
-          ...notification,
-          read: false,
-          targetRole: 'ALL',
-          link: notification.link || undefined,
-          userId: notification.userId || undefined
-        }));
-        
-        this.notifications.set(existingNotifications);
-        this.unreadCount.set(existingNotifications.length);
-        this.hasNewNotifications.set(existingNotifications.length > 0);
-      }
-    } catch (error) {
-      console.error('HTTP Query error:', error);
-    }
-  }
-
   disconnect() {
-    this.subscription?.unsubscribe();
+    this.subscriptions.forEach(sub => sub?.unsubscribe());
+    this.subscriptions = [];
   }
 }

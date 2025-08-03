@@ -11,7 +11,7 @@ export function configureAmplify() {
     },
     API: {
       GraphQL: {
-        endpoint: 'https://b65pumrqendyhkpg2o2k6tto4a.appsync-api.us-east-1.amazonaws.com/graphql',
+        endpoint: environment.graphqlUrl,
         region: environment.cognitoConfig.region,
         defaultAuthMode: 'userPool'
       }

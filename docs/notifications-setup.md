@@ -161,7 +161,31 @@ mutation CreateNotification {
   }) {
     notificationId
     title
+    description
     createdAt
+    targetRole
+    userId
+    author
+  }
+}
+```
+
+```graphql
+mutation CreateNotification {
+  createNotification(input: {
+    title: "¡Inscripciones abiertas para el AWS Community Day Bolivia 2025!",
+    description: "Ya puedes registrarte para ser parte del evento más importante del año en la comunidad AWS. Charlas técnicas, networking, actividades y muchas sorpresas te esperan.\\n👉 ¡No te quedes fuera, asegura tu lugar hoy mismo!",
+    author: "Comunidad AWS Bolivia",
+    targetRole: "ALL",
+    userId: "1"
+  }) {
+    notificationId
+    title
+    description
+    createdAt
+    targetRole
+    userId
+    author
   }
 }
 ```
