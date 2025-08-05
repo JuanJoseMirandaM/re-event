@@ -39,6 +39,8 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
           "dynamodb:UpdateItem",
           "dynamodb:PutItem",
           "dynamodb:DeleteItem",
+          "dynamodb:BatchWriteItem",
+          "dynamodb:BatchGetItem",
           "dynamodb:Query",
           "dynamodb:Scan"
         ]
@@ -47,7 +49,32 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
           var.events_table_arn,
           "${var.events_table_arn}/index/*",
           var.notifications_table_arn,
-          "${var.notifications_table_arn}/index/*"
+          "${var.notifications_table_arn}/index/*",
+          var.verification_codes_table_arn,
+          "${var.verification_codes_table_arn}/index/*"
+        ]
+      }
+    ]
+  })
+}
+
+# S3 access policy
+resource "aws_iam_role_policy" "lambda_s3" {
+  name = "${var.project_name}-api-s3-policy-${var.environment}"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject"
+        ]
+        Resource = [
+          "arn:aws:s3:::${var.s3_bucket_name}/*"
         ]
       }
     ]

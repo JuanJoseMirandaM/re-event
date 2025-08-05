@@ -57,3 +57,18 @@ variable "cognito_user_pool_arn" {
   description = "Cognito User Pool ARN for API Gateway authorization"
   type        = string
 }
+
+variable "verification_codes_table_name" {
+  description = "DynamoDB verification codes table name"
+  type        = string
+}
+
+variable "s3_bucket_name" {
+  description = "S3 bucket name for storing verification codes PDF"
+  type        = string
+}
+
+variable "verification_codes_table_arn" {
+  description = "DynamoDB verification codes table ARN"
+  type        = string
+}

@@ -37,3 +37,13 @@ output "notifications_table_arn" {
   description = "ARN of the Notifications DynamoDB table"
   value       = aws_dynamodb_table.notifications.arn
 }
+
+output "verification_codes_table_name" {
+  description = "Name of the verification codes DynamoDB table"
+  value       = aws_dynamodb_table.verification_codes.name
+}
+
+output "verification_codes_table_arn" {
+  description = "ARN of the verification codes DynamoDB table"
+  value       = aws_dynamodb_table.verification_codes.arn
+}

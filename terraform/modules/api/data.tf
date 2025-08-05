@@ -5,14 +5,28 @@ data "archive_file" "get_user_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../../../backend/lambdas/user"
   output_path = "${path.module}/../../../backend/lambdas/user/get-user.zip"
-  excludes    = ["update-user.js", "create-user.js", "*.zip"]
+  excludes    = ["update-user.js", "create-user.js", "verify-code.js", "*.zip"]
 }
 
 data "archive_file" "update_user_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../../../backend/lambdas/user"
   output_path = "${path.module}/../../../backend/lambdas/user/update-user.zip"
-  excludes    = ["get-user.js", "create-user.js", "*.zip"]
+  excludes    = ["get-user.js", "create-user.js", "verify-code.js", "*.zip"]
+}
+
+data "archive_file" "verify_code_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/user"
+  output_path = "${path.module}/../../../backend/lambdas/user/verify-code.zip"
+  excludes    = ["get-user.js", "create-user.js", "generate-codes.js", "*.zip"]
+}
+
+data "archive_file" "generate_codes_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/verification"
+  output_path = "${path.module}/../../../backend/lambdas/verification/generate-codes.zip"
+  excludes    = ["*.zip"]
 }
 
 # Event Lambda ZIPs

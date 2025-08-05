@@ -50,3 +50,9 @@ variable "cognito_logout_urls" {
   type        = list(string)
   default     = ["http://localhost:4200/auth/logout"]
 }
+
+variable "s3_bucket_name" {
+  description = "S3 bucket name for storing verification codes PDF"
+  type        = string
+  default     = "reevent-verification-codes-dev"
+}

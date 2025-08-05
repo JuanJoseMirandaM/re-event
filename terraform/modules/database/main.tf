@@ -87,6 +87,56 @@ resource "aws_dynamodb_table" "evaluations" {
   tags = var.common_tags
 }
 
+# DynamoDB Table for Verification Codes
+resource "aws_dynamodb_table" "verification_codes" {
+  name         = "${var.project_name}-verification-codes-${var.environment}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "verificationCode"
+
+  attribute {
+    name = "verificationCode"
+    type = "S"
+  }
+
+  attribute {
+    name = "role"
+    type = "S"
+  }
+
+  attribute {
+    name = "used"
+    type = "S"
+  }
+
+  attribute {
+    name = "createdAt"
+    type = "S"
+  }
+
+  # GSI para consultar códigos por rol
+  global_secondary_index {
+    name            = "RoleIndex"
+    hash_key        = "role"
+    projection_type = "ALL"
+  }
+
+  # GSI para consultar códigos por estado (usado/no usado)
+  global_secondary_index {
+    name            = "UsedIndex"
+    hash_key        = "used"
+    projection_type = "ALL"
+  }
+
+  # GSI para consultar códigos por fecha de creación
+  global_secondary_index {
+    name            = "CreatedIndex"
+    hash_key        = "createdAt"
+    projection_type = "ALL"
+  }
+
+  tags = var.common_tags
+}
+
 # DynamoDB Table for Notifications
 resource "aws_dynamodb_table" "notifications" {
   name         = "${var.project_name}-notifications-${var.environment}"
