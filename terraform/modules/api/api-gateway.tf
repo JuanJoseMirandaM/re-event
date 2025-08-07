@@ -366,6 +366,138 @@ resource "aws_api_gateway_integration" "get_evaluation_by_session_and_user" {
   uri                     = aws_lambda_function.get_evaluation.invoke_arn
 }
 
+# Points System Resources
+resource "aws_api_gateway_resource" "points" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "points"
+}
+
+# POST /points/claim
+resource "aws_api_gateway_resource" "points_claim" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.points.id
+  path_part   = "claim"
+}
+
+resource "aws_api_gateway_method" "claim_points" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.points_claim.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "claim_points" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.points_claim.id
+  http_method = aws_api_gateway_method.claim_points.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.claim_points.invoke_arn
+}
+
+# GET /points/history
+resource "aws_api_gateway_resource" "points_history" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.points.id
+  path_part   = "history"
+}
+
+resource "aws_api_gateway_method" "get_points_history" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.points_history.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "get_points_history" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.points_history.id
+  http_method = aws_api_gateway_method.get_points_history.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.get_points_history.invoke_arn
+}
+
+# GET /points/history/{userId}
+resource "aws_api_gateway_resource" "points_history_user" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.points_history.id
+  path_part   = "{userId}"
+}
+
+resource "aws_api_gateway_method" "get_points_history_user" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.points_history_user.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "get_points_history_user" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.points_history_user.id
+  http_method = aws_api_gateway_method.get_points_history_user.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.get_points_history.invoke_arn
+}
+
+# GET /points/total
+resource "aws_api_gateway_resource" "points_total" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.points.id
+  path_part   = "total"
+}
+
+resource "aws_api_gateway_method" "get_total_points" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.points_total.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "get_total_points" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.points_total.id
+  http_method = aws_api_gateway_method.get_total_points.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.get_total_points.invoke_arn
+}
+
+# POST /points/generate-code
+resource "aws_api_gateway_resource" "points_generate_code" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.points.id
+  path_part   = "generate-code"
+}
+
+resource "aws_api_gateway_method" "generate_code" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.points_generate_code.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "generate_code" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.points_generate_code.id
+  http_method = aws_api_gateway_method.generate_code.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.generate_code.invoke_arn
+}
+
 # API Gateway Deployment
 resource "aws_api_gateway_deployment" "main" {
   depends_on = [
@@ -382,7 +514,12 @@ resource "aws_api_gateway_deployment" "main" {
     aws_api_gateway_integration.get_evaluations_by_user,
     aws_api_gateway_integration.get_evaluation_by_session_and_user,
     aws_api_gateway_integration.generate_codes,
-    aws_api_gateway_integration.verify_code
+    aws_api_gateway_integration.verify_code,
+    aws_api_gateway_integration.claim_points,
+    aws_api_gateway_integration.get_points_history,
+    aws_api_gateway_integration.get_points_history_user,
+    aws_api_gateway_integration.get_total_points,
+    aws_api_gateway_integration.generate_code
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id

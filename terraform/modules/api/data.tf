@@ -93,3 +93,32 @@ data "archive_file" "get_evaluations_by_user_zip" {
   output_path = "${path.module}/../../../backend/lambdas/evaluation/get-evaluations-by-user.zip"
   excludes    = ["get-evaluation.js", "create-evaluation.js", "get-evaluations-by-session.js", "*.zip"]
 }
+
+# Points Lambda ZIPs
+data "archive_file" "claim_points_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/points"
+  output_path = "${path.module}/../../../backend/lambdas/points/claim-points.zip"
+  excludes    = ["get-points-history.js", "get-total-points.js", "generate-code.js", "*.zip"]
+}
+
+data "archive_file" "generate_code_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/points"
+  output_path = "${path.module}/../../../backend/lambdas/points/generate-code.zip"
+  excludes    = ["claim-points.js", "get-points-history.js", "get-total-points.js", "*.zip"]
+}
+
+data "archive_file" "get_points_history_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/points"
+  output_path = "${path.module}/../../../backend/lambdas/points/get-points-history.zip"
+  excludes    = ["claim-points.js", "generate-code.js", "get-total-points.js", "*.zip"]
+}
+
+data "archive_file" "get_total_points_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/points"
+  output_path = "${path.module}/../../../backend/lambdas/points/get-total-points.zip"
+  excludes    = ["claim-points.js", "generate-code.js", "get-points-history.js", "*.zip"]
+}

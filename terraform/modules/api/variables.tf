@@ -72,3 +72,24 @@ variable "verification_codes_table_arn" {
   description = "DynamoDB verification codes table ARN"
   type        = string
 }
+
+# Points System Variables
+variable "points_codes_table_name" {
+  description = "Name of the points codes DynamoDB table"
+  type        = string
+}
+
+variable "points_codes_table_arn" {
+  description = "ARN of the points codes DynamoDB table"
+  type        = string
+}
+
+variable "points_claims_table_name" {
+  description = "Name of the points claims DynamoDB table"
+  type        = string
+}
+
+variable "points_claims_table_arn" {
+  description = "ARN of the points claims DynamoDB table"
+  type        = string
+}

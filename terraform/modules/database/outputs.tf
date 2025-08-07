@@ -47,3 +47,24 @@ output "verification_codes_table_arn" {
   description = "ARN of the verification codes DynamoDB table"
   value       = aws_dynamodb_table.verification_codes.arn
 }
+
+# Points System Tables
+output "points_codes_table_name" {
+  description = "Name of the points codes DynamoDB table"
+  value       = aws_dynamodb_table.points_codes.name
+}
+
+output "points_codes_table_arn" {
+  description = "ARN of the points codes DynamoDB table"
+  value       = aws_dynamodb_table.points_codes.arn
+}
+
+output "points_claims_table_name" {
+  description = "Name of the points claims DynamoDB table"
+  value       = aws_dynamodb_table.points_claims.name
+}
+
+output "points_claims_table_arn" {
+  description = "ARN of the points claims DynamoDB table"
+  value       = aws_dynamodb_table.points_claims.arn
+}

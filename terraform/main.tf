@@ -36,8 +36,12 @@ module "api" {
   notifications_table_arn  = module.database.notifications_table_arn
   verification_codes_table_name = module.database.verification_codes_table_name
   verification_codes_table_arn  = module.database.verification_codes_table_arn
-  s3_bucket_name             = var.s3_bucket_name
-  cognito_user_pool_arn    = module.auth.user_pool_arn
+  points_codes_table_name       = module.database.points_codes_table_name
+  points_codes_table_arn        = module.database.points_codes_table_arn
+  points_claims_table_name      = module.database.points_claims_table_name
+  points_claims_table_arn       = module.database.points_claims_table_arn
+  s3_bucket_name                = var.s3_bucket_name
+  cognito_user_pool_arn         = module.auth.user_pool_arn
 }
 
 # AppSync Module
