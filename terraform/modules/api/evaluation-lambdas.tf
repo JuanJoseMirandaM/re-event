@@ -28,7 +28,7 @@ resource "aws_lambda_function" "get_evaluation" {
 
   environment {
     variables = {
-      EVENTS_TABLE = var.evaluations_table_name
+      EVALUATIONS_TABLE = var.evaluations_table_name
     }
   }
 
@@ -47,7 +47,7 @@ resource "aws_lambda_function" "get_evaluations_by_session" {
 
   environment {
     variables = {
-      EVENTS_TABLE = var.evaluations_table_name
+      EVALUATIONS_TABLE = var.evaluations_table_name
     }
   }
 
@@ -60,13 +60,13 @@ resource "aws_lambda_function" "get_evaluations_by_user" {
   filename      = "${path.module}/../../../backend/lambdas/evaluation/get-evaluations-by-user.zip"
   function_name = "${var.project_name}-get-evaluations-by-user-${var.environment}"
   role          = aws_iam_role.lambda_role.arn
-  handler       = "get-evaluations-by-user.handler"
+  handler       = "get_evaluations_by_user.handler"
   runtime       = "nodejs18.x"
   timeout       = 30
 
   environment {
     variables = {
-      EVENTS_TABLE = var.evaluations_table_name
+      EVALUATIONS_TABLE = var.evaluations_table_name
     }
   }
 

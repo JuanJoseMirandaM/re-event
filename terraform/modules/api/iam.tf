@@ -48,6 +48,8 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
           var.users_table_arn,
           var.events_table_arn,
           "${var.events_table_arn}/index/*",
+          var.evaluations_table_arn,
+          "${var.evaluations_table_arn}/index/*",
           var.notifications_table_arn,
           "${var.notifications_table_arn}/index/*",
           var.verification_codes_table_arn,
