@@ -328,10 +328,10 @@ resource "aws_api_gateway_integration" "get_evaluations_by_session" {
   uri                    = aws_lambda_function.get_evaluations_by_session.invoke_arn
 }
 
-# GET /evaluations/user/{userId}
+# GET /evaluations/user
 resource "aws_api_gateway_method" "get_evaluations_by_user" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.evaluations_user_id.id
+  resource_id   = aws_api_gateway_resource.evaluations_user.id
   http_method   = "GET"
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = aws_api_gateway_authorizer.cognito.id
@@ -339,7 +339,7 @@ resource "aws_api_gateway_method" "get_evaluations_by_user" {
 
 resource "aws_api_gateway_integration" "get_evaluations_by_user" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.evaluations_user_id.id
+  resource_id = aws_api_gateway_resource.evaluations_user.id
   http_method = aws_api_gateway_method.get_evaluations_by_user.http_method
 
   integration_http_method = "POST"
