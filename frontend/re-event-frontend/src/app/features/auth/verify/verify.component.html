@@ -1,0 +1,28 @@
+<h1 class="re-h1-title re-txt-center re-mb-2-4">Verify your email</h1>
+<p class="re-txt-center re-mb-1-6">We sent a 6-digit code to <strong>{{ email() || 'your email' }}</strong></p>
+
+<form [formGroup]="codeForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="re-flex re-flex-column re-mb-1-6">
+    <label for="code" class="re-font-500 re-mb-1-6">Verification Code</label>
+
+    <input id="code" class="re-input re-w-100" placeholder="Enter 6-digit code" maxlength="6" formControlName="code"/>
+    @if (cf.code.touched && cf.code.errors?.['required']) {
+      <small class="re-error">Code is required.</small>
+    }
+    @if (cf.code.touched && (cf.code.errors?.['minlength'] || cf.code.errors?.['maxlength'])) {
+      <small class="re-error">Code must be 6 digits.</small>
+    }
+  </div>
+
+  <div class="re-flex re-flex-column re-gap-flex-1-2">
+    <button class="re-primary-btn re-w-100" [disabled]="codeForm.invalid">Continue</button>
+    <!--  TODO: Implemente Resent Code-->
+    <div class="re-txt-center re-mt-1-6 ">
+      <button type="button" class="re-secondary-btn re-w-100">Resend code</button>
+    </div>
+
+    <div class="re-txt-center re-mt-1-6">
+      <a routerLink="/login" class="re-secondary-btn re-block re-w-100">Back to login</a>
+    </div>
+  </div>
+</form>

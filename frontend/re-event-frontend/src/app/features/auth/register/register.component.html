@@ -1,49 +1,64 @@
 <h1 class="re-h1-title re-txt-center re-mb-2-4">Create Account</h1>
 
-<form>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
   <div>
     <div class="re-flex re-flex-column">
       <label for="name" class="re-font-500 re-mb-1-6">Name</label>
-      <input id="name" class="re-input re-w-100 re-mb-1-6" placeholder="Enter Your Name"/>
+      <input id="name" class="re-input re-w-100 re-mb-1-6" placeholder="Enter Your Name" formControlName="name" />
     </div>
 
     <div>
-      <small>Error</small>
+      @if (rf.name.touched && rf.name.invalid) {<small class="re-error">Name is required.</small>}
     </div>
   </div>
 
   <div>
     <div class="re-flex re-flex-column">
       <label for="email" class="re-font-500 re-mb-1-6">Email</label>
-      <input id="email" class="re-input re-w-100 re-mb-1-6" placeholder="Enter your email"/>
+      <input id="email" class="re-input re-w-100 re-mb-1-6" placeholder="Enter your email" formControlName="email" />
     </div>
 
     <div>
-      <small>Error</small>
+      @if (rf.email.touched && rf.email.errors?.['required']) {<small class="re-error">Email is required.</small>}
+      @if (rf.email.touched && rf.email.errors?.['email']) {<small class="re-error">Please enter a valid email.</small>}
     </div>
   </div>
 
   <div>
     <div class="re-flex re-flex-column">
       <label for="password" class="re-font-500 re-mb-1-6">Password</label>
-      <input id="password" class="re-input re-w-100 re-mb-1-6" placeholder="Enter your password"/>
+      <input id="password" type="password" class="re-input re-w-100 re-mb-1-6" placeholder="Enter your password" formControlName="password" />
     </div>
 
     <div>
-      <small>Error</small>
+      @if (rf.password.touched && rf.password.errors?.['required']) {<small class="re-error">Password is required.</small>}
+      @if (rf.password.touched && rf.password.errors?.['minlength']) {<small class="re-error">Password must be at least 6 characters.</small>}
     </div>
   </div>
 
   <div class="re-mb-1-6">
     <div class="re-flex re-flex-column">
       <label for="conf-password" class="re-font-500 re-mb-1-6">Confirm Password</label>
-      <input id="conf-password" class="re-input re-w-100 re-mb-1-6" placeholder="Confirm your password"/>
+      <input id="conf-password" type="password" class="re-input re-w-100 re-mb-1-6" placeholder="Confirm your password" formControlName="confirmPassword" />
     </div>
 
     <div>
-      <small>Error</small>
+      @if (rf.confirmPassword.touched && rf.confirmPassword.errors?.['required']) {<small class="re-error">Please confirm your password.</small>}
+      @if (registerForm.touched && registerForm.errors?.['passwordMismatch']) {<small class="re-error">Passwords do not match.</small>}
     </div>
   </div>
 
-  <button class="re-primary-btn re-w-100">Create Account</button>
+  @if (signUpState().status === 'error') {
+  <div class="re-mb-1-6">
+    <small class="re-error">{{signUpState().error}}</small>
+  </div>
+}
+
+  <button class="re-primary-btn re-w-100" [disabled]="registerForm.invalid || signUpState().status === 'loading'">
+    {{ signUpState().status === 'loading' ? 'Creating Account...' : 'Create Account' }}
+  </button>
+
+  <div class="re-txt-center re-mt-1-6">
+    <a routerLink="/login">Already have an account? Log in</a>
+  </div>
 </form>
