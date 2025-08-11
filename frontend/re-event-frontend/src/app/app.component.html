@@ -1,1 +1,3 @@
-<router-outlet></router-outlet>
+@if (authService.isAuthStateReady() | async ) {
+  <router-outlet />
+}

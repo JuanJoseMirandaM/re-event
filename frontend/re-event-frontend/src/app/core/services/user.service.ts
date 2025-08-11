@@ -44,9 +44,8 @@ export class UserService {
   ) {}
 
   getCurrentUser(): Observable<User> {
-    return this.authService.getUserAttributes().pipe(
-      switchMap(attributes => {
-        const userId = attributes?.['sub'];
+    return this.authService.getCurrentUserId().pipe(
+      switchMap(userId => {
         if (!userId) {
           throw new Error('User ID not found');
         }
@@ -59,7 +58,7 @@ export class UserService {
     return this.authService.getAuthToken().pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
-          Authorization: token,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         });
         
@@ -71,9 +70,8 @@ export class UserService {
   }
 
   updateCurrentUser(userData: Partial<User>): Observable<User> {
-    return this.authService.getUserAttributes().pipe(
-      switchMap(attributes => {
-        const userId = attributes?.['sub'];
+    return this.authService.getCurrentUserId().pipe(
+      switchMap(userId => {
         if (!userId) {
           throw new Error('User ID not found');
         }
@@ -86,7 +84,7 @@ export class UserService {
     return this.authService.getAuthToken().pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
-          Authorization: token,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         });
         
