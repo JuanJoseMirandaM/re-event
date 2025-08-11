@@ -8,7 +8,7 @@ exports.handler = async (event) => {
     console.log('Post confirmation trigger:', JSON.stringify(event, null, 2));
     
     const { userAttributes, userName } = event.request;
-    const userId = userName || event.userName || userAttributes.sub;
+    const userId = userAttributes.sub || event.userName || userName;
     
     if (!userId) {
         console.error('No userId found in event');
