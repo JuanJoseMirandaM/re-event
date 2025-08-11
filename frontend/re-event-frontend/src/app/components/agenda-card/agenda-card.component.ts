@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {Event} from '../../core/services/events.service';
-import {DurationPipe} from '../../shared/pipes/duration.pipe';
+import {DurationPipe} from '../../pipes/duration.pipe';
 
 @Component({
   selector: 'app-agenda-card',
