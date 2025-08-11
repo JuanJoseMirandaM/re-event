@@ -14,9 +14,17 @@
     }
   </div>
 
+  @if (confirmState().status === 'error') {
+    <div class="re-mb-1-6">
+      <small class="re-error">{{ confirmState().error }}</small>
+    </div>
+  }
+
   <div class="re-flex re-flex-column re-gap-flex-1-2">
-    <button class="re-primary-btn re-w-100" [disabled]="codeForm.invalid">Continue</button>
-    <!--  TODO: Implemente Resent Code-->
+    <button class="re-primary-btn re-w-100" [disabled]="codeForm.invalid || confirmState().status === 'loading'">
+      {{ confirmState().status === 'loading' ? 'Verifying…' : 'Continue' }}
+    </button>
+    <!--  TODO: Implement Resend Code -->
     <div class="re-txt-center re-mt-1-6 ">
       <button type="button" class="re-secondary-btn re-w-100">Resend code</button>
     </div>
