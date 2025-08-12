@@ -16,6 +16,9 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    provideEnvironmentInitializer(() => () => configureAmplify())
+    provideEnvironmentInitializer(() => () => configureAmplify()), provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ]
 };

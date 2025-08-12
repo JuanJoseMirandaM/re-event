@@ -42,6 +42,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/my-account/my-account.component')
       },
       {
+        path: 'qr',
+        loadComponent: () => import('./features/qr/qr-scanner/qr-scanner.component')
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'notifications'

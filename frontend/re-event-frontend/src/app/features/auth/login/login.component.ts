@@ -4,6 +4,7 @@ import {Router, RouterLink} from '@angular/router';
 import {AuthService} from "../../../core/services/auth.service";
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, map, of, switchMap} from 'rxjs';
+import {BeforeInstallPromptEvent} from '../../../interfaces/before-install-prompt-event.interface';
 
 @Component({
   selector: 'app-login',
@@ -13,13 +14,21 @@ import {catchError, map, of, switchMap} from 'rxjs';
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(window:beforeinstallprompt)': 'onBeforeInstallPrompt($event)',
+    '(window:appinstalled)': 'onAppInstalled()'
+  }
+
 })
 export default class LoginComponent {
   #formGroup = inject(FormBuilder);
   #authService = inject(AuthService);
   #router = inject(Router);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);
+
+  installPromptEvent = signal<BeforeInstallPromptEvent | null>(null);
+  appInstalled = signal(false);
 
   loginState = toSignal(
     toObservable(this.#loginTrigger).pipe(
@@ -64,5 +73,28 @@ export default class LoginComponent {
     const password = this.loginForm.get('password')?.value ?? '';
 
     this.#loginTrigger.set({email, password});
+  }
+
+  onInstallPwa() {
+    const promptEvent = this.installPromptEvent();
+    if (!promptEvent) return;
+    /*TODO ADD ERRORS LOG*/
+    promptEvent.prompt()
+      .then(() => promptEvent.userChoice)
+      .then(choice => {
+        if (choice.outcome === 'accepted') {
+          this.installPromptEvent.set(null);
+        }
+      })
+  }
+
+  onBeforeInstallPrompt(event: Event) {
+    event.preventDefault();
+    this.installPromptEvent.set(event as BeforeInstallPromptEvent);
+  }
+
+  onAppInstalled() {
+    this.appInstalled.set(true);
+    this.installPromptEvent.set(null);
   }
 }

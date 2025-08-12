@@ -52,3 +52,12 @@
 </form>
 
 <small class="create-account-text">Don't have an account? <a routerLink="/register">Sign Up</a></small>
+
+@if (installPromptEvent() && !appInstalled()) {
+  <div class="re-txt-center re-mt-1-6">
+    <button type="button" class="re-secondary-btn re-w-100 re-txt-bold" (click)="onInstallPwa()"
+            aria-label="Install App">
+      Install App
+    </button>
+  </div>
+}

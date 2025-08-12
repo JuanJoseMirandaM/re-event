@@ -1,0 +1,16 @@
+.re-qr-preview {
+  aspect-ratio: 1;
+  background: var(--body-color, #111);
+  border-radius: 12px;
+  border: 2px dashed var(--first-color-alt, #ccc);
+  color: var(--text-color-light, #aaa);
+  margin: 0 auto;
+  max-width: 480px;
+  min-height: 300px;
+  position: relative;
+  width: 100%;
+}
+
+.re-qr-success {
+  outline: 4px solid var(--success-alert);
+}

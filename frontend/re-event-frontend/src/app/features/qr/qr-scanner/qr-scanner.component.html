@@ -1,0 +1,11 @@
+<h1 class="re-h1-title re-txt-center re-mb-2-4">Scan QR Code</h1>
+<p class="re-txt-center re-mb-1-6">Point your camera at a QR code to continue.</p>
+
+<div class="re-qr-preview re-flex re-flex-ai-center re-flex-jc-center re-mb-1-6"
+     [class.re-qr-success]="isQrScanSuccessful()"
+     id="reader"
+     aria-label="Camera preview placeholder"></div>
+
+<div class="re-flex re-flex-column re-gap-flex-1-2">
+  <button type="button" class="re-secondary-btn re-w-100">Upload from gallery</button>
+</div>
