@@ -6,5 +6,8 @@ export const environment = {
     region: 'us-east-1',
     userPoolId: 'us-east-1_koSnqucA2',
     userPoolClientId: '162d0f9irj230mhiuhhh2t3o8m',
+    domain: 'reevent-auth-dev.auth.us-east-1.amazoncognito.com',
+    redirectSignIn: 'http://localhost:4200/auth/callback',
+    redirectSignOut: 'http://localhost:4200/auth/logout'
   }
 };

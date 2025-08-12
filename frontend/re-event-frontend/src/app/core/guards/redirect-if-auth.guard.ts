@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { map, filter, take } from 'rxjs';
 
-export const isAuthGuard: CanMatchFn = (route, segments) => {
+export const redirectIfAuthGuard: CanMatchFn = (route, segments) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -12,9 +12,11 @@ export const isAuthGuard: CanMatchFn = (route, segments) => {
     take(1),
     map(state => {
       if (state.isAuthenticated) {
-        return true;
+        // Si está autenticado, redirigir al dashboard
+        return router.createUrlTree(['/secure/agenda']);
       } else {
-        return router.createUrlTree(['/login']);
+        // Si no está autenticado, permitir acceso a rutas públicas
+        return true;
       }
     })
   );

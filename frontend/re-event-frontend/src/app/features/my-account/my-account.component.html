@@ -6,26 +6,113 @@
   <button class="re-secondary-btn re-small-font re-w-80 re-font-500">Gallery</button>
 </div>
 
-<form class="re-profile__body re-general-padding">
-  <div class="re-profile__body-header re-flex re-align-items-center re-flex-jc-sp">
-    <span class="re-small-font re-font-500">Profile Information</span>
-
-    <button class="re-secondary-btn re-font-500 re-small-font">Edit</button>
+@if (isLoading()) {
+  <div class="re-loading re-flex re-flex-jc-center re-p-2">
+    <div class="spinner"></div>
+    <span>Cargando perfil...</span>
   </div>
+} @else if (currentUser) {
+  <form class="re-profile__body re-general-padding" [formGroup]="profileForm">
+    <div class="re-profile__body-header re-flex re-align-items-center re-flex-jc-sp">
+      <span class="re-small-font re-font-500">Profile Information</span>
 
-  <div class="re-flex re-flex-column re-gap-flex-0-8">
-    <label for="email">Email</label>
-    <input type="text" id="email" class="re-input">
+      @if (!isEditing()) {
+        <button type="button" class="re-secondary-btn re-font-500 re-small-font" (click)="toggleEditMode()">Edit</button>
+      } @else {
+        <div class="re-flex re-gap-flex-0-8">
+          <button type="button" class="re-secondary-btn re-font-500 re-small-font" (click)="saveProfile()">Save</button>
+          <button type="button" class="re-secondary-btn re-font-500 re-small-font" (click)="cancelEdit()">Cancel</button>
+        </div>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <div class="re-error-message re-mb-1-6">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="re-flex re-flex-column re-gap-flex-0-8">
+      <label for="name">Name</label>
+      @if (isEditing()) {
+        <input type="text" id="name" class="re-input" formControlName="name">
+        @if (formControls.name.invalid && formControls.name.touched) {
+          <small class="re-error-message">
+            @if (formControls.name.errors?.['required']) {
+              Name is required
+            }
+            @if (formControls.name.errors?.['minlength']) {
+              Name must be at least 2 characters
+            }
+          </small>
+        }
+      } @else {
+        <input type="text" id="name" class="re-input" [value]="currentUser.name || ''" readonly>
+      }
+    </div>
+
+    <div class="re-flex re-flex-column re-gap-flex-0-8">
+      <label for="email">Email</label>
+      @if (isEditing()) {
+        <input type="email" id="email" class="re-input" formControlName="email">
+        @if (formControls.email.invalid && formControls.email.touched) {
+          <small class="re-error-message">
+            @if (formControls.email.errors?.['required']) {
+              Email is required
+            }
+            @if (formControls.email.errors?.['email']) {
+              Please enter a valid email
+            }
+          </small>
+        }
+      } @else {
+        <input type="email" id="email" class="re-input" [value]="currentUser.email || ''" readonly>
+      }
+    </div>
+
+    <div class="re-flex re-flex-column re-gap-flex-0-8">
+      <label for="company">Company</label>
+      @if (isEditing()) {
+        <input type="text" id="company" class="re-input" formControlName="company">
+      } @else {
+        <input type="text" id="company" class="re-input" [value]="currentUser.company || 'Not specified'" readonly>
+      }
+    </div>
+
+    <div class="re-flex re-flex-column re-gap-flex-0-8">
+      <label for="phoneNumber">Phone</label>
+      @if (isEditing()) {
+        <input type="tel" id="phoneNumber" class="re-input" formControlName="phoneNumber">
+        @if (formControls.phoneNumber.invalid && formControls.phoneNumber.touched) {
+          <small class="re-error-message">
+            @if (formControls.phoneNumber.errors?.['pattern']) {
+              Please enter a valid phone number (e.g., +59170112241)
+            }
+          </small>
+        }
+      } @else {
+        <input type="tel" id="phoneNumber" class="re-input" [value]="formatPhoneNumber(currentUser.phoneNumber)" readonly>
+      }
+    </div>
+
+    <div class="re-flex re-flex-column re-gap-flex-0-8">
+      <label for="role">Role</label>
+      <input type="text" id="role" class="re-input" [value]="currentUser.role || ''" readonly>
+    </div>
+
+    <div class="re-flex re-flex-column re-gap-flex-0-8">
+      <label for="points">Points</label>
+      <input type="text" id="points" class="re-input" [value]="currentUser.points.toString() || '0'" readonly>
+    </div>
+  </form>
+
+  <div class="re-profile__footer re-general-padding re-flex re-gap-flex-1-2 re-flex-column">
+    <p class="re-font-500 re-small-font re-font-500">Account Settings</p>
+    <button class="re-secondary-btn re-font-500">Change Password</button>
+    <button class="re-error-btn re-font-500" (click)="logout()">Logout</button>
   </div>
-
-  <div class="re-flex re-flex-column re-gap-flex-0-8">
-    <label for="username">Username</label>
-    <input type="text" id="username" class="re-input">
+} @else {
+  <div class="re-error re-flex re-flex-jc-center re-p-2">
+    <span>Error loading user profile</span>
   </div>
-</form>
-
-<div class="re-profile__footer re-general-padding re-flex re-gap-flex-1-2 re-flex-column">
-  <p class="re-font-500 re-small-font re-font-500">Account Settings</p>
-  <button class="re-secondary-btn re-font-500">Change Password</button>
-  <button class="re-error-btn re-font-500">Logout</button>
-</div>
+}

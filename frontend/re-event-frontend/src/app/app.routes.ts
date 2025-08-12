@@ -1,11 +1,26 @@
-import {Routes} from '@angular/router';
-import {isAuthGuard} from './core/guards/is-auth.guard';
+import { Routes } from '@angular/router';
+import { isAuthGuard } from './core/guards/is-auth.guard';
+import { redirectIfAuthGuard } from './core/guards/redirect-if-auth.guard';
 
 export const routes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'login', loadComponent: () => import('./features/auth/login/login.component')},
-  {path: 'register', loadComponent: () => import('./features/auth/register/register.component')},
-  {path: 'verify', loadComponent: () => import('./features/auth/verify/verify.component')},
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login.component'),
+    canMatch: [redirectIfAuthGuard]
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./features/auth/register/register.component'),
+    canMatch: [redirectIfAuthGuard]
+  },
+  {
+    path: 'verify',
+    loadComponent: () => import('./features/auth/verify/verify.component'),
+    canMatch: [redirectIfAuthGuard]
+  },
+  { path: 'auth/callback', loadComponent: () => import('./features/auth/callback/callback.component') },
+  { path: 'auth/logout', loadComponent: () => import('./features/auth/logout/logout.component') },
   {
     path: 'secure',
     loadComponent: () => import('./features/secure/secure.component'),

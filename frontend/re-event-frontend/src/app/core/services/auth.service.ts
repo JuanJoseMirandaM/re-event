@@ -1,34 +1,140 @@
-import {Injectable} from '@angular/core';
-import {catchError, from, map, Observable, of, throwError} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, catchError, from, map, Observable, of, switchMap, throwError } from 'rxjs';
 import {
   type AuthSession,
   type AuthUser,
   confirmSignUp,
   type ConfirmSignUpOutput,
   fetchAuthSession,
-  fetchUserAttributes,
+  fetchAuthSession as fetchAuthSessionFromRedirect,
   getCurrentUser,
+  getCurrentUser as getCurrentUserFromRedirect,
   signIn,
   type SignInOutput,
+  signInWithRedirect,
   signOut,
   signUp,
   type SignUpOutput,
 } from 'aws-amplify/auth';
+import { environment } from '../../../environments/environment';
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: AuthUser | null;
+  session: AuthSession | null;
+  loading: boolean;
+  error: string | null;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private authStateSubject = new BehaviorSubject<AuthState>({
+    isAuthenticated: false,
+    user: null,
+    session: null,
+    loading: true,
+    error: null
+  });
+
+  public authState$ = this.authStateSubject.asObservable();
+
+  constructor() {
+    this.initializeAuthState();
+  }
+
+  private async initializeAuthState(): Promise<void> {
+    try {
+      this.authStateSubject.next({ ...this.authStateSubject.value, loading: true });
+
+      const user = await getCurrentUser();
+      const session = await fetchAuthSession();
+      const isAuthenticated = !!session.tokens?.idToken;
+
+      this.authStateSubject.next({
+        isAuthenticated,
+        user,
+        session,
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      this.authStateSubject.next({
+        isAuthenticated: false,
+        user: null,
+        session: null,
+        loading: false,
+        error: null
+      });
+    }
+  }
 
   signIn(email: string, password: string): Observable<SignInOutput> {
-    return from(signIn({username: email, password})).pipe(
-      catchError(error => throwError(() => error))
+    return from(signIn({ username: email, password })).pipe(
+      map(result => {
+        this.updateAuthState();
+        return result;
+      }),
+      catchError(error => {
+        this.authStateSubject.next({ ...this.authStateSubject.value, error: error.message });
+        return throwError(() => error);
+      })
+    );
+  }
+
+  signInWithGoogle(): Observable<void> {
+    return from(signInWithRedirect({ provider: 'Google' })).pipe(
+      catchError(error => {
+        this.authStateSubject.next({ ...this.authStateSubject.value, error: error.message });
+        return throwError(() => error);
+      })
+    );
+  }
+
+  handleAuthRedirect(): Observable<{ user: AuthUser; session: AuthSession }> {
+    return from(getCurrentUserFromRedirect()).pipe(
+      switchMap(user => {
+        if (!user) {
+          throw new Error('No se pudo obtener el usuario después de la redirección');
+        }
+
+        return from(fetchAuthSessionFromRedirect()).pipe(
+          map(session => {
+            this.authStateSubject.next({
+              isAuthenticated: true,
+              user,
+              session,
+              loading: false,
+              error: null
+            });
+            return { user, session };
+          })
+        );
+      }),
+      catchError(error => {
+        this.authStateSubject.next({ ...this.authStateSubject.value, error: error.message });
+        return throwError(() => error);
+      })
     );
   }
 
   signOut(): Observable<void> {
-    return from(signOut()).pipe(
-      catchError(error => throwError(() => error))
+    return from(fetchAuthSession()).pipe(
+      switchMap(session => {
+        const hasOAuthTokens = session.tokens?.accessToken?.payload?.['token_use'] === 'access';
+        const isOAuthUser = session.tokens?.accessToken?.payload?.iss?.includes('cognito');
+
+        if (hasOAuthTokens && isOAuthUser) {
+          return this.signOutWithCallbackRedirect();
+        } else {
+          return this.signOutWithoutRedirect();
+        }
+      }),
+      catchError(error => {
+        console.error('Error detecting user type for logout:', error);
+        return this.signOutWithoutRedirect();
+      })
     );
   }
 
@@ -48,34 +154,112 @@ export class AuthService {
   }
 
   confirmSignUp(email: string, code: string): Observable<ConfirmSignUpOutput> {
-    return from(confirmSignUp({username: email, confirmationCode: code})).pipe(
+    return from(confirmSignUp({ username: email, confirmationCode: code })).pipe(
       catchError(error => throwError(() => error))
     );
   }
 
-  getCurrentUser(): Observable<AuthUser | null> {
-    return from(getCurrentUser()).pipe(
-      catchError(() => of(null))
+  getCurrentUserId(): Observable<string> {
+    return from(fetchAuthSession()).pipe(
+      map(session => session.tokens?.accessToken?.payload?.sub?.toString() || ''),
+      catchError(() => of(''))
     );
   }
 
-  getUserAttributes(): Observable<Partial<Record<string, string>>> {
-    return from(fetchUserAttributes()).pipe(
-      catchError(() => of({}))
+  isAuthStateReady(): Observable<boolean> {
+    return this.authState$.pipe(
+      map(state => !state.loading)
     );
   }
 
   isAuthenticated(): Observable<boolean> {
-    return from(fetchAuthSession()).pipe(
-      map((session: AuthSession) => !!session.tokens?.idToken),
-      catchError(() => of(false))
+    return this.authState$.pipe(
+      map(state => state.isAuthenticated)
     );
   }
 
   getAuthToken(): Observable<string> {
-    return from(fetchAuthSession()).pipe(
-      map((session: AuthSession) => session.tokens?.idToken?.toString() ?? ''),
-      catchError(() => of(''))
+    return this.authState$.pipe(
+      map(state => state.session?.tokens?.idToken?.toString() ?? '')
     );
+  }
+
+  getAuthState(): AuthState {
+    return this.authStateSubject.value;
+  }
+
+  clearError(): void {
+    this.authStateSubject.next({ ...this.authStateSubject.value, error: null });
+  }
+
+  private signOutWithoutRedirect(): Observable<void> {
+    return from(signOut({ global: true })).pipe(
+      map(() => {
+        this.authStateSubject.next({
+          isAuthenticated: false,
+          user: null,
+          session: null,
+          loading: false,
+          error: null
+        });
+      }),
+      catchError(error => throwError(() => error))
+    );
+  }
+
+  private signOutWithCallbackRedirect(): Observable<void> {
+    return from(signOut({ global: true })).pipe(
+      map(() => {
+        this.authStateSubject.next({
+          isAuthenticated: false,
+          user: null,
+          session: null,
+          loading: false,
+          error: null
+        });
+
+        const logoutUrl = `https://${environment.cognitoConfig.domain}/logout?client_id=${environment.cognitoConfig.userPoolClientId}&logout_uri=${encodeURIComponent(environment.cognitoConfig.redirectSignOut)}`;
+        console.log('Cognito logout successful, redirecting to OAuth logout URL:', logoutUrl);
+        window.location.href = logoutUrl;
+      }),
+      catchError(error => {
+        console.error('Error during Cognito logout:', error);
+        this.authStateSubject.next({
+          isAuthenticated: false,
+          user: null,
+          session: null,
+          loading: false,
+          error: null
+        });
+
+        const logoutUrl = `https://${environment.cognitoConfig.domain}/logout?client_id=${environment.cognitoConfig.userPoolClientId}&logout_uri=${encodeURIComponent(environment.cognitoConfig.redirectSignOut)}`;
+        window.location.href = logoutUrl;
+
+        return of(void 0);
+      })
+    );
+  }
+
+  private async updateAuthState(): Promise<void> {
+    try {
+      const user = await getCurrentUser();
+      const session = await fetchAuthSession();
+
+      this.authStateSubject.next({
+        isAuthenticated: !!session.tokens?.idToken,
+        user,
+        session,
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      this.authStateSubject.next({
+        isAuthenticated: false,
+        user: null,
+        session: null,
+        loading: false,
+        error: null
+      });
+    }
   }
 }

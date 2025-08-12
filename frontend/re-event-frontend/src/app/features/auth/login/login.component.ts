@@ -47,12 +47,27 @@ export default class LoginComponent {
     ), {initialValue: {status: 'idle', error: null}}
   );
 
+  googleLoginState = toSignal(
+    this.#authService.authState$.pipe(
+      map(state => ({
+        loading: state.loading,
+        error: state.error
+      }))
+    ), {initialValue: {loading: false, error: null}}
+  );
+
   loginStateEffect = effect(() => {
     if (this.loginState().status === 'success') {
       this.#router.navigate(['/secure/agenda']);
     }
   });
 
+  googleLoginStateEffect = effect(() => {
+    const state = this.googleLoginState();
+    if (state.error) {
+      this.errorMessage.set(state.error);
+    }
+  });
 
   errorMessage = signal('');
   loginForm = this.#formGroup.group({
@@ -73,6 +88,24 @@ export default class LoginComponent {
     const password = this.loginForm.get('password')?.value ?? '';
 
     this.#loginTrigger.set({email, password});
+  }
+
+  onGoogleSignIn(): void {
+    this.errorMessage.set('');
+    this.#authService.signInWithGoogle().subscribe({
+      next: () => {
+        console.log('Redirigiendo a Google...');
+      },
+      error: (error) => {
+        console.error('Error al iniciar sesión con Google:', error);
+        this.errorMessage.set('Error al iniciar sesión con Google. Inténtalo de nuevo.');
+      }
+    });
+  }
+
+  clearError(): void {
+    this.errorMessage.set('');
+    this.#authService.clearError();
   }
 
   onInstallPwa() {
