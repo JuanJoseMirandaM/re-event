@@ -20,6 +20,7 @@ export const routes: Routes = [
     canMatch: [redirectIfAuthGuard]
   },
   { path: 'auth/callback', loadComponent: () => import('./features/auth/callback/callback.component') },
+  { path: 'auth/logout', loadComponent: () => import('./features/auth/logout/logout.component') },
   {
     path: 'secure',
     loadComponent: () => import('./features/secure/secure.component'),

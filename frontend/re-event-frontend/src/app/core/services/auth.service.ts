@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { catchError, from, map, Observable, of, throwError, BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, from, map, Observable, of, switchMap, throwError } from 'rxjs';
 import {
   type AuthSession,
   type AuthUser,
   confirmSignUp,
   type ConfirmSignUpOutput,
   fetchAuthSession,
-  fetchUserAttributes,
+  fetchAuthSession as fetchAuthSessionFromRedirect,
   getCurrentUser,
+  getCurrentUser as getCurrentUserFromRedirect,
   signIn,
   type SignInOutput,
+  signInWithRedirect,
   signOut,
   signUp,
   type SignUpOutput,
-  signInWithRedirect,
-  getCurrentUser as getCurrentUserFromRedirect,
-  fetchAuthSession as fetchAuthSessionFromRedirect,
 } from 'aws-amplify/auth';
+import { environment } from '../../../environments/environment';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -47,11 +47,11 @@ export class AuthService {
   private async initializeAuthState(): Promise<void> {
     try {
       this.authStateSubject.next({ ...this.authStateSubject.value, loading: true });
-      
+
       const user = await getCurrentUser();
       const session = await fetchAuthSession();
       const isAuthenticated = !!session.tokens?.idToken;
-      
+
       this.authStateSubject.next({
         isAuthenticated,
         user,
@@ -98,7 +98,7 @@ export class AuthService {
         if (!user) {
           throw new Error('No se pudo obtener el usuario después de la redirección');
         }
-        
+
         return from(fetchAuthSessionFromRedirect()).pipe(
           map(session => {
             this.authStateSubject.next({
@@ -120,17 +120,21 @@ export class AuthService {
   }
 
   signOut(): Observable<void> {
-    return from(signOut()).pipe(
-      map(() => {
-        this.authStateSubject.next({
-          isAuthenticated: false,
-          user: null,
-          session: null,
-          loading: false,
-          error: null
-        });
+    return from(fetchAuthSession()).pipe(
+      switchMap(session => {
+        const hasOAuthTokens = session.tokens?.accessToken?.payload?.['token_use'] === 'access';
+        const isOAuthUser = session.tokens?.accessToken?.payload?.iss?.includes('cognito');
+
+        if (hasOAuthTokens && isOAuthUser) {
+          return this.signOutWithCallbackRedirect();
+        } else {
+          return this.signOutWithoutRedirect();
+        }
       }),
-      catchError(error => throwError(() => error))
+      catchError(error => {
+        console.error('Error detecting user type for logout:', error);
+        return this.signOutWithoutRedirect();
+      })
     );
   }
 
@@ -180,19 +184,67 @@ export class AuthService {
     );
   }
 
+  getAuthState(): AuthState {
+    return this.authStateSubject.value;
+  }
+
   clearError(): void {
     this.authStateSubject.next({ ...this.authStateSubject.value, error: null });
   }
 
-  getAuthState(): AuthState {
-    return this.authStateSubject.value;
+  private signOutWithoutRedirect(): Observable<void> {
+    return from(signOut({ global: true })).pipe(
+      map(() => {
+        this.authStateSubject.next({
+          isAuthenticated: false,
+          user: null,
+          session: null,
+          loading: false,
+          error: null
+        });
+      }),
+      catchError(error => throwError(() => error))
+    );
+  }
+
+  private signOutWithCallbackRedirect(): Observable<void> {
+    return from(signOut({ global: true })).pipe(
+      map(() => {
+        this.authStateSubject.next({
+          isAuthenticated: false,
+          user: null,
+          session: null,
+          loading: false,
+          error: null
+        });
+
+        const logoutUrl = `https://${environment.cognitoConfig.domain}/logout?client_id=${environment.cognitoConfig.userPoolClientId}&logout_uri=${encodeURIComponent(environment.cognitoConfig.redirectSignOut)}`;
+        console.log('Cognito logout successful, redirecting to OAuth logout URL:', logoutUrl);
+        window.location.href = logoutUrl;
+      }),
+      catchError(error => {
+        console.error('Error during Cognito logout:', error);
+        this.authStateSubject.next({
+          isAuthenticated: false,
+          user: null,
+          session: null,
+          loading: false,
+          error: null
+        });
+
+        const logoutUrl = `https://${environment.cognitoConfig.domain}/logout?client_id=${environment.cognitoConfig.userPoolClientId}&logout_uri=${encodeURIComponent(environment.cognitoConfig.redirectSignOut)}`;
+        window.location.href = logoutUrl;
+
+        return of(void 0);
+      })
+    );
   }
 
   private async updateAuthState(): Promise<void> {
     try {
       const user = await getCurrentUser();
       const session = await fetchAuthSession();
-      
+
       this.authStateSubject.next({
         isAuthenticated: !!session.tokens?.idToken,
         user,
