@@ -19,3 +19,13 @@
 .re-footer-text {
   color: var(--text-secondary);
 }
+
+.re-qr-container {
+  background: var(--first-color-alt);
+  border-radius: var(--border-radius-xl);
+  color: currentColor;
+  outline: 2px solid var(--first-color);
+  padding: 1.2rem;
+  position: relative;
+  top: -43px;
+}
