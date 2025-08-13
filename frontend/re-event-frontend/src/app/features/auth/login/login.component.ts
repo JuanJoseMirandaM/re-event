@@ -3,8 +3,9 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from "../../../core/services/auth.service";
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
-import {catchError, map, of, switchMap} from 'rxjs';
+import {catchError, finalize, map, of, switchMap} from 'rxjs';
 import {BeforeInstallPromptEvent} from '../../../interfaces/before-install-prompt-event.interface';
+import {LoaderService} from '../../../core/services/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,7 @@ export default class LoginComponent {
   #formGroup = inject(FormBuilder);
   #authService = inject(AuthService);
   #router = inject(Router);
+  #loader = inject(LoaderService);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);
 
   installPromptEvent = signal<BeforeInstallPromptEvent | null>(null);
@@ -37,12 +39,15 @@ export default class LoginComponent {
           return of({status: 'idle', error: null})
         }
 
+        this.#loader.show();
         return this.#authService.signIn(credentials.email, credentials.password).pipe(
           map(() => ({status: 'success', error: null})),
           catchError(err => {
             const msg = err?.message ?? 'An unexpected error occurred.';
             return of({status: 'error', error: msg});
-          }))
+          }),
+          finalize(() => this.#loader.hide())
+        )
       })
     ), {initialValue: {status: 'idle', error: null}}
   );
@@ -92,13 +97,16 @@ export default class LoginComponent {
 
   onGoogleSignIn(): void {
     this.errorMessage.set('');
+    this.#loader.show();
     this.#authService.signInWithGoogle().subscribe({
       next: () => {
+        // Keep loader visible until redirect occurs
         console.log('Redirigiendo a Google...');
       },
       error: (error) => {
         console.error('Error al iniciar sesión con Google:', error);
         this.errorMessage.set('Error al iniciar sesión con Google. Inténtalo de nuevo.');
+        this.#loader.hide();
       }
     });
   }

@@ -7,5 +7,12 @@
      aria-label="Camera preview placeholder"></div>
 
 <div class="re-flex re-flex-column re-gap-flex-1-2">
-  <button type="button" class="re-secondary-btn re-w-100">Upload from gallery</button>
+  <button type="button"
+          class="re-secondary-btn"
+          [hidden]="!hasMultipleCameras"
+          (click)="switchCamera()">
+    Change Camera
+  </button>
+
+  <button type="button" class="re-secondary-btn re-w-100" disabled>Upload from gallery</button>
 </div>

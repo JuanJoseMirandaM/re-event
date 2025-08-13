@@ -1,6 +1,6 @@
 {
-  "name": "re-event-frontend",
-  "short_name": "re-event-frontend",
+  "name": "Qinaya",
+  "short_name": "Qinaya",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

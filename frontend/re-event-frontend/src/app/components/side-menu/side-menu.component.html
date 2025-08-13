@@ -1,0 +1,29 @@
+@if (isMenuOpen()) {
+  <div class="re-menu-overlay" (click)="closeMenu()" aria-hidden="true"></div>
+}
+
+<aside id="app-side-menu"
+       class="re-side-menu"
+       [class.re-side-menu--open]="isMenuOpen()"
+       role="region"
+       aria-label="Menú principal">
+  <div class="re-side-menu__header">
+    <span class="re-txt-bold">Menú</span>
+
+    <button class="re-btn" (click)="closeMenu()" aria-label="Close Menu">
+      <span class="re-icon-close re-big-font"></span>
+    </button>
+  </div>
+  <nav class="re-side-menu__nav">
+    <ul>
+      @for (item of navItems; track item.link) {
+        <li>
+          <a class="re-side-menu__link" routerLink="{{ item.link }}" (click)="closeMenu()">
+<!--            <span class="{{ item.icon }} re-inline-block"></span>-->
+            <span class="re-side-menu__text">{{ item.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+</aside>

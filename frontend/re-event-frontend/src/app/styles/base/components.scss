@@ -39,6 +39,12 @@
   &:focus {
     outline: 2px solid var(--first-color-alt);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
 }
 
 .re-secondary-btn {
@@ -55,6 +61,11 @@
 
   &:focus {
     outline: 2px solid var(--first-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

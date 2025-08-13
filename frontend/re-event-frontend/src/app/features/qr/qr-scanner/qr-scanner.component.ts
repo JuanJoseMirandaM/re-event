@@ -5,6 +5,11 @@ import {filter, take, timer} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PointsService} from '../../../core/services/points.service';
 
+interface CameraDevice {
+  id: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-qr-scanner',
   imports: [],
@@ -18,11 +23,18 @@ import {PointsService} from '../../../core/services/points.service';
 export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   isQrScanSuccessful = signal(false);
 
+  // Html5Qrcode instance and camera state
   #html5QrCode: Html5Qrcode | null = null;
   #cameraId: string | null = null;
+  #devices: CameraDevice[] = [];
+  #currentDeviceIndex = 0;
+
+  // Injected services
   #destroyRef = inject(DestroyRef);
   #pointsService = inject(PointsService);
 
+  // Exposed to template
+  hasMultipleCameras = false;
 
   ngAfterViewInit() {
     this.#initializeQrPreview();
@@ -34,10 +46,19 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
         filter(devices => devices && devices.length > 0),
         take(1),
         takeUntilDestroyed(this.#destroyRef)
-      ).subscribe(devices => {
-      this.#cameraId = devices[0].id;
+      ).subscribe((devices: CameraDevice[]) => {
+      this.#devices = devices;
+      this.hasMultipleCameras = devices.length > 1;
+      this.#currentDeviceIndex = this.#findPreferredCameraIndex(devices);
+      this.#cameraId = devices[this.#currentDeviceIndex].id;
       this.#initializeHtml5QrCode();
     })
+  }
+
+  #findPreferredCameraIndex(devices: CameraDevice[]): number {
+    const backRegex = /(back|rear|environment)/i;
+    const idx = devices.findIndex(d => backRegex.test(d.label));
+    return idx >= 0 ? idx : 0;
   }
 
   #initializeHtml5QrCode() {
@@ -52,7 +73,15 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
       .catch((err) => console.error('Error init html5QRCode', err))
   }
 
-  #onSuccess(decodedText: string) {
+  async switchCamera() {
+    if (!this.hasMultipleCameras || this.#devices.length === 0) return;
+    this.#currentDeviceIndex = (this.#currentDeviceIndex + 1) % this.#devices.length;
+    this.#cameraId = this.#devices[this.#currentDeviceIndex].id;
+    await this.#stopAndClear();
+    this.#initializeHtml5QrCode();
+  }
+
+  #onSuccess(decodedText: string): void {
     this.isQrScanSuccessful.set(true)
     timer(500).subscribe(() => this.#html5QrCode?.stop());
     this.#pointsService.claimPoints(decodedText).subscribe(value => console.log(value))

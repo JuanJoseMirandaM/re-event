@@ -82,7 +82,7 @@
   justify-content: space-around;
 }
 
-.re-align-items-center{
+.re-align-items-center {
   align-items: center;
 }
 
@@ -111,6 +111,11 @@
   margin: 0;
   outline: none;
   padding: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .re-overflow-hidden {
