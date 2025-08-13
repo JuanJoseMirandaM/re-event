@@ -56,12 +56,12 @@
   </button>
   
   <div class="re-flex re-flex-jc-center re-gap-flex-1-2">
-    <button class="re-secondary-btn re-media-button google-btn" type="button" 
+    <button class="re-secondary-btn google-btn" type="button"
             (click)="onGoogleSignIn()" 
             [disabled]="googleLoginState().loading"
             aria-label="Sign in with Google">
       @if (googleLoginState().loading) {
-        <div class="google-loading-spinner"></div>
+        <div class="spinner spinner--md"></div>
       } @else {
         <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -85,7 +85,7 @@
 
 @if (installPromptEvent() && !appInstalled()) {
   <div class="re-txt-center re-mt-1-6">
-    <button type="button" class="re-secondary-btn re-w-100 re-txt-bold" (click)="onInstallPwa()"
+    <button type="button" class="re-secondary-btn re-w-100" (click)="onInstallPwa()"
             aria-label="Install App">
       Install App
     </button>

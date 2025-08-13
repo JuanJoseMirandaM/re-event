@@ -1,11 +1,11 @@
 :host {
   display: flex;
-  padding: var(--min-padding);
+  padding: var(--space-4);
   gap: 1.4rem;
-  border-radius: var(--general-border-radius);
+  border-radius: var(--border-radius-lg);
   border-left-color: var(--first-color);
   border-left-style: solid;
-  box-shadow: var(--general-box-shadow);
+  box-shadow: var(--shadow-lg);
 }
 
 .re-type-icon {
@@ -16,9 +16,9 @@
   span {
     background-color: var(--first-color-alt);
     padding: 0.7rem;
-    font-size: var(--big-font-size);
+    font-size: var(--text-2xl);
     color: var(--first-color);
-    border-radius: var(--general-border-radius);
+    border-radius: var(--border-radius-lg);
   }
 }
 
@@ -26,14 +26,14 @@
   gap: 1rem;
 
   .re-title-notification {
-    font-size: var(--small-font-size);
+    font-size: var(--text-sm);
   }
 
   .re-dsc-notification {
-    font-size: var(--small-font-size);
+    font-size: var(--text-sm);
   }
 
   .re-time {
-    font-size: var(--very-small-font-size);
+    font-size: var(--text-xs);
   }
 }
