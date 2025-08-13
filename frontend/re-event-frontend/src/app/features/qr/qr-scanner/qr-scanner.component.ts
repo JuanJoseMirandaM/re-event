@@ -3,6 +3,7 @@ import {Html5Qrcode} from 'html5-qrcode';
 import {fromPromise} from 'rxjs/internal/observable/innerFrom';
 import {filter, take, timer} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {PointsService} from '../../../core/services/points.service';
 
 @Component({
   selector: 'app-qr-scanner',
@@ -20,6 +21,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   #html5QrCode: Html5Qrcode | null = null;
   #cameraId: string | null = null;
   #destroyRef = inject(DestroyRef);
+  #pointsService = inject(PointsService);
 
 
   ngAfterViewInit() {
@@ -43,7 +45,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
     this.#html5QrCode.start(
       this.#cameraId!,
       {
-        fps: 5,
+        fps: 10,
       },
       (decodedText) => this.#onSuccess(decodedText),
       (errorMessage) => this.#onError(errorMessage))
@@ -53,6 +55,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   #onSuccess(decodedText: string) {
     this.isQrScanSuccessful.set(true)
     timer(500).subscribe(() => this.#html5QrCode?.stop());
+    this.#pointsService.claimPoints(decodedText).subscribe(value => console.log(value))
   }
 
   #onError(errorMessage: string) {

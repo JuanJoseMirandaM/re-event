@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, from, map, Observable, of, switchMap, throwError } from 'rxjs';
+import {Injectable, signal} from '@angular/core';
+import {BehaviorSubject, catchError, from, map, Observable, of, switchMap, throwError} from 'rxjs';
 import {
   type AuthSession,
   type AuthUser,
   confirmSignUp,
-  type ConfirmSignUpOutput,
   fetchAuthSession,
   fetchAuthSession as fetchAuthSessionFromRedirect,
   getCurrentUser,
@@ -16,7 +15,7 @@ import {
   signUp,
   type SignUpOutput,
 } from 'aws-amplify/auth';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -30,7 +29,7 @@ export interface AuthState {
   providedIn: 'root'
 })
 export class AuthService {
-  private authStateSubject = new BehaviorSubject<AuthState>({
+  #authStateSubject = new BehaviorSubject<AuthState>({
     isAuthenticated: false,
     user: null,
     session: null,
@@ -38,7 +37,8 @@ export class AuthService {
     error: null
   });
 
-  public authState$ = this.authStateSubject.asObservable();
+  authState$ = this.#authStateSubject.asObservable();
+  passwordRegister = signal<string>('');
 
   constructor() {
     this.initializeAuthState();
@@ -46,13 +46,13 @@ export class AuthService {
 
   private async initializeAuthState(): Promise<void> {
     try {
-      this.authStateSubject.next({ ...this.authStateSubject.value, loading: true });
+      this.#authStateSubject.next({...this.#authStateSubject.value, loading: true});
 
       const user = await getCurrentUser();
       const session = await fetchAuthSession();
       const isAuthenticated = !!session.tokens?.idToken;
 
-      this.authStateSubject.next({
+      this.#authStateSubject.next({
         isAuthenticated,
         user,
         session,
@@ -60,7 +60,7 @@ export class AuthService {
         error: null
       });
     } catch (error) {
-      this.authStateSubject.next({
+      this.#authStateSubject.next({
         isAuthenticated: false,
         user: null,
         session: null,
@@ -71,22 +71,22 @@ export class AuthService {
   }
 
   signIn(email: string, password: string): Observable<SignInOutput> {
-    return from(signIn({ username: email, password })).pipe(
+    return from(signIn({username: email, password})).pipe(
       map(result => {
         this.updateAuthState();
         return result;
       }),
       catchError(error => {
-        this.authStateSubject.next({ ...this.authStateSubject.value, error: error.message });
+        this.#authStateSubject.next({...this.#authStateSubject.value, error: error.message});
         return throwError(() => error);
       })
     );
   }
 
   signInWithGoogle(): Observable<void> {
-    return from(signInWithRedirect({ provider: 'Google' })).pipe(
+    return from(signInWithRedirect({provider: 'Google'})).pipe(
       catchError(error => {
-        this.authStateSubject.next({ ...this.authStateSubject.value, error: error.message });
+        this.#authStateSubject.next({...this.#authStateSubject.value, error: error.message});
         return throwError(() => error);
       })
     );
@@ -101,19 +101,19 @@ export class AuthService {
 
         return from(fetchAuthSessionFromRedirect()).pipe(
           map(session => {
-            this.authStateSubject.next({
+            this.#authStateSubject.next({
               isAuthenticated: true,
               user,
               session,
               loading: false,
               error: null
             });
-            return { user, session };
+            return {user, session};
           })
         );
       }),
       catchError(error => {
-        this.authStateSubject.next({ ...this.authStateSubject.value, error: error.message });
+        this.#authStateSubject.next({...this.#authStateSubject.value, error: error.message});
         return throwError(() => error);
       })
     );
@@ -153,8 +153,9 @@ export class AuthService {
     );
   }
 
-  confirmSignUp(email: string, code: string): Observable<ConfirmSignUpOutput> {
-    return from(confirmSignUp({ username: email, confirmationCode: code })).pipe(
+  confirmSignUp(email: string, code: string): Observable<SignInOutput> {
+    return from(confirmSignUp({username: email, confirmationCode: code})).pipe(
+      switchMap(() => this.signIn(email, this.passwordRegister())),
       catchError(error => throwError(() => error))
     );
   }
@@ -185,17 +186,17 @@ export class AuthService {
   }
 
   getAuthState(): AuthState {
-    return this.authStateSubject.value;
+    return this.#authStateSubject.value;
   }
 
   clearError(): void {
-    this.authStateSubject.next({ ...this.authStateSubject.value, error: null });
+    this.#authStateSubject.next({...this.#authStateSubject.value, error: null});
   }
 
   private signOutWithoutRedirect(): Observable<void> {
-    return from(signOut({ global: true })).pipe(
+    return from(signOut({global: true})).pipe(
       map(() => {
-        this.authStateSubject.next({
+        this.#authStateSubject.next({
           isAuthenticated: false,
           user: null,
           session: null,
@@ -208,9 +209,9 @@ export class AuthService {
   }
 
   private signOutWithCallbackRedirect(): Observable<void> {
-    return from(signOut({ global: true })).pipe(
+    return from(signOut({global: true})).pipe(
       map(() => {
-        this.authStateSubject.next({
+        this.#authStateSubject.next({
           isAuthenticated: false,
           user: null,
           session: null,
@@ -224,7 +225,7 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Error during Cognito logout:', error);
-        this.authStateSubject.next({
+        this.#authStateSubject.next({
           isAuthenticated: false,
           user: null,
           session: null,
@@ -244,8 +245,7 @@ export class AuthService {
     try {
       const user = await getCurrentUser();
       const session = await fetchAuthSession();
-
-      this.authStateSubject.next({
+      this.#authStateSubject.next({
         isAuthenticated: !!session.tokens?.idToken,
         user,
         session,
@@ -253,7 +253,7 @@ export class AuthService {
         error: null
       });
     } catch (error) {
-      this.authStateSubject.next({
+      this.#authStateSubject.next({
         isAuthenticated: false,
         user: null,
         session: null,

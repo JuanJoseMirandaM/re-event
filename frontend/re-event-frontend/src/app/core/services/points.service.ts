@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {map, Observable, switchMap} from "rxjs";
+import {catchError, map, Observable, of, switchMap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
 
@@ -19,14 +19,12 @@ export interface PointsHistoryResponse {
 }
 
 export interface TotalPointsResponse {
-  points: number;
+  totalPoints: number;
 }
 
 export interface ClaimPointsRequest {
   code: string;
 }
-
-
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -58,10 +56,10 @@ export class PointsService {
           Authorization: token,
           'Content-Type': 'application/json'
         });
-        
+
         const url = `${this.baseUrl}/points/claim`;
-        const request: ClaimPointsRequest = { code };
-        
+        const request: ClaimPointsRequest = {code};
+
         return this.http.post<ApiResponse<{ pointsAwarded: number; message: string }>>(url, request, {headers}).pipe(
           map(response => response.data!)
         );
@@ -76,19 +74,19 @@ export class PointsService {
           Authorization: token,
           'Content-Type': 'application/json'
         });
-        
+
         const queryParams = new URLSearchParams();
         if (params?.limit) queryParams.set('limit', params.limit.toString());
         if (params?.lastKey) queryParams.set('lastKey', params.lastKey);
         if (params?.sourceType) queryParams.set('sourceType', params.sourceType);
-        
+
         const url = `${this.baseUrl}/points/history${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-        return this.http.get<ApiResponse<PointsHistoryResponse>>(url, {headers}).pipe(
-          map(response => response.data!)
-        );
+        return this.http.get<ApiResponse<PointsHistoryResponse>>(url, {headers})
+          .pipe(map(r => r.data!));
       })
     );
   }
+
 
   getTotalPoints(): Observable<number> {
     return this.authService.getAuthToken().pipe(
@@ -97,18 +95,19 @@ export class PointsService {
           Authorization: token,
           'Content-Type': 'application/json'
         });
-        
+
         const url = `${this.baseUrl}/points/total`;
         return this.http.get<ApiResponse<TotalPointsResponse>>(url, {headers}).pipe(
-          map(response => response.data!.points)
+          map(response => {
+            return response.data && response.data.totalPoints ? response.data.totalPoints : 0;
+          }),
+          catchError(error => {
+            return of(0);
+          })
         );
       })
     );
   }
-
-
-
-
 
   // Helper method to format points
   formatPoints(points: number): string {
@@ -152,15 +151,15 @@ export class PointsService {
   // Helper method to get points level
   getPointsLevel(points: number): { level: string; color: string; icon: string } {
     if (points >= 1000) {
-      return { level: 'Legendario', color: '#FFD700', icon: 'stars' };
+      return {level: 'Legendario', color: '#FFD700', icon: 'stars'};
     } else if (points >= 500) {
-      return { level: 'Épico', color: '#8B5CF6', icon: 'workspace_premium' };
+      return {level: 'Épico', color: '#8B5CF6', icon: 'workspace_premium'};
     } else if (points >= 200) {
-      return { level: 'Raro', color: '#3B82F6', icon: 'diamond' };
+      return {level: 'Raro', color: '#3B82F6', icon: 'diamond'};
     } else if (points >= 100) {
-      return { level: 'Común', color: '#10B981', icon: 'emoji_events' };
+      return {level: 'Común', color: '#10B981', icon: 'emoji_events'};
     } else {
-      return { level: 'Novato', color: '#6B7280', icon: 'school' };
+      return {level: 'Novato', color: '#6B7280', icon: 'school'};
     }
   }
 }

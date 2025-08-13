@@ -5,7 +5,7 @@
   </span>
 
   <div class="re-card__body re-flex re-flex-column re-txt-center">
-    <span class="re-card__value re-txt-bold">250</span>
+    <span class="re-card__value re-txt-bold">{{ points() }}</span>
     <span class="re-normal-font re-font-500">Total Points</span>
   </div>
 </div>
@@ -14,9 +14,8 @@
   <span class="re-font-500 re-small-font">Points History</span>
 
   <div class="re-flex re-gap-flex-1-2 re-flex-column">
-    <app-points-card></app-points-card>
-    <app-points-card></app-points-card>
-    <app-points-card></app-points-card>
-    <app-points-card></app-points-card>
+    @for (item of itemPoints(); track item.code) {
+      <app-points-card [pointsDetail]="item"></app-points-card>
+    }
   </div>
 </div>

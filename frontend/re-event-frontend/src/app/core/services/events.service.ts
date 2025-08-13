@@ -38,7 +38,6 @@ export interface EventsParams {
   providedIn: 'root'
 })
 export class EventsService {
-
   private readonly baseUrl = '/api';
 
   constructor(private readonly http: HttpClient,
@@ -52,13 +51,13 @@ export class EventsService {
           Authorization: token,
           'Content-Type': 'application/json'
         });
-        
+
         const queryParams = new URLSearchParams();
         if (params?.limit) queryParams.set('limit', params.limit.toString());
         if (params?.lastKey) queryParams.set('lastKey', params.lastKey);
         if (params?.upcoming) queryParams.set('upcoming', 'true');
         if (params?.past) queryParams.set('past', 'true');
-        
+
         const url = `${this.baseUrl}/events${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
         return this.http.get<ApiResponse>(url, {headers}).pipe(
           map(response => response.data)
@@ -68,10 +67,10 @@ export class EventsService {
   }
 
   getUpcomingEvents(limit?: number, lastKey?: string): Observable<EventsResponse> {
-    return this.getEvents({ upcoming: true, limit, lastKey });
+    return this.getEvents({upcoming: true, limit, lastKey});
   }
 
   getPastEvents(limit?: number, lastKey?: string): Observable<EventsResponse> {
-    return this.getEvents({ past: true, limit, lastKey });
+    return this.getEvents({past: true, limit, lastKey});
   }
 }

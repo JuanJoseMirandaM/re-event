@@ -71,7 +71,7 @@ export default class RegisterComponent {
     const name = this.registerForm.get('name')?.value ?? '';
     const email = this.registerForm.get('email')?.value ?? '';
     const password = this.registerForm.get('password')?.value ?? '';
-
+    this.#authService.passwordRegister.set(password);
     this.#signUpTrigger.set({name, email, password});
   }
 }

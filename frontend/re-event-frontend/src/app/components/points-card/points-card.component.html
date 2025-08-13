@@ -1,17 +1,20 @@
 <div>
   <!--TODO: Change the styles with the Icon-->
-  <div style="padding: 1rem;background-color: var(--first-color-alt);border-radius: 50%;">CC</div>
+  <div style="padding: 1rem;background-color: var(--first-color-alt);border-radius: 50%;">
+    <span class="re-icon-goal"></span>
+  </div>
 </div>
 
 <div class="re-flex-1 re-gap-flex-0-8 re-flex-column re-flex">
-  <p class="re-small-font re-font-500">Connected with 5 new attendees</p>
+  <p class="re-small-font re-font-500">{{ pointsDetail().description }}</p>
   <div class="re-flex re-gap-flex-0-8">
-    <span class="re-ver-small-font">1/15/2024 at 1:15:00 PM</span>
-    <span class="re-ver-small-font">SPENT</span>
+    <span class="re-ver-small-font">{{ pointsDetail().timestamp | date }}</span>
+    <!--TODO: ADd type of tag-->
+    <!--    <span class="re-ver-small-font">SPENT</span>-->
   </div>
 </div>
 
 <div class="re-flex re-flex-column re-txt-center">
-  <span class="re-font-500">+50</span>
+  <span class="re-font-500">+{{pointsDetail().points}}</span>
   <span class="re-small-font">points</span>
 </div>
