@@ -9,16 +9,58 @@
 
 html {
   font-size: 62.5%;
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--body-color);
-  color: var(--text-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 body,
 button,
 input {
   font-family: var(--body-font);
-  font-size: var(--normal-font-size);
+  font-size: var(--text-base);
+}
+
+/* ===== ENHANCED FOCUS STATES ===== */
+*:focus-visible {
+  outline: var(--border-width-normal) solid var(--primary-lilac);
+  outline-offset: var(--space-2);
+}
+
+/* ===== SELECTION STYLES ===== */
+::selection {
+  background-color: var(--primary-lilac);
+  color: var(--primary-white);
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-lilac);
+  border-radius: var(--border-radius-full);
+
+  &:hover {
+    background: var(--primary-lilac-dark);
+  }
+}
+
+/* ===== REDUCED MOTION SUPPORT ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

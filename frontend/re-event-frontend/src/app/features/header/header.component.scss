@@ -1,6 +1,6 @@
 :host {
   display: flex;
-  padding: var(--mb-1-6);
+  padding: var(--space-4);
   background-color: var(--color-bg-secure);
   color: var(--color-text-secure);
   border-radius: var(--border-radius);
@@ -9,8 +9,8 @@
 }
 
 .re-icon-header {
-  color: var(--text-color-light);
-  border-radius: var(--general-border-radius);
+  color: var(--text-secondary);
+  border-radius: var(--border-radius-lg);
 
   button {
     position: relative;
@@ -20,9 +20,9 @@
       animation: appear-notification 2.5s ease-in-out infinite;
       background: var(--first-color);
       border-radius: 50%;
-      color: var(--text-color);
+      color: var(--text-primary);
       display: flex;
-      font-size: var(--very-small-font-size);
+      font-size: var(--text-xs);
       height: 0.7rem;
       position: absolute;
       right: -0.2rem;

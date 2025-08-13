@@ -1,0 +1,18 @@
+{
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/re-event-frontend/browser",
+        "command": "ng build --configuration production"
+      }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev/$1"
+    }
+  ]
+}

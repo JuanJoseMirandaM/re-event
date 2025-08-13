@@ -2,12 +2,12 @@
   display: flex;
   padding: 1.4rem;
   gap: 1.2rem;
-  box-shadow: var(--general-box-shadow);
-  border-radius: var(--general-border-radius);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--border-radius-lg);
 }
 
 .agenda-card__time {
-  color: var(--text-color);
+  color: var(--text-primary);
   flex-basis: auto;
   text-align: center;
 }
@@ -17,11 +17,11 @@
   gap: 0.6rem;
 
   .agenda-card__title {
-    font-size: var(--small-font-size);
+    font-size: var(--text-sm);
   }
 
   .agenda-card__speaker {
-    font-size: var(--small-font-size);
+    font-size: var(--text-sm);
   }
 
   .agenda-card-btn {
