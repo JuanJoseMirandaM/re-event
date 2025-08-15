@@ -291,7 +291,6 @@ export class NotificationsService {
       const permission = await Notification.requestPermission();
 
       if (permission === 'granted') {
-        // Registrar el service worker para notificaciones push
         this.registerServiceWorker();
       }
 
