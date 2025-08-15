@@ -1,8 +1,8 @@
 import {inject, Injectable, signal} from '@angular/core';
-import {AuthService} from './auth.service';
 import {generateClient} from 'aws-amplify/api';
-import {filter, forkJoin, of, switchMap, take} from "rxjs";
+import {forkJoin, of, switchMap, take} from "rxjs";
 import {UserRole, UserService} from "./user.service";
+import {Router} from '@angular/router';
 
 export interface Notification {
   notificationId: string;
@@ -24,6 +24,7 @@ const client = generateClient();
 export class NotificationsService {
   private subscriptions: any[] = [];
   #userService = inject(UserService);
+  #router = inject(Router);
 
   notifications = signal<Notification[]>([]);
   unreadCount = signal<number>(0);
@@ -43,7 +44,7 @@ export class NotificationsService {
         ]);
       })
     ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
-      console.log({ allNotifs, userNotifs, roleNotifs });
+      console.log({allNotifs, userNotifs, roleNotifs});
     });
   }
 
@@ -56,6 +57,9 @@ export class NotificationsService {
           description
           createdAt
           author
+          link
+          targetRole
+          userId
         }
       }
     `;
@@ -92,6 +96,9 @@ export class NotificationsService {
           description
           createdAt
           author
+          link
+          targetRole
+          userId
         }
       }
     `;
@@ -133,7 +140,7 @@ export class NotificationsService {
         ]);
       })
     ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
-      console.log({ allNotifs, userNotifs, roleNotifs });
+      console.log({allNotifs, userNotifs, roleNotifs});
     });
   }
 
@@ -243,18 +250,91 @@ export class NotificationsService {
 
   private async showBrowserNotification(notification: Notification) {
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(notification.title, {
+      const browserNotification = new Notification(notification.title, {
         body: notification.description || '',
-        icon: '/assets/icons/icon-192x192.png'
+        icon: '/assets/icons/icon-192x192.png',
+        badge: '/assets/icons/icon-72x72.png',
+        tag: notification.notificationId,
+        data: {
+          link: notification.link,
+          notificationId: notification.notificationId
+        }
       });
+
+      // Manejar clic en la notificación
+      browserNotification.onclick = (event) => {
+        event.preventDefault();
+        this.handleNotificationClick(notification);
+        browserNotification.close();
+      };
+    }
+  }
+
+  private handleNotificationClick(notification: Notification) {
+    // Marcar como leída
+    this.markAsRead(notification.notificationId);
+
+    // Navegar si hay un link
+    if (notification.link) {
+      if (notification.link.startsWith('http')) {
+        // Link externo
+        window.open(notification.link, '_blank');
+      } else {
+        // Link interno
+        this.#router.navigate([notification.link]);
+      }
     }
   }
 
   async requestNotificationPermission() {
     if ('Notification' in window) {
-      return await Notification.requestPermission();
+      const permission = await Notification.requestPermission();
+
+      if (permission === 'granted') {
+        // Registrar el service worker para notificaciones push
+        this.registerServiceWorker();
+      }
+
+      return permission;
     }
     return 'denied';
+  }
+
+  private async registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/ngsw-worker.js');
+        console.log('Service Worker registrado:', registration);
+
+        // Solicitar permisos para notificaciones push
+        if ('PushManager' in window) {
+          const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: this.urlBase64ToUint8Array('TU_VAPID_PUBLIC_KEY_AQUI') as unknown as ArrayBuffer
+          });
+
+          console.log('Push subscription:', subscription);
+          // Aquí enviarías la subscription al backend para guardarla
+        }
+      } catch (error) {
+        console.error('Error registrando Service Worker:', error);
+      }
+    }
+  }
+
+  private urlBase64ToUint8Array(base64String: string): Uint8Array {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
   }
 
   markAsRead(notificationId: string) {

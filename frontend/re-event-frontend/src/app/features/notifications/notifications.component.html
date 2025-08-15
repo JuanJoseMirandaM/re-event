@@ -1,4 +1,4 @@
-<div class="re-notifications re-flex re-flex-column">
+<div class="flex flex--col gap-2">
   @for (notification of notifications(); track notification.notificationId) {
     <app-notification-card 
       [notification]="notification" 

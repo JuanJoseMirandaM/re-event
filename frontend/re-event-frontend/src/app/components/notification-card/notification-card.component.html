@@ -6,4 +6,16 @@
   <p class="re-title-notification re-font-500">{{ notification().title }}</p>
   <p class="re-dsc-notification">{{ notification().description }}</p>
   <small class="re-time re-font-500">{{ notification().createdAt | date: 'short' }}</small>
+  
+  <!-- Mostrar link si existe -->
+  @if (notification().link) {
+    <div class="re-notification-link">
+      <a [href]="notification().link"
+         [target]="notification().link?.startsWith('http') ? '_blank' : '_self'"
+         (click)="$event.stopPropagation()"
+         class="re-link">
+        {{ notification().link?.startsWith('http') ? 'Ver enlace' : 'Ver más' }}
+      </a>
+    </div>
+  }
 </div>

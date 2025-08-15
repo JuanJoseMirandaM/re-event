@@ -1,5 +1,10 @@
-:host{
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-4);
+.no-notifications {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--text-muted);
+  
+  p {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
 }

@@ -1,6 +1,7 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {NotificationCardComponent} from '../../components/notification-card/notification-card.component';
 import {NotificationsService} from '../../core/services/notifications.service';
+import {PushNotificationService} from '../../core/services/push-notification.service';
 
 @Component({
   selector: 'app-notifications',
@@ -13,12 +14,15 @@ import {NotificationsService} from '../../core/services/notifications.service';
 })
 export default class NotificationsComponent implements OnInit {
   #notificationsService = inject(NotificationsService);
-  
+  #pushNotificationService = inject(PushNotificationService);
+
   notifications = this.#notificationsService.notifications;
 
   async ngOnInit() {
     await this.#notificationsService.loadNotifications();
-    this.#notificationsService.requestNotificationPermission();
+    await this.#notificationsService.requestNotificationPermission();
+    await this.#pushNotificationService.initializePushNotifications();
+
     this.#notificationsService.markAllAsRead();
   }
 
