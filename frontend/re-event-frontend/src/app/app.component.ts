@@ -4,6 +4,7 @@ import {AuthService} from './core/services/auth.service';
 import {CommonModule} from '@angular/common';
 import {LoaderOverlayComponent} from './shared/components/loader-overlay/loader-overlay.component';
 import {NotificationsService} from "./core/services/notifications.service";
+import {PushNotificationService} from "./core/services/push-notification.service";
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,13 @@ import {NotificationsService} from "./core/services/notifications.service";
 })
 export class AppComponent implements OnInit {
   #notificationsService = inject(NotificationsService);
+  #pushNotificationService = inject(PushNotificationService);
 
   constructor(public authService: AuthService) {
   }
 
   async ngOnInit() {
     await this.#notificationsService.requestNotificationPermission();
+    await this.#pushNotificationService.initializePushNotifications();
   }
 }

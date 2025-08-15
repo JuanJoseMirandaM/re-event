@@ -14,13 +14,11 @@ import {PushNotificationService} from '../../core/services/push-notification.ser
 })
 export default class NotificationsComponent implements OnInit {
   #notificationsService = inject(NotificationsService);
-  #pushNotificationService = inject(PushNotificationService);
 
   notifications = this.#notificationsService.notifications;
 
   async ngOnInit() {
     await this.#notificationsService.loadNotifications();
-    await this.#pushNotificationService.initializePushNotifications();
 
     this.#notificationsService.markAllAsRead();
   }
