@@ -3,6 +3,7 @@ import {generateClient} from 'aws-amplify/api';
 import {forkJoin, of, switchMap, take} from "rxjs";
 import {UserRole, UserService} from "./user.service";
 import {Router} from '@angular/router';
+import {pushConfig} from '../config/push-config';
 
 export interface Notification {
   notificationId: string;
@@ -153,6 +154,7 @@ export class NotificationsService {
           description
           createdAt
           author
+          link
           targetRole
           userId
           read
@@ -197,6 +199,7 @@ export class NotificationsService {
           description
           createdAt
           author
+          link
           targetRole
           userId
           read
@@ -305,15 +308,18 @@ export class NotificationsService {
         const registration = await navigator.serviceWorker.register('/ngsw-worker.js');
         console.log('Service Worker registrado:', registration);
 
-        // Solicitar permisos para notificaciones push
-        if ('PushManager' in window) {
-          const subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: this.urlBase64ToUint8Array('TU_VAPID_PUBLIC_KEY_AQUI') as unknown as ArrayBuffer
-          });
-
-          console.log('Push subscription:', subscription);
-          // Aquí enviarías la subscription al backend para guardarla
+        if ('PushManager' in window && this.isValidVapidKey(pushConfig.vapidPublicKey)) {
+          try {
+            const subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: this.urlBase64ToUint8Array(pushConfig.vapidPublicKey) as unknown as ArrayBuffer
+            });
+            console.log('Push subscription exitosa:', subscription);
+          } catch (error) {
+            console.error('Error al suscribirse a notificaciones push:', error);
+          }
+        } else {
+          console.log('Clave VAPID no válida o PushManager no disponible. Las notificaciones del navegador seguirán funcionando.');
         }
       } catch (error) {
         console.error('Error registrando Service Worker:', error);
@@ -334,6 +340,11 @@ export class NotificationsService {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
+  }
+
+  private isValidVapidKey(key: string): boolean {
+    const base64Regex = /^[A-Za-z0-9+/]+={0,2}$/;
+    return Boolean(key && key.length >= 80 && base64Regex.test(key));
   }
 
   markAsRead(notificationId: string) {

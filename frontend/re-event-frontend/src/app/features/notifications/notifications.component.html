@@ -1,7 +1,7 @@
 <div class="flex flex--col gap-2">
   @for (notification of notifications(); track notification.notificationId) {
-    <app-notification-card 
-      [notification]="notification" 
+    <app-notification-card
+      [notification]="notification"
       (markAsRead)="markAsRead($event)">
     </app-notification-card>
   } @empty {
