@@ -6,6 +6,7 @@ import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, finalize, map, of, switchMap} from 'rxjs';
 import {BeforeInstallPromptEvent} from '../../../interfaces/before-install-prompt-event.interface';
 import {LoaderService} from '../../../core/services/loader.service';
+import {VersionService} from '../../../core/services/version.service';
 
 @Component({
   selector: 'app-login',
@@ -27,10 +28,12 @@ export default class LoginComponent {
   #authService = inject(AuthService);
   #router = inject(Router);
   #loader = inject(LoaderService);
+  #versionService = inject(VersionService);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);
 
   installPromptEvent = signal<BeforeInstallPromptEvent | null>(null);
   appInstalled = signal(false);
+  versionInfo = signal(this.#versionService.getVersionInfo());
 
   loginState = toSignal(
     toObservable(this.#loginTrigger).pipe(
