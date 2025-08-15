@@ -1,10 +1,11 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {AuthService} from './core/services/auth.service';
-import {CommonModule} from '@angular/common';
-import {LoaderOverlayComponent} from './shared/components/loader-overlay/loader-overlay.component';
-import {NotificationsService} from "./core/services/notifications.service";
-import {PushNotificationService} from "./core/services/push-notification.service";
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { AuthService } from './core/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { LoaderOverlayComponent } from './shared/components/loader-overlay/loader-overlay.component';
+import { NotificationManagerService } from './core/services/notification-manager.service';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,15 +14,35 @@ import {PushNotificationService} from "./core/services/push-notification.service
   standalone: true,
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  #notificationsService = inject(NotificationsService);
-  #pushNotificationService = inject(PushNotificationService);
+export class AppComponent implements OnInit, OnDestroy {
+  #notificationManager = inject(NotificationManagerService);
+  #destroy$ = new Subject<void>();
 
   constructor(public authService: AuthService) {
   }
 
   async ngOnInit() {
-    await this.#notificationsService.requestNotificationPermission();
-    await this.#pushNotificationService.initializePushNotifications();
+    // Escuchar cambios en el estado de autenticación
+    this.authService.authState$
+      .pipe(
+        filter(state => !state.loading), // Solo procesar cuando no esté cargando
+        takeUntil(this.#destroy$)
+      )
+      .subscribe(async (authState) => {
+        if (authState.isAuthenticated) {
+          // Usuario autenticado - inicializar notificaciones
+          console.log('✅ Usuario autenticado - Inicializando notificaciones...');
+          await this.#notificationManager.initializeAfterLogin();
+        } else {
+          // Usuario no autenticado - limpiar notificaciones
+          await this.#notificationManager.cleanup();
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.#destroy$.next();
+    this.#destroy$.complete();
+    this.#notificationManager.cleanup();
   }
 }

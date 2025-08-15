@@ -3,7 +3,6 @@ import {generateClient} from 'aws-amplify/api';
 import {forkJoin, of, switchMap, take} from "rxjs";
 import {UserRole, UserService} from "./user.service";
 import {Router} from '@angular/router';
-import {pushConfig} from '../config/push-config';
 
 export interface Notification {
   notificationId: string;
@@ -32,11 +31,16 @@ export class NotificationsService {
   hasNewNotifications = signal<boolean>(false);
 
   async connect() {
+    // Desconectar suscripciones existentes para evitar duplicados
+    this.disconnect();
+
     this.#userService.getCurrentUser().pipe(
       take(1),
       switchMap(user => {
         const userId = user.userId;
         const userRole = user.role;
+
+        console.log('🔄 Conectando a notificaciones...');
 
         return forkJoin([
           this.subscribeToRole(UserRole.ALL),
@@ -45,7 +49,7 @@ export class NotificationsService {
         ]);
       })
     ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
-      console.log({allNotifs, userNotifs, roleNotifs});
+      console.log('✅ Conectado a notificaciones');
     });
   }
 
@@ -74,6 +78,7 @@ export class NotificationsService {
       const sub = subscription.subscribe({
         next: ({data}: any) => {
           if (data?.onCreateNotification) {
+            console.log('📨 Nueva notificación recibida:', data.onCreateNotification.title);
             this.addNotification(data.onCreateNotification);
           }
         },
@@ -113,6 +118,7 @@ export class NotificationsService {
       const sub = subscription.subscribe({
         next: ({data}: any) => {
           if (data?.onCreateUserNotification) {
+            console.log('📨 Nueva notificación de usuario recibida:', data.onCreateUserNotification.title);
             this.addNotification(data.onCreateUserNotification);
           }
         },
@@ -141,7 +147,7 @@ export class NotificationsService {
         ]);
       })
     ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
-      console.log({allNotifs, userNotifs, roleNotifs});
+      console.log('📋 Notificaciones cargadas');
     });
   }
 
@@ -239,20 +245,40 @@ export class NotificationsService {
     const newNotification: Notification = {
       ...notification,
       read: false,
-      targetRole: notification.targetRole || 'ALL',
-      link: notification.link || undefined,
-      userId: notification.userId || undefined
+      targetRole: notification.targetRole ?? 'ALL',
+      link: notification.link ?? undefined,
+      userId: notification.userId ?? undefined
     };
 
-    this.notifications.update(notifications => [newNotification, ...notifications]);
-    this.unreadCount.update(count => count + 1);
-    this.hasNewNotifications.set(true);
+    this.notifications.update(notifications => {
+      const exists = notifications.some(n => n.notificationId === newNotification.notificationId);
+      if (exists) {
+        console.log('⚠️ Notificación duplicada ignorada');
+        return notifications;
+      }
 
-    this.showBrowserNotification(newNotification);
+      console.log('✅ Notificación agregada al estado');
+      this.unreadCount.update(count => count + 1);
+      this.hasNewNotifications.set(true);
+      this.showBrowserNotification(newNotification);
+
+      return [newNotification, ...notifications];
+    });
   }
 
   private async showBrowserNotification(notification: Notification) {
-    if ('Notification' in window && Notification.permission === 'granted') {
+    if (!('Notification' in window)) {
+      console.log('❌ Notificaciones no soportadas en este navegador');
+      return;
+    }
+
+    if (Notification.permission !== 'granted') {
+      console.log('❌ Permisos de notificación no concedidos');
+      return;
+    }
+
+    try {
+      console.log('🔔 Mostrando notificación del navegador');
       const browserNotification = new Notification(notification.title, {
         body: notification.description || '',
         icon: '/assets/icons/icon-192x192.png',
@@ -264,87 +290,106 @@ export class NotificationsService {
         }
       });
 
-      // Manejar clic en la notificación
       browserNotification.onclick = (event) => {
         event.preventDefault();
         this.handleNotificationClick(notification);
         browserNotification.close();
       };
+    } catch (error) {
+      console.error('❌ Error mostrando notificación:', error);
     }
   }
 
   private handleNotificationClick(notification: Notification) {
-    // Marcar como leída
+    console.log('🖱️ Notificación clickeada');
     this.markAsRead(notification.notificationId);
 
-    // Navegar si hay un link
-    if (notification.link) {
-      if (notification.link.startsWith('http')) {
-        // Link externo
-        window.open(notification.link, '_blank');
-      } else {
-        // Link interno
-        this.#router.navigate([notification.link]);
-      }
+    const link = notification.link?.trim();
+    if (!link) return;
+
+    if (/^https?:\/\//i.test(link)) {
+      window.open(link, '_blank', 'noopener');
+    } else {
+      this.#router.navigate([link]);
     }
   }
 
-  async requestNotificationPermission() {
-    if ('Notification' in window) {
-      const permission = await Notification.requestPermission();
-
-      if (permission === 'granted') {
-        this.registerServiceWorker();
-      }
-
-      return permission;
+  async requestNotificationPermission(): Promise<NotificationPermission> {
+    if (!('Notification' in window)) {
+      console.log('❌ Notifications not supported in this browser');
+      return 'denied';
     }
-    return 'denied';
+
+    // Verificar el permiso actual
+    if (Notification.permission === 'granted') {
+      console.log('✅ Notification permission already granted');
+      await this.registerServiceWorker();
+      return 'granted';
+    }
+
+    if (Notification.permission === 'denied') {
+      console.log('❌ Notification permission previously denied');
+      return 'denied';
+    }
+
+    // Solicitar permiso
+    console.log('🔄 Requesting notification permission...');
+    const permission = await Notification.requestPermission();
+
+    if (permission === 'granted') {
+      console.log('✅ Notification permission granted');
+      await this.registerServiceWorker();
+    } else {
+      console.log('❌ Notification permission denied');
+    }
+
+    return permission;
   }
 
   private async registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.register('/ngsw-worker.js');
-        console.log('Service Worker registrado:', registration);
+    if (!('serviceWorker' in navigator)) {
+      console.log('❌ Service Worker not supported');
+      return;
+    }
 
-        if ('PushManager' in window && this.isValidVapidKey(pushConfig.vapidPublicKey)) {
-          try {
-            const subscription = await registration.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: this.urlBase64ToUint8Array(pushConfig.vapidPublicKey) as unknown as ArrayBuffer
-            });
-            console.log('Push subscription exitosa:', subscription);
-          } catch (error) {
-            console.error('Error al suscribirse a notificaciones push:', error);
-          }
-        } else {
-          console.log('Clave VAPID no válida o PushManager no disponible. Las notificaciones del navegador seguirán funcionando.');
-        }
-      } catch (error) {
-        console.error('Error registrando Service Worker:', error);
+    try {
+      // Verificar si ya hay un service worker registrado
+      const existingRegistration = await navigator.serviceWorker.getRegistration();
+
+      let registration: ServiceWorkerRegistration;
+
+      if (existingRegistration) {
+        console.log('✅ Service Worker already registered');
+        registration = existingRegistration;
+      } else {
+        console.log('🔄 Registering Service Worker...');
+        registration = await navigator.serviceWorker.register('/ngsw-worker.js');
+        console.log('✅ Service Worker registered successfully');
       }
+
+      // Esperar a que esté listo
+      await navigator.serviceWorker.ready;
+      console.log('✅ Service Worker ready');
+
+      // Configurar listener para mensajes del service worker
+      this.setupServiceWorkerMessageListener();
+
+    } catch (error) {
+      console.error('❌ Error with Service Worker:', error);
     }
   }
 
-  private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
+  private setupServiceWorkerMessageListener() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'NOTIFICATION_CLICK') {
+          const notificationData = event.data.data;
+          if (notificationData?.notificationId) {
+            this.handleNotificationClick(notificationData);
+          }
+        }
+      });
     }
-    return outputArray;
-  }
-
-  private isValidVapidKey(key: string): boolean {
-    const base64Regex = /^[A-Za-z0-9+/]+={0,2}$/;
-    return Boolean(key && key.length >= 80 && base64Regex.test(key));
   }
 
   markAsRead(notificationId: string) {
@@ -369,7 +414,22 @@ export class NotificationsService {
   }
 
   disconnect() {
-    this.subscriptions.forEach(sub => sub?.unsubscribe());
+    console.log('🔄 Disconnecting notification subscriptions...');
+    this.subscriptions.forEach(sub => {
+      try {
+        sub?.unsubscribe();
+      } catch (error) {
+        console.error('Error unsubscribing:', error);
+      }
+    });
     this.subscriptions = [];
+    console.log('✅ Notification subscriptions disconnected');
+  }
+
+  clearNotifications() {
+    this.notifications.set([]);
+    this.unreadCount.set(0);
+    this.hasNewNotifications.set(false);
+    console.log('🧹 Notifications cleared');
   }
 }
