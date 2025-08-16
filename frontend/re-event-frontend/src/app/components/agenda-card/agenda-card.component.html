@@ -1,18 +1,25 @@
-<div class="agenda-card__time">
-  <span class="re-block agenda__event__time__start re-txt-bold">{{ getStartTime() }}</span>
-  <span class="re-block agenda__event__time__start re-ver-small-font re-font-500">{{ event().time | duration }}</span>
+<span class="text-lg font-medium py-2">{{ event().title }}</span>
+
+<div class="flex gap-2">
+  <span class="text-lg material-symbols-outlined">schedule</span>
+  <span class="text-base font-light">{{ getStartTime() }} - {{ getStartTime() }}</span>
 </div>
 
-<div class="re-agenda-card__details re-flex re-flex-column">
-  <h3 class="agenda-card__title">{{ event().title }}</h3>
-  <div>
-    <span class="agenda-card__speaker re-font-500">Speaker: {{ getSpeakerNames() }}</span>
-  </div>
-  <small class="re-ver-small-font">{{ event().location }}</small>
-
-  @if (isPastEvent()) {
-    <div class="re-flex">
-      <button class="agenda-card-btn re-secondary-btn re-ver-small-font">Rated &starf;</button>
-    </div>
-  }
+<div class="flex gap-2">
+  <span class="text-lg material-symbols-outlined">hourglass_top</span>
+  <span class="text-base font-light">{{ event().time | duration }}</span>
 </div>
+
+<div class="flex gap-2">
+  <span class="text-lg material-symbols-outlined">location_on</span>
+  <span class="text-base font-light">{{ event().location }}</span>
+</div>
+
+<div class="flex gap-2">
+  <span class="text-lg material-symbols-outlined">group</span>
+  <span class="text-base font-light">{{ getSpeakerNames() }}</span>
+</div>
+
+@if (isPastEvent()) {
+  <button class="btn btn--secondary btn--sm">Calificar &starf;</button>
+}

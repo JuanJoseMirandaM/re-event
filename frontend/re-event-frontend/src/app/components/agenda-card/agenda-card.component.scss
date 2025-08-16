@@ -1,8 +1,9 @@
 :host {
+  background-color: var(--bg-primary);
   display: flex;
-  padding: 1.4rem;
-  gap: 1.2rem;
-  box-shadow: var(--shadow-lg);
+  flex-direction: column;
+  padding: var(--space-4);
+  gap: var(--space-2);
   border-radius: var(--border-radius-lg);
 }
 

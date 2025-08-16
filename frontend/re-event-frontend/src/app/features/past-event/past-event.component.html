@@ -1,8 +1,6 @@
-<div class="re-agenda re-flex re-flex-column">
+<div class="flex flex--col gap-2 p-2">
   @for (dayGroup of eventsByDate(); track dayGroup.date) {
-    <div class="date-header">
-      <h3>{{ formatDate(dayGroup.date) }}</h3>
-    </div>
+    <p class="text-base">{{ formatDate(dayGroup.date) }}</p>
     @for (event of dayGroup.events; track event.eventId) {
       <app-agenda-card [event]="event"></app-agenda-card>
     }
