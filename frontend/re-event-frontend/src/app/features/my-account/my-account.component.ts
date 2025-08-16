@@ -11,7 +11,7 @@ import { User, UserService } from '../../core/services/user.service';
   styleUrl: './my-account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 're-general-padding re-flex re-flex-column re-gap-flex-1-6'
+    class: 'px-4 py-2 flex flex--col gap-4'
   }
 })
 export default class MyAccountComponent implements OnInit {

@@ -1,27 +1,29 @@
-<div class="re-profile-pic__container re-flex re-flex-column re-gap-flex-1-2 re-general-padding re-align-items-center">
-  <div class="re-profile-pic__frame">
+<div class="flex flex--col gap-4 p-6 rounded-md bg-primary">
+  <div class="my-account-profile">
     <img src="assets/images/pic-default.webp" alt="default pic">
   </div>
-  <button class="re-secondary-btn re-small-font re-w-80 re-font-500">Camera</button>
-  <button class="re-secondary-btn re-small-font re-w-80 re-font-500">Gallery</button>
+  <div class="flex justify-evenly">
+    <button class="btn btn--secondary btn--sm w-auto">Camara</button>
+    <button class="btn btn--secondary btn--sm w-auto">Galeria</button>
+  </div>
 </div>
 
 @if (isLoading()) {
-  <div class="re-loading re-flex re-flex-jc-center re-p-2">
+  <div class="flex flex--col gap-2 items-center justify-center p-2">
     <div class="spinner spinner--md"></div>
     <span>Cargando perfil...</span>
   </div>
 } @else if (currentUser) {
-  <form class="re-profile__body re-general-padding" [formGroup]="profileForm">
-    <div class="re-profile__body-header re-flex re-align-items-center re-flex-jc-sp">
-      <span class="re-small-font re-font-500">Profile Information</span>
+  <form class="flex flex--col gap-2 p-6 rounded-md bg-primary" [formGroup]="profileForm">
+    <div class="flex items-center justify-between py-2">
+      <span class="text-lg font-medium">Mi perfil</span>
 
       @if (!isEditing()) {
-        <button type="button" class="re-secondary-btn re-font-500 re-small-font" (click)="toggleEditMode()">Edit</button>
+        <button type="button" class="btn btn--secondary btn--sm w-auto" (click)="toggleEditMode()">Editar</button>
       } @else {
-        <div class="re-flex re-gap-flex-0-8">
-          <button type="button" class="re-secondary-btn re-font-500 re-small-font" (click)="saveProfile()">Save</button>
-          <button type="button" class="re-secondary-btn re-font-500 re-small-font" (click)="cancelEdit()">Cancel</button>
+        <div class="flex gap-2">
+          <button type="button" class="btn btn--primary btn--sm w-auto" (click)="saveProfile()">Guardar</button>
+          <button type="button" class="btn btn--secondary btn--sm w-auto" (click)="cancelEdit()">Cancel</button>
         </div>
       }
     </div>
@@ -32,10 +34,10 @@
       </div>
     }
 
-    <div class="re-flex re-flex-column re-gap-flex-0-8">
-      <label for="name">Name</label>
+    <div class="form-group">
+      <label for="name" class="form-label">Nombre</label>
       @if (isEditing()) {
-        <input type="text" id="name" class="re-input" formControlName="name">
+        <input type="text" id="name" class="form-input" formControlName="name">
         @if (formControls.name.invalid && formControls.name.touched) {
           <small class="re-error-message">
             @if (formControls.name.errors?.['required']) {
@@ -47,14 +49,14 @@
           </small>
         }
       } @else {
-        <input type="text" id="name" class="re-input" [value]="currentUser.name || ''" readonly>
+        <input type="text" id="name" class="form-input" [value]="currentUser.name || ''" readonly>
       }
     </div>
 
-    <div class="re-flex re-flex-column re-gap-flex-0-8">
-      <label for="email">Email</label>
+    <div class="form-group">
+      <label for="email" class="form-label">Email</label>
       @if (isEditing()) {
-        <input type="email" id="email" class="re-input" formControlName="email">
+        <input type="email" id="email" class="form-input" formControlName="email">
         @if (formControls.email.invalid && formControls.email.touched) {
           <small class="re-error-message">
             @if (formControls.email.errors?.['required']) {
@@ -66,23 +68,23 @@
           </small>
         }
       } @else {
-        <input type="email" id="email" class="re-input" [value]="currentUser.email || ''" readonly>
+        <input type="email" id="email" class="form-input" [value]="currentUser.email || ''" readonly>
       }
     </div>
 
-    <div class="re-flex re-flex-column re-gap-flex-0-8">
-      <label for="company">Company</label>
+    <div class="form-group">
+      <label for="company" class="form-label">Empresa</label>
       @if (isEditing()) {
-        <input type="text" id="company" class="re-input" formControlName="company">
+        <input type="text" id="company" class="form-input" formControlName="company">
       } @else {
-        <input type="text" id="company" class="re-input" [value]="currentUser.company || 'Not specified'" readonly>
+        <input type="text" id="company" class="form-input" [value]="currentUser.company || 'Not specified'" readonly>
       }
     </div>
 
-    <div class="re-flex re-flex-column re-gap-flex-0-8">
-      <label for="phoneNumber">Phone</label>
+    <div class="form-group">
+      <label for="phoneNumber" class="form-label">Celular</label>
       @if (isEditing()) {
-        <input type="tel" id="phoneNumber" class="re-input" formControlName="phoneNumber">
+        <input type="tel" id="phoneNumber" class="form-input" formControlName="phoneNumber">
         @if (formControls.phoneNumber.invalid && formControls.phoneNumber.touched) {
           <small class="re-error-message">
             @if (formControls.phoneNumber.errors?.['pattern']) {
@@ -91,28 +93,28 @@
           </small>
         }
       } @else {
-        <input type="tel" id="phoneNumber" class="re-input" [value]="formatPhoneNumber(currentUser.phoneNumber)" readonly>
+        <input type="tel" id="phoneNumber" class="form-input" [value]="formatPhoneNumber(currentUser.phoneNumber)" readonly>
       }
     </div>
 
-    <div class="re-flex re-flex-column re-gap-flex-0-8">
-      <label for="role">Role</label>
-      <input type="text" id="role" class="re-input" [value]="currentUser.role || ''" readonly>
+    <div class="form-group">
+      <label for="role" class="form-label">Rol</label>
+      <input type="text" id="role" class="form-input" [value]="currentUser.role || ''" readonly>
     </div>
 
-    <div class="re-flex re-flex-column re-gap-flex-0-8">
-      <label for="points">Points</label>
-      <input type="text" id="points" class="re-input" [value]="currentUser.points.toString() || '0'" readonly>
+    <div class="form-group">
+      <label for="points" class="form-label">Puntos</label>
+      <input type="text" id="points" class="form-input" [value]="currentUser.points.toString() || '0'" readonly>
     </div>
   </form>
 
-  <div class="re-profile__footer re-general-padding re-flex re-gap-flex-1-2 re-flex-column">
-    <p class="re-font-500 re-small-font re-font-500">Account Settings</p>
-    <button class="re-secondary-btn re-font-500">Change Password</button>
-    <button class="re-error-btn re-font-500" (click)="logout()">Logout</button>
+  <div class="flex flex--col gap-2 p-6 rounded-md bg-primary">
+    <span class="text-lg font-medium py-2">Configuraciones</span>
+    <button class="btn btn--secondary">Cambiar contraseña</button>
+    <button class="btn re-error-btn" (click)="logout()">Salir</button>
   </div>
 } @else {
-  <div class="re-error re-flex re-flex-jc-center re-p-2">
+  <div class="re-error flex justify-center p-2">
     <span>Error loading user profile</span>
   </div>
 }
