@@ -1,11 +1,13 @@
 import {ChangeDetectionStrategy, Component, inject, signal, computed} from '@angular/core';
 import {AgendaCardComponent} from '../../components/agenda-card/agenda-card.component';
 import {Event, EventsService} from "../../core/services/events.service";
+import {RelativeDatePipe} from "../../pipes";
 
 @Component({
   selector: 'app-past-event',
   imports: [
-    AgendaCardComponent
+    AgendaCardComponent,
+    RelativeDatePipe
   ],
   templateUrl: './past-event.component.html',
   styleUrl: './past-event.component.scss',

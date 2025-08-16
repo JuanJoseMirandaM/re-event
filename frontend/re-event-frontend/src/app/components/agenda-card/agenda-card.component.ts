@@ -25,4 +25,9 @@ export class AgendaCardComponent {
     const startDate = new Date(this.event().startDate);
     return startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
   }
+
+  getEndTime(): string {
+    const startDate = new Date(this.event().endDate);
+    return startDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
 }

@@ -1,6 +1,6 @@
 <div class="flex flex--col gap-2 p-2">
   @for (dayGroup of eventsByDate(); track dayGroup.date) {
-    <p class="text-base">{{ formatDate(dayGroup.date) }}</p>
+    <p class="text-base">{{ dayGroup.date | relativeDate }}</p>
     @for (event of dayGroup.events; track event.eventId) {
       <app-agenda-card [event]="event"></app-agenda-card>
     }
