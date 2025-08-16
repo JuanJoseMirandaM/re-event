@@ -21,5 +21,18 @@
 </div>
 
 @if (isPastEvent()) {
-  <button class="btn btn--secondary btn--sm">Calificar &starf;</button>
+  <button 
+    class="btn btn--secondary btn--sm" 
+    (click)="openRatingPanel()">
+    Calificar &starf;
+  </button>
 }
+
+<app-rating-panel
+  [eventId]="event().eventId"
+  [title]="event().title"
+  [speaker]="getSpeakerNames()"
+  [isVisible]="showRatingPanel()"
+  (submitRating)="onRatingSubmitted($event)"
+  (closePanel)="closeRatingPanel()">
+</app-rating-panel>

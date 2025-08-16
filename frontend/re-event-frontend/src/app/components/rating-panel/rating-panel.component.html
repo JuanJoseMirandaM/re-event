@@ -1,0 +1,61 @@
+<div class="rating-panel" [class.rating-panel--visible]="isVisible()">
+  <div class="rating-panel__overlay" (click)="onClose()"></div>
+
+  <div class="rating-panel__content bg-primary">
+    <div class="flex justify-between items-center">
+      <span class="text-base font-semibold">Calificar Charla</span>
+      <button class="rating-close-btn" (click)="onClose()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="rating-event-info">
+      <span class="text-base">{{ title() }}</span>
+      <span class="text-xs">{{ speaker() }}</span>
+    </div>
+
+    <div class="flex flex--col items-center gap-2">
+      <p class="text-base">¿Cómo calificarías esta charla?</p>
+      <div class="flex gap-2">
+        @for (star of [1, 2, 3, 4, 5]; track star) {
+          <button
+                  class="rating-start-btn"
+                  (click)="setRating(star)"
+                  (mouseenter)="setHoveredRating(star)"
+                  (mouseleave)="clearHoveredRating()"
+                  [attr.aria-label]="'Calificar con ' + star + ' estrellas'">
+            <span class="text-3xl material-symbols-outlined" [class]="getStarClass(star)">star_outline</span>
+          </button>
+        }
+      </div>
+      <p class="text-xs">
+        @if (rating() > 0) {
+          {{ rating() === 1 ? 'Muy mala' : rating() === 2 ? 'Mala' : rating() === 3 ? 'Regular' : rating() === 4 ? 'Buena' : 'Excelente' }}
+        } @else {
+          Selecciona una calificación
+        }
+      </p>
+    </div>
+
+    <div class="flex flex--col gap-2">
+      <label for="comment" class="flex items-center gap-1">
+        <span class="text-base material-symbols-outlined">chat</span>
+        <span class="text-sm font-medium">Comentarios (opcional)</span>
+      </label>
+      <textarea
+              id="comment"
+              class="form-input"
+              placeholder="Comparte tu experiencia, qué te gustó, qué se podría mejorar..."
+              rows="4"
+              [value]="comment()"
+              (input)="onCommentChange($event)">
+      </textarea>
+    </div>
+
+    <button class="btn btn--primary"
+            [disabled]="rating() === 0"
+            (click)="onSubmit()">
+      <span class="text-base">Calificar Charla</span>
+    </button>
+  </div>
+</div>

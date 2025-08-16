@@ -1,7 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, signal, computed} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {AgendaCardComponent} from '../../components/agenda-card/agenda-card.component';
 import {Event, EventsService} from "../../core/services/events.service";
 import {RelativeDatePipe} from "../../pipes";
+import {RatingData} from '../../components/rating-panel/rating-panel.component';
+import {EvaluationService} from "../../core/services/evaluation.service";
 
 @Component({
   selector: 'app-past-event',
@@ -15,13 +17,14 @@ import {RelativeDatePipe} from "../../pipes";
 })
 export default class PastEventComponent {
   #eventsService = inject(EventsService);
+  #evalutationService = inject(EvaluationService);
 
   pastEvents = signal<Event[]>([]);
-  
+
   eventsByDate = computed(() => {
     const events = this.pastEvents();
     const grouped = new Map<string, Event[]>();
-    
+
     events.forEach(event => {
       const date = new Date(event.startDate).toISOString().split('T')[0];
       if (!grouped.has(date)) {
@@ -29,7 +32,7 @@ export default class PastEventComponent {
       }
       grouped.get(date)!.push(event);
     });
-    
+
     return Array.from(grouped.entries())
       .sort(([a], [b]) => b.localeCompare(a))
       .map(([date, events]) => ({
@@ -48,14 +51,18 @@ export default class PastEventComponent {
       error: (error) => console.error('Error loading past events:', error)
     });
   }
-  
-  formatDate(dateString: string): string {
-    const [year, month, day] = dateString.split('-');
-    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-    return date.toLocaleDateString('es-ES', { 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
-    });
+
+  onRatingSubmitted(ratingData: RatingData): void {
+    console.log('Rating submitted:', ratingData);
+    const evaluation = {
+      sessionId: ratingData.eventId,
+      rating: ratingData.rating,
+      comments: ratingData.comment
+    }
+    this.#evalutationService.createEvaluation(evaluation).subscribe({
+      next: () => {
+        console.log('Evaluation submitted:', evaluation);
+      }
+    })
   }
 }
