@@ -1,13 +1,13 @@
-<div class="re-type-icon">
-<!--  <span [class]="notification().type | typeNotificationClass"></span>-->
+<div class="notification-icon"[class.notification-icon-no-read]="!notification().read">
+  <span class="material-symbols-outlined">info</span>
 </div>
 
-<div class="re-notification-desc re-flex re-flex-column" (click)="onMarkAsRead()">
-  <p class="re-title-notification re-font-500">{{ notification().title }}</p>
-  <p class="re-dsc-notification">{{ notification().description }}</p>
-  <small class="re-time re-font-500">{{ notification().createdAt | date: 'short' }}</small>
+<div class="notification-body" (click)="onMarkAsRead()">
+  <p class="text-base font-medium py-1">{{ notification().title }}</p>
+  <p class="text-sm font-light py-2">{{ notification().description }}</p>
+  <p class="text-xs font-light">{{ notification().createdAt | date: 'short' }}</p>
   
-  <!-- Mostrar link si existe -->
+  <!-- TODO: Mostrar link si existe -->
   @if (notification().link) {
     <div class="re-notification-link">
       <a [href]="notification().link"
@@ -18,4 +18,10 @@
       </a>
     </div>
   }
+</div>
+
+<div class="notification-button">
+  <button class="btn">
+    <span class="material-symbols-outlined">chevron_forward</span>
+  </button>
 </div>
