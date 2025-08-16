@@ -8,6 +8,13 @@
   justify-content: space-between
 }
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-4);
+  width: 100%;
+}
+
 .re-icon-header {
   color: var(--text-secondary);
   border-radius: var(--border-radius-lg);
