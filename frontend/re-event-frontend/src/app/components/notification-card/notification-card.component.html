@@ -5,7 +5,7 @@
 <div class="notification-body" (click)="onMarkAsRead()">
   <p class="text-base font-medium py-1">{{ notification().title }}</p>
   <p class="text-sm font-light py-2">{{ notification().description }}</p>
-  <p class="text-xs font-light">{{ notification().createdAt | date: 'short' }}</p>
+  <p class="text-xs font-light">{{ notification().createdAt | date:'hh:mm a' }}</p>
   
   <!-- TODO: Mostrar link si existe -->
   @if (notification().link) {
