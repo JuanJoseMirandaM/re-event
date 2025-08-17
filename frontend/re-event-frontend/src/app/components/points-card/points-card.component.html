@@ -1,20 +1,13 @@
 <div>
-  <!--TODO: Change the styles with the Icon-->
-  <div style="padding: 1rem;background-color: var(--first-color-alt);border-radius: 50%;">
-    <span class="re-icon-goal"></span>
-  </div>
+  <span class="text-2xl material-symbols-outlined" [style.color]="'var(--primary-lilac)'">cards_star</span>
 </div>
 
-<div class="re-flex-1 re-gap-flex-0-8 re-flex-column re-flex">
-  <p class="re-small-font re-font-500">{{ pointsDetail().description }}</p>
-  <div class="re-flex re-gap-flex-0-8">
-    <span class="re-ver-small-font">{{ pointsDetail().timestamp | date }}</span>
-    <!--TODO: ADd type of tag-->
-    <!--    <span class="re-ver-small-font">SPENT</span>-->
-  </div>
+<div class="flex re-flex-1 flex--col gap-1">
+  <span class="text-base font-normal">{{ pointsDetail().description }}</span>
+  <span class="text-xs font-light">{{ pointsDetail().timestamp | relativeDate }}, {{ pointsDetail().timestamp | date: 'short' }}</span>
 </div>
 
-<div class="re-flex re-flex-column re-txt-center">
-  <span class="re-font-500">+{{pointsDetail().points}}</span>
-  <span class="re-small-font">points</span>
+<div class="flex flex--col items-center">
+  <span class="text-xl font-medium">+{{ pointsDetail().points }}</span>
+  <span class="text-xs font-light">puntos</span>
 </div>

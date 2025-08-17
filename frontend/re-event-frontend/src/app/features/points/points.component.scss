@@ -1,16 +1,5 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.re-card-points {
-  gap: var(--space-3);
-
-  .re-card__body {
-    .re-card__value {
-      color: var(--first-color);
-      font-size: 5rem;
-    }
-  }
+.total-points {
+  color: var(--primary-lilac);
+  font-size: 5rem;
+  font-weight: 700;
 }
