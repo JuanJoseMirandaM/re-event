@@ -34,9 +34,7 @@ export interface EventsParams {
   past?: boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class EventsService {
   private readonly baseUrl = '/api';
 

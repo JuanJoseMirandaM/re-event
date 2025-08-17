@@ -1,0 +1,23 @@
+<div class="toast-container" aria-live="polite" aria-atomic="true">
+  <div *ngFor="let t of toasts(); trackBy: trackById" class="toast"
+       [ngClass]="{
+           'toast--success': t.type === 'success',
+           'toast--error': t.type === 'error',
+           'toast--warning': t.type === 'warning',
+           'toast--info': t.type === 'info'
+         }"
+       [attr.data-toast-id]="t.id"
+       (pointerdown)="onPointerDown($event, t.id)"
+       (pointermove)="onPointerMove($event)"
+       (pointerup)="onPointerUp($event)"
+       role="status">
+    <div class="toast__content">
+      <span class="toast__icon" aria-hidden="true"></span>
+      <span class="toast__message">{{ t.message }}</span>
+    </div>
+    <button *ngIf="t.dismissible" class="toast__close" aria-label="Dismiss" (click)="dismiss(t.id)">
+      ×
+    </button>
+  </div>
+</div>
+

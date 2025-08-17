@@ -1,9 +1,11 @@
-import { Routes } from '@angular/router';
-import { isAuthGuard } from './core/guards/is-auth.guard';
-import { redirectIfAuthGuard } from './core/guards/redirect-if-auth.guard';
+import {Routes} from '@angular/router';
+import {isAuthGuard} from './core/guards/is-auth.guard';
+import {redirectIfAuthGuard} from './core/guards/redirect-if-auth.guard';
+import {PointsService} from './core/services/points.service';
+import {EventsService} from './core/services/events.service';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component'),
@@ -19,8 +21,8 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/verify/verify.component'),
     canMatch: [redirectIfAuthGuard]
   },
-  { path: 'auth/callback', loadComponent: () => import('./features/auth/callback/callback.component') },
-  { path: 'auth/logout', loadComponent: () => import('./features/auth/logout/logout.component') },
+  {path: 'auth/callback', loadComponent: () => import('./features/auth/callback/callback.component')},
+  {path: 'auth/logout', loadComponent: () => import('./features/auth/logout/logout.component')},
   {
     path: 'secure',
     loadComponent: () => import('./features/secure/secure.component'),
@@ -61,12 +63,17 @@ export const routes: Routes = [
         loadComponent: () => import('./features/qr/qr-scanner/qr-scanner.component')
       },
       {
+        path: 'claim-points',
+        loadComponent: () => import('./features/claim-points/claim-points.component')
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'notifications'
       },
     ],
-    canMatch: [isAuthGuard]
+    canMatch: [isAuthGuard],
+    providers: [PointsService, EventsService]
   },
   {
     path: '**', redirectTo: '/login'

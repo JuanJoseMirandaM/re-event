@@ -38,18 +38,24 @@ export interface PointsParams {
   sourceType?: 'QR_CODE' | 'COLLECTIBLE_CARD';
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class PointsService {
+export interface ClaimPointsResponse {
+  claimedAt: string;
+  code: string;
+  description: string;
+  pointsEarned: number;
+  sourceType: string;
+  totalPoints: number;
+}
 
+@Injectable()
+export class PointsService {
   private readonly baseUrl = '/api';
 
   constructor(private readonly http: HttpClient,
               private readonly authService: AuthService) {
   }
 
-  claimPoints(code: string): Observable<{ pointsAwarded: number; message: string }> {
+  claimPoints(code: string): Observable<ClaimPointsResponse> {
     return this.authService.getAuthToken().pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
@@ -60,7 +66,7 @@ export class PointsService {
         const url = `${this.baseUrl}/points/claim`;
         const request: ClaimPointsRequest = {code};
 
-        return this.http.post<ApiResponse<{ pointsAwarded: number; message: string }>>(url, request, {headers}).pipe(
+        return this.http.post<ApiResponse<ClaimPointsResponse>>(url, request, {headers}).pipe(
           map(response => response.data!)
         );
       })
