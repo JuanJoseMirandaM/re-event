@@ -21,11 +21,19 @@
 </div>
 
 @if (isPastEvent()) {
-  <button 
-    class="btn btn--secondary btn--sm" 
-    (click)="openRatingPanel()">
-    Calificar &starf;
-  </button>
+  @if (evaluation()?.sessionId) {
+    <button class="btn btn--secondary btn--sm" disabled>
+      Calificada
+      @for ( start of [1,2,3,4,5]; track start) {
+        <span [style.color]="start > evaluation()!.rating ? 'var(--gray-400)' : 'var(--primary-lilac)'">&starf;</span>
+      }
+    </button>
+  } @else {
+    <button class="btn btn--secondary btn--sm"
+            (click)="openRatingPanel()">
+      Calificar
+    </button>
+  }
 }
 
 <app-rating-panel

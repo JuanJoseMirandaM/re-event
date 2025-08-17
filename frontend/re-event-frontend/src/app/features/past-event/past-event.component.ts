@@ -2,8 +2,6 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {AgendaCardComponent} from '../../components/agenda-card/agenda-card.component';
 import {Event, EventsService} from "../../core/services/events.service";
 import {RelativeDatePipe} from "../../pipes";
-import {RatingData} from '../../components/rating-panel/rating-panel.component';
-import {EvaluationService} from "../../core/services/evaluation.service";
 
 @Component({
   selector: 'app-past-event',
@@ -17,7 +15,6 @@ import {EvaluationService} from "../../core/services/evaluation.service";
 })
 export default class PastEventComponent {
   #eventsService = inject(EventsService);
-  #evalutationService = inject(EvaluationService);
 
   pastEvents = signal<Event[]>([]);
 
@@ -50,19 +47,5 @@ export default class PastEventComponent {
       next: (response) => this.pastEvents.set(response.items),
       error: (error) => console.error('Error loading past events:', error)
     });
-  }
-
-  onRatingSubmitted(ratingData: RatingData): void {
-    console.log('Rating submitted:', ratingData);
-    const evaluation = {
-      sessionId: ratingData.eventId,
-      rating: ratingData.rating,
-      comments: ratingData.comment
-    }
-    this.#evalutationService.createEvaluation(evaluation).subscribe({
-      next: () => {
-        console.log('Evaluation submitted:', evaluation);
-      }
-    })
   }
 }

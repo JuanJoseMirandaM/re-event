@@ -2,10 +2,7 @@
   @for (dayGroup of eventsByDate(); track dayGroup.date) {
     <p class="text-base">{{ dayGroup.date | relativeDate }}</p>
     @for (event of dayGroup.events; track event.eventId) {
-      <app-agenda-card 
-        [event]="event"
-        (ratingSubmitted)="onRatingSubmitted($event)">
-      </app-agenda-card>
+      <app-agenda-card [event]="event"></app-agenda-card>
     }
   }
 </div>

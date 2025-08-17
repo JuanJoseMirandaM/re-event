@@ -1,7 +1,7 @@
 <div class="rating-panel" [class.rating-panel--visible]="isVisible()">
   <div class="rating-panel__overlay" (click)="onClose()"></div>
 
-  <div class="rating-panel__content bg-primary">
+  <div class="rating-panel__content bg-primary flex flex--col gap-4 p-4 w-full shadow-md">
     <div class="flex justify-between items-center">
       <span class="text-base font-semibold">Calificar Charla</span>
       <button class="rating-close-btn" (click)="onClose()">
