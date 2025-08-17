@@ -4,7 +4,7 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/re-event-frontend",
+        "distDir": "dist/re-event-frontend/browser",
         "command": "ng build --configuration production"
       }
     }
