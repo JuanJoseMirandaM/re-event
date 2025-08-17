@@ -4,6 +4,9 @@ import {fromPromise} from 'rxjs/internal/observable/innerFrom';
 import {filter, take, timer} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PointsService} from '../../../core/services/points.service';
+import {FooterService} from '../../../core/services/footer.service';
+import {Location} from '@angular/common';
+import {Router} from '@angular/router';
 
 interface CameraDevice {
   id: string;
@@ -23,20 +26,21 @@ interface CameraDevice {
 export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   isQrScanSuccessful = signal(false);
 
-  // Html5Qrcode instance and camera state
   #html5QrCode: Html5Qrcode | null = null;
   #cameraId: string | null = null;
   #devices: CameraDevice[] = [];
   #currentDeviceIndex = 0;
 
-  // Injected services
   #destroyRef = inject(DestroyRef);
   #pointsService = inject(PointsService);
+  #footerService = inject(FooterService);
+  #location = inject(Location);
+  #router = inject(Router);
 
-  // Exposed to template
   hasMultipleCameras = false;
 
   ngAfterViewInit() {
+    this.#footerService.hide();
     this.#initializeQrPreview();
   }
 
@@ -67,6 +71,8 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
       this.#cameraId!,
       {
         fps: 10,
+        qrbox: 250,
+        aspectRatio: this.#calculateAspectRatio(),
       },
       (decodedText) => this.#onSuccess(decodedText),
       (errorMessage) => this.#onError(errorMessage))
@@ -81,10 +87,20 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
     this.#initializeHtml5QrCode();
   }
 
+  #calculateAspectRatio(): number {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const reverseAspectRatio = height / width
+    return reverseAspectRatio > 1.5
+      ? reverseAspectRatio + (reverseAspectRatio * 12 / 100)
+      : reverseAspectRatio
+  }
+
   #onSuccess(decodedText: string): void {
     this.isQrScanSuccessful.set(true)
     timer(500).subscribe(() => this.#html5QrCode?.stop());
-    this.#pointsService.claimPoints(decodedText).subscribe(value => console.log(value))
+    this.#pointsService.claimPoints(decodedText)
+      .subscribe(value => this.#router.navigate(['/secure/points']))
   }
 
   #onError(errorMessage: string) {
@@ -104,7 +120,20 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  onClose(): void {
+    try {
+      this.#location.back();
+    } catch {
+      void this.#router.navigate(['/secure']);
+    }
+  }
+
+  onEnterCode(): void {
+    void this.#router.navigate(['/secure/claim-points']);
+  }
+
   ngOnDestroy(): void {
+    this.#footerService.show();
     void this.#stopAndClear();
   }
 }

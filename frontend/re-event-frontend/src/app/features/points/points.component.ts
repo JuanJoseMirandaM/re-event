@@ -12,7 +12,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
   styleUrl: './points.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'flex flex--col items-center gap-4 p-2'
+    class: 'flex flex--col gap-2 p-4'
   }
 })
 export default class PointsComponent implements OnInit {

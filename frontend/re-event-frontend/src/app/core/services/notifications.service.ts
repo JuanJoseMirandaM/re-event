@@ -31,7 +31,6 @@ export class NotificationsService {
   hasNewNotifications = signal<boolean>(false);
 
   async connect() {
-    // Desconectar suscripciones existentes para evitar duplicados
     this.disconnect();
 
     this.#userService.getCurrentUser().pipe(
@@ -39,8 +38,6 @@ export class NotificationsService {
       switchMap(user => {
         const userId = user.userId;
         const userRole = user.role;
-
-        console.log('🔄 Conectando a notificaciones...');
 
         return forkJoin([
           this.subscribeToRole(UserRole.ALL),
@@ -281,8 +278,8 @@ export class NotificationsService {
       console.log('🔔 Mostrando notificación del navegador');
       const browserNotification = new Notification(notification.title, {
         body: notification.description || '',
-        icon: '/assets/icons/icon-192x192.png',
-        badge: '/assets/icons/icon-72x72.png',
+        icon: '/icons/icon-192x192.png',
+        badge: '/icons/icon-72x72.png',
         tag: notification.notificationId,
         data: {
           link: notification.link,

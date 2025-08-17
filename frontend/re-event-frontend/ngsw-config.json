@@ -5,11 +5,12 @@
     {
       "name": "app",
       "installMode": "prefetch",
-      "updateMode": "prefetch",
       "resources": {
         "files": [
+          "/favicon.ico",
+          "/index.csr.html",
           "/index.html",
-          "/manifest.json",
+          "/manifest.webmanifest",
           "/*.css",
           "/*.js"
         ]
@@ -21,17 +22,7 @@
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**/*"
-        ]
-      }
-    },
-    {
-      "name": "icons",
-      "installMode": "lazy",
-      "updateMode": "prefetch",
-      "resources": {
-        "files": [
-          "/assets/icons/*.png"
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
       }
     }
@@ -49,5 +40,8 @@
         "timeout": "10s"
       }
     }
-  ]
+  ],
+  "notifications": {
+    "enabled": true
+  }
 }

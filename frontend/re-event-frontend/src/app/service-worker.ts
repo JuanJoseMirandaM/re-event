@@ -1,3 +1,4 @@
+/*
 /// <reference lib="webworker" />
 
 import { clientsClaim } from 'workbox-core';
@@ -160,3 +161,4 @@ self.addEventListener('error', (event) => log('Error:', event.error));
 self.addEventListener('unhandledrejection', (event) => log('Rejection:', event.reason));
 
 log('SW ready (v' + APP_VERSION + ')');
+*/
