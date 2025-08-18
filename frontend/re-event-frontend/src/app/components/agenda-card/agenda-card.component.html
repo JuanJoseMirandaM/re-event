@@ -1,6 +1,11 @@
 <span class="text-lg font-medium py-2">{{ event().title }}</span>
 
 <div class="flex gap-2">
+  <span class="text-lg material-symbols-outlined">group</span>
+  <span class="text-base font-light">{{ event().speakers?.join(', ') || 'AWS UG' }}</span>
+</div>
+
+<div class="flex gap-2">
   <span class="text-lg material-symbols-outlined">schedule</span>
   <span class="text-base font-light">{{ getStartTime() }} - {{ getEndTime() }}</span>
 </div>
@@ -12,13 +17,30 @@
 
 <div class="flex gap-2">
   <span class="text-lg material-symbols-outlined">location_on</span>
-  <span class="text-base font-light">{{ event().location }}</span>
+  @if (event().locationLink) {
+    <a 
+      [href]="event().locationLink" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="location-link"
+      (click)="onLocationClick()">
+      {{ event().location }}
+    </a>
+  } @else {
+    <span class="text-base font-light">{{ event().location }}</span>
+  }
 </div>
 
-<div class="flex gap-2">
-  <span class="text-lg material-symbols-outlined">group</span>
-  <span class="text-base font-light">{{ getSpeakerNames() }}</span>
-</div>
+@if (event().tags && event().tags.length > 0) {
+  <div class="flex gap-2">
+    <span class="text-lg material-symbols-outlined">label</span>
+    <div class="flex flex-wrap gap-1 items-center">
+      @for (tag of event().tags; track tag) {
+        <span class="tag">{{ tag }}</span>
+      }
+    </div>
+  </div>
+}
 
 @if (isPastEvent()) {
   @if (evaluation()?.sessionId) {
@@ -39,7 +61,7 @@
 <app-rating-panel
   [eventId]="event().eventId"
   [title]="event().title"
-  [speaker]="getSpeakerNames()"
+  [speaker]="event().speakers?.join(', ') || 'AWS UG'"
   [isVisible]="showRatingPanel()"
   (submitRating)="onRatingSubmitted($event)"
   (closePanel)="closeRatingPanel()">

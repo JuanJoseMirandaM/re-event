@@ -1,11 +1,11 @@
 <div class="flex bg-primary rounded-lg">
-  <button class="btn text-base font-medium"
+  <button class="btn agenda-option-button text-base font-medium"
           routerLinkActive="btn-active"
           routerLink="./upcoming">
     Upcoming
   </button>
 
-  <button class="btn text-base font-medium"
+  <button class="btn agenda-option-button text-base font-medium"
           routerLinkActive="btn-active"
           routerLink="./past">
     Past events
@@ -13,3 +13,17 @@
 </div>
 
 <router-outlet/>
+
+@if (isAdmin()) {
+  <button 
+    class="btn btn--primary floating-create-btn"
+    (click)="openCreatePanel()"
+    aria-label="Crear nuevo evento">
+    <span class="material-symbols-outlined">add</span>
+  </button>
+}
+
+<app-create-event
+  [isVisible]="showCreatePanel()"
+  (closePanel)="closeCreatePanel()">
+</app-create-event>

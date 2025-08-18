@@ -16,6 +16,18 @@ export interface Event {
   tags: string[];
 }
 
+export interface CreateEventInput {
+  title: string;
+  description: string;
+  startDate: string;
+  endDate?: string;
+  time?: number; // Cambiado a number para duración en minutos
+  location: string;
+  locationLink?: string;
+  speakers: string[];
+  tags: string[];
+}
+
 export interface EventsResponse {
   items: Event[];
   lastKey: string | null;
@@ -70,5 +82,21 @@ export class EventsService {
 
   getPastEvents(limit?: number, lastKey?: string): Observable<EventsResponse> {
     return this.getEvents({past: true, limit, lastKey});
+  }
+
+  createEvent(eventData: CreateEventInput): Observable<Event> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/events`;
+        return this.http.post<{success: boolean, data: Event}>(url, eventData, {headers}).pipe(
+          map(response => response.data)
+        );
+      })
+    );
   }
 }

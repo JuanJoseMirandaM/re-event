@@ -1,0 +1,133 @@
+<app-slide-panel [isVisible]="isVisible()" (closePanel)="onClose()">
+  <div class="create-event__content bg-primary flex flex--col gap-4 p-4 w-full shadow-md">
+    <div class="flex justify-between items-center">
+      <span class="text-base font-semibold">Crear Nuevo Evento</span>
+      <button class="close-btn" (click)="onClose()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form class="flex flex--col gap-4" (submit)="onSubmit(); $event.preventDefault()">
+      <div class="form-group">
+        <label for="title" class="form-label">Título del Evento *</label>
+        <input
+          type="text"
+          id="title"
+          class="form-input"
+          placeholder="Ej: AWS Community Day Bolivia 2025"
+          [value]="title()"
+          (input)="onTitleChange($event)"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Descripción *</label>
+        <textarea
+          id="description"
+          class="form-textarea"
+          placeholder="Describe el evento, qué aprenderás, qué esperar..."
+          rows="3"
+          [value]="description()"
+          (input)="onDescriptionChange($event)"
+          required>
+        </textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startDate" class="form-label">Fecha de Inicio *</label>
+          <input
+            type="datetime-local"
+            id="startDate"
+            class="form-input"
+            [class.form-input--error]="dateError()"
+            [value]="startDate()"
+            (input)="onStartDateChange($event)"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="endDate" class="form-label">Fecha de Fin *</label>
+          <input
+            type="datetime-local"
+            id="endDate"
+            class="form-input"
+            [class.form-input--error]="dateError()"
+            [value]="endDate()"
+            (input)="onEndDateChange($event)"
+            required>
+        </div>
+      </div>
+
+      @if (dateError()) {
+        <div class="form-error">
+          <span class="error-text">{{ dateError() }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label class="form-label">Duración del Evento</label>
+        <div class="duration-display">
+          <span class="duration-text">{{ durationDisplay() }}</span>
+          <small class="form-help">Se calcula automáticamente entre las fechas seleccionadas</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="location" class="form-label">Ubicación *</label>
+        <input
+          type="text"
+          id="location"
+          class="form-input"
+          placeholder="Ej: Universidad Católica Boliviana, La Paz"
+          [value]="location()"
+          (input)="onLocationChange($event)"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="locationLink" class="form-label">Link de Ubicación (opcional)</label>
+        <input
+          type="url"
+          id="locationLink"
+          class="form-input"
+          placeholder="https://maps.google.com/..."
+          [value]="locationLink()"
+          (input)="onLocationLinkChange($event)">
+      </div>
+
+      <div class="form-group">
+        <label for="speakers" class="form-label">Ponentes (opcional)</label>
+        <input
+          type="text"
+          id="speakers"
+          class="form-input"
+          placeholder="Juan Pérez, María García, Carlos López"
+          [value]="speakers()"
+          (input)="onSpeakersChange($event)">
+        <small class="form-help">Separa múltiples ponentes con comas</small>
+      </div>
+
+      <div class="form-group">
+        <label for="tags" class="form-label">Etiquetas (opcional)</label>
+        <input
+          type="text"
+          id="tags"
+          class="form-input"
+          placeholder="AWS, Cloud, Networking, Workshop"
+          [value]="tags()"
+          (input)="onTagsChange($event)">
+        <small class="form-help">Separa múltiples etiquetas con comas</small>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="!isFormValid()">
+        <span class="material-symbols-outlined">add</span>
+        Crear Evento
+      </button>
+    </form>
+  </div>
+</app-slide-panel>
+

@@ -22,6 +22,7 @@ export class AgendaCardComponent implements OnInit {
   #evaluationService = inject(EvaluationService);
 
   ngOnInit() {
+    console.log(this.event());
     if (this.isPastEvent()) {
       this.checkEvaluationStatus();
     }
@@ -32,8 +33,10 @@ export class AgendaCardComponent implements OnInit {
     return eventDate < new Date();
   }
 
-  getSpeakerNames(): string {
-    return this.event().speakers?.map(speaker => speaker.name).join(', ') || 'AWS UG';
+  onLocationClick(): void {
+    if (this.event().locationLink) {
+      console.log('Redirigiendo a ubicación:', this.event().locationLink);
+    }
   }
 
   getStartTime(): string {

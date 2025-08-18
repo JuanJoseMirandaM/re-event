@@ -29,3 +29,31 @@
     margin-left: auto;
   }
 }
+
+.location-link {
+  color: var(--primary-lilac);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    color: var(--primary-lilac-dark);
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: var(--primary-lilac-darker);
+  }
+}
+
+.tag {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  border: 1px solid var(--gray-200);
+  transition: all 0.2s ease;
+}
