@@ -1,0 +1,5 @@
+<div class="slide-panel" [class.slide-panel--visible]="isVisible()">
+  <div class="slide-panel__overlay" (click)="onClose()"></div>
+
+  <ng-content></ng-content>
+</div>

@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {SlidePanelComponent} from "../slide-panel/slide-panel.component";
 
 export interface RatingData {
   eventId: string;
@@ -12,7 +13,7 @@ export interface RatingData {
 @Component({
   selector: 'app-rating-panel',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, SlidePanelComponent],
   templateUrl: './rating-panel.component.html',
   styleUrl: './rating-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
