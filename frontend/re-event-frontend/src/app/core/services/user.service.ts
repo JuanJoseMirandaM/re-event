@@ -76,4 +76,16 @@ export class UserService {
       map(response => response.data)
     );
   }
+
+  isAdmin(): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      map(user => {
+        const adminUserIds = [
+          '75624637-0cbc-4af0-9b18-a363569ffaf8', // jhonrocker2012@gmail.com
+          'be8be8ca-2e18-4ac1-a04e-e9c91ec7c131'  // jjsmm97@gmail.com
+        ];
+        return adminUserIds.includes(user.userId);
+      })
+    );
+  }
 }

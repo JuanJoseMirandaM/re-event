@@ -38,19 +38,21 @@ input {
 
 /* ===== SCROLLBAR STYLING ===== */
 ::-webkit-scrollbar {
-  width: 0.8rem;
+  width: 0.4rem;
+  height: 0.4rem;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-lilac);
+  background: var(--gray-300);
   border-radius: var(--border-radius-full);
+  transition: background 0.3s ease;
 
   &:hover {
-    background: var(--primary-lilac-dark);
+    background: var(--gray-300);
   }
 }
 

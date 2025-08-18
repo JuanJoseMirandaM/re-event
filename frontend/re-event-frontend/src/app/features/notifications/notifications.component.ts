@@ -1,7 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, computed} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, computed, signal, effect} from '@angular/core';
 import {NotificationCardComponent} from '../../components/notification-card/notification-card.component';
 import {NotificationsService} from '../../core/services/notifications.service';
 import {RelativeDatePipe} from "../../pipes";
+import {CreateNotificationComponent} from '../../components/create-notification/create-notification.component';
+import {UserService} from "../../core/services/user.service";
 
 interface GroupedNotifications {
   date: string;
@@ -12,7 +14,8 @@ interface GroupedNotifications {
   selector: 'app-notifications',
   imports: [
     NotificationCardComponent,
-    RelativeDatePipe
+    RelativeDatePipe,
+    CreateNotificationComponent
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
@@ -20,8 +23,24 @@ interface GroupedNotifications {
 })
 export default class NotificationsComponent implements OnInit {
   #notificationsService = inject(NotificationsService);
+  #userService = inject(UserService);
 
+  isAdmin = signal<boolean>(false);
   notifications = this.#notificationsService.notifications;
+  showCreatePanel = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      this.#userService.isAdmin().subscribe({
+        next: (isAdmin) => {
+          this.isAdmin.set(isAdmin);
+        },
+        error: (error) => {
+          this.isAdmin.set(false);
+        }
+      });
+    });
+  }
 
   groupedNotifications = computed(() => {
     const notifications = this.notifications();
@@ -53,11 +72,18 @@ export default class NotificationsComponent implements OnInit {
 
   async ngOnInit() {
     await this.#notificationsService.loadNotifications();
-
     this.#notificationsService.markAllAsRead();
   }
 
   markAsRead(notificationId: string) {
     this.#notificationsService.markAsRead(notificationId);
+  }
+
+  openCreatePanel(): void {
+    this.showCreatePanel.set(true);
+  }
+
+  closeCreatePanel(): void {
+    this.showCreatePanel.set(false);
   }
 }

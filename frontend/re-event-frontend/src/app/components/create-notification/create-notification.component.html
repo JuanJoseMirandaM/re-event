@@ -1,0 +1,82 @@
+<app-slide-panel [isVisible]="isVisible()" (closePanel)="onClose()">
+  <div class="create-notification__content bg-primary flex flex--col gap-4 p-4 w-full shadow-md">
+    <div class="flex justify-between items-center">
+      <span class="text-base font-semibold">Crear Notificación</span>
+      <button class="close-btn" (click)="onClose()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form class="flex flex--col gap-4" (submit)="onSubmit(); $event.preventDefault()">
+      <div class="form-group">
+        <label for="title" class="form-label">Título *</label>
+        <input
+          id="title"
+          type="text"
+          class="form-input"
+          placeholder="Título de la notificación"
+          [value]="title()"
+          (input)="onTitleChange($event)"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Descripción *</label>
+        <textarea
+          id="description"
+          class="form-textarea"
+          placeholder="Descripción de la notificación"
+          rows="4"
+          [value]="description()"
+          (input)="onDescriptionChange($event)"
+          required>
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="author" class="form-label">Autor</label>
+        <input
+          id="author"
+          type="text"
+          class="form-input"
+          placeholder="Autor de la notificación"
+          [value]="author()"
+          (input)="onAuthorChange($event)">
+      </div>
+
+      <div class="form-group">
+        <label for="targetRole" class="form-label">Rol Objetivo</label>
+        <select
+          id="targetRole"
+          class="form-select"
+          [value]="targetRole()"
+          (change)="onTargetRoleChange($event)">
+          @for (option of targetRoleOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="userId" class="form-label">Usuario Específico</label>
+        <select
+          id="userId"
+          class="form-select"
+          [value]="userId()"
+          (change)="onUserIdChange($event)">
+          @for (option of userIdOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <button 
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="!isFormValid()">
+        <span class="material-symbols-outlined">add</span>
+        Crear Notificación
+      </button>
+    </form>
+  </div>
+</app-slide-panel>

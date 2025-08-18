@@ -16,6 +16,24 @@ export interface Notification {
   read: boolean;
 }
 
+export interface NotificationInput {
+  title: string;
+  description: string;
+  author: string;
+  targetRole: string;
+  userId: string;
+}
+
+export interface CreateNotificationResponse {
+  notificationId: string;
+  title: string;
+  description: string;
+  createdAt: string;
+  targetRole: string;
+  userId: string;
+  author: string;
+}
+
 const client = generateClient();
 
 @Injectable({
@@ -48,6 +66,40 @@ export class NotificationsService {
     ).subscribe(([allNotifs, userNotifs, roleNotifs]) => {
       console.log('✅ Conectado a notificaciones');
     });
+  }
+
+  async createNotification(input: NotificationInput): Promise<CreateNotificationResponse> {
+    const mutation = `
+      mutation CreateNotification($input: NotificationInput!) {
+        createNotification(input: $input) {
+          notificationId
+          title
+          description
+          createdAt
+          targetRole
+          userId
+          author
+        }
+      }
+    `;
+
+    try {
+      const result: any = await client.graphql({
+        query: mutation,
+        variables: { input }
+      });
+
+      if (result.data?.createNotification) {
+        const newNotification = result.data.createNotification;
+        
+        return newNotification;
+      } else {
+        throw new Error('No se recibió respuesta del servidor');
+      }
+    } catch (error) {
+      console.error('Error creando notificación:', error);
+      throw error;
+    }
   }
 
   private async subscribeToRole(targetRole: string) {
