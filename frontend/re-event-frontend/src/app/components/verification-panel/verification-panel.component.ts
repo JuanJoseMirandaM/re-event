@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { SlidePanelComponent } from "../slide-panel/slide-panel.component";
 import { UserService } from "../../core/services/user.service";
 import { ConfettiModalComponent, ConfettiModalConfig } from "../confetti-modal/confetti-modal.component";
+import {ToastService} from "../../core/services/toast.service";
 
 @Component({
   selector: 'app-verification-panel',
@@ -18,6 +19,7 @@ export class VerificationPanelComponent {
   closePanel = output<void>();
 
   #userService = inject(UserService);
+  #toast = inject(ToastService);
 
   verificationCode = signal<string>('');
   isLoading = signal<boolean>(false);
@@ -54,11 +56,11 @@ export class VerificationPanelComponent {
           } else {
             console.error(result?.message || 'Error en la verificación');
           }
+          this.isLoading.set(false);
         },
         error: (err) => {
-          console.error('Error en la verificación:', err);
-        },
-        complete: () => {
+          console.error('Error en la verificación:', err.error.error);
+          this.#toast.error(err.error.error);
           this.isLoading.set(false);
         }
       });
