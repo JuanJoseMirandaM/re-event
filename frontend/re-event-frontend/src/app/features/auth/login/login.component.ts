@@ -6,7 +6,6 @@ import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, finalize, map, of, switchMap} from 'rxjs';
 import {BeforeInstallPromptEvent} from '../../../interfaces/before-install-prompt-event.interface';
 import {LoaderService} from '../../../core/services/loader.service';
-import {VersionService} from '../../../core/services/version.service';
 
 @Component({
   selector: 'app-login',

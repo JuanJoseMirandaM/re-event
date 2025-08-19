@@ -2,7 +2,7 @@
 
 <div class="flex gap-2">
   <span class="text-lg material-symbols-outlined">group</span>
-  <span class="text-base font-light">{{ event().speakers?.join(', ') || 'AWS UG' }}</span>
+  <span class="text-base font-light">{{ event().speakers.join(', ') || 'AWS UG' }}</span>
 </div>
 
 <div class="flex gap-2">
@@ -61,7 +61,7 @@
 <app-rating-panel
   [eventId]="event().eventId"
   [title]="event().title"
-  [speaker]="event().speakers?.join(', ') || 'AWS UG'"
+  [speaker]="event().speakers.join(', ') || 'AWS UG'"
   [isVisible]="showRatingPanel()"
   (submitRating)="onRatingSubmitted($event)"
   (closePanel)="closeRatingPanel()">
