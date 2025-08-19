@@ -1,14 +1,13 @@
 {
-  "name": "re:Event - Gestión de Eventos",
-  "short_name": "re:Event",
-  "description": "Aplicación para gestionar y participar en eventos",
+  "name": "Qinaya - Gestión de Eventos",
   "short_name": "Qinaya",
+  "description": "Aplicación para gestionar y participar en eventos",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
-  "theme_color": "#1976d2",
-   "background_color": "#ffffff",
-   "orientation": "portrait-primary",
+  "theme_color": "#6b7280",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "icons/icon-72x72.png",
