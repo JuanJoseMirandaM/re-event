@@ -1,0 +1,87 @@
+.verification-panel__content {
+  position: fixed;
+  bottom: 0;
+  border-radius: 20px 20px 0 0;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--gray-100);
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+    color: var(--gray-600);
+  }
+}
+
+.verification-info {
+  background: var(--primary-lilac-light);
+  color: white;
+  padding: var(--space-4);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+
+  .text-primary-lilac {
+    color: white !important;
+  }
+}
+
+.verification-code-input {
+  font-size: var(--text-base);
+  letter-spacing: 1px;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.form-help {
+  font-size: var(--text-xs);
+  color: var(--gray-500);
+  font-style: italic;
+}
+
+.form-error {
+  padding: var(--space-2);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+}
+
+.error-text {
+  color: var(--error-color, #ef4444);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.verification-tips {
+  background: var(--gray-50);
+  padding: var(--space-3);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--gray-200);
+}
+
+.verification-tips ul {
+  margin: 0;
+  padding-left: var(--space-3);
+}
+
+.verification-tips li {
+  line-height: 1.4;
+}

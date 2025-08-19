@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { User, UserService } from '../../core/services/user.service';
+import { VerificationPanelComponent } from '../../components/verification-panel/verification-panel.component';
 
 @Component({
   selector: 'app-my-account',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, VerificationPanelComponent],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +24,7 @@ export default class MyAccountComponent implements OnInit {
   isLoading = signal(true);
   isEditing = signal(false);
   errorMessage = signal('');
+  showVerificationPanel = signal<boolean>(false);
 
   profileForm = this.#formBuilder.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -152,6 +154,14 @@ export default class MyAccountComponent implements OnInit {
         this.errorMessage.set('Error al cerrar sesión');
       }
     });
+  }
+
+  openVerificationPanel(): void {
+    this.showVerificationPanel.set(true);
+  }
+
+  closeVerificationPanel(): void {
+    this.showVerificationPanel.set(false);
   }
 
   get currentUser(): User | null {

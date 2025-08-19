@@ -1,0 +1,71 @@
+<app-slide-panel [isVisible]="isVisible()" (closePanel)="onClose()">
+  <div class="verification-panel__content bg-primary flex flex--col gap-4 p-4 w-full shadow-md">
+    <div class="flex justify-between items-center">
+      <span class="text-base font-semibold">Acreditación</span>
+      <button class="close-btn" (click)="onClose()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="verification-info">
+      <div class="flex justify-center gap-2 mb-2">
+        <span class="text-lg material-symbols-outlined text-primary-lilac">verified_user</span>
+        <span class="text-base font-medium">Verificar Código de Acreditación</span>
+      </div>
+      <p class="text-sm text-gray-500">
+        Ingresa el código de 6 caracteres que recibiste para acreditar tu usuario en el AWS Community Day Bolivia 2025.
+      </p>
+    </div>
+
+    <form class="flex flex--col gap-4" (submit)="onSubmit(); $event.preventDefault()">
+      <div class="form-group">
+        <label for="verificationCode" class="form-label">Código de Verificación *</label>
+        <input
+          type="text"
+          id="verificationCode"
+          class="form-input verification-code-input"
+          placeholder="AWS123"
+          maxlength="6"
+          [value]="verificationCode()"
+          (input)="onVerificationCodeChange($event)">
+        <small class="form-help">El código debe tener exactamente 6 caracteres</small>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="form-error">
+          <span class="error-text">{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="!isFormValid() || isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          Verificando...
+        } @else {
+          <span class="material-symbols-outlined">verified</span>
+          Verificar Código
+        }
+      </button>
+    </form>
+
+    <div class="verification-tips">
+      <div class="flex items-center gap-2 my-2">
+        <span class="text-sm material-symbols-outlined text-gray-500">info</span>
+        <span class="text-sm font-medium text-gray-600">¿Dónde encuentro mi código?</span>
+      </div>
+      <ul class="text-xs text-gray-500">
+        <li>En tu entrada física del evento</li>
+        <li>Contacta a los organizadores si no lo tienes</li>
+      </ul>
+    </div>
+  </div>
+</app-slide-panel>
+
+<app-confetti-modal
+  [isVisible]="showConfettiModal()"
+  [config]="confettiConfig()"
+  (closeModal)="onConfettiModalClose()">
+</app-confetti-modal>

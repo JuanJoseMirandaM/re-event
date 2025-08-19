@@ -1,0 +1,475 @@
+.confetti-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &--visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.confetti-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.confetti-modal__content {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  background: white;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  transform: scale(0.8);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  .confetti-modal--visible & {
+    transform: scale(1);
+  }
+}
+
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+.confetti-piece {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: confetti-explosion 1.5s ease-out forwards;
+  transform-origin: center;
+}
+
+@keyframes confetti-explosion {
+  0% {
+    transform: translateY(100vh) translateX(50vw) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  15% {
+    opacity: 1;
+    transform: translateY(80vh) translateX(45vw) scale(1.4) rotate(180deg);
+  }
+  
+  35% {
+    opacity: 0.9;
+    transform: translateY(60vh) translateX(55vw) scale(1.1) rotate(360deg);
+  }
+  
+  55% {
+    opacity: 0.7;
+    transform: translateY(40vh) translateX(35vw) scale(0.9) rotate(540deg);
+  }
+  
+  75% {
+    opacity: 0.5;
+    transform: translateY(20vh) translateX(65vw) scale(0.7) rotate(720deg);
+  }
+  
+  100% {
+    transform: translateY(0vh) translateX(25vw) scale(0.4) rotate(900deg);
+    opacity: 0;
+  }
+}
+
+// Variaciones de confeti con diferentes animaciones
+.confetti-piece:nth-child(3n) {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-bounce 1.2s ease-out forwards;
+}
+
+.confetti-piece:nth-child(3n+1) {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  animation: confetti-spiral 1.6s ease-out forwards;
+}
+
+.confetti-piece:nth-child(3n+2) {
+  width: 6px;
+  height: 6px;
+  border-radius: 0;
+  animation: confetti-rainbow 1.1s ease-out forwards;
+}
+
+.confetti-piece:nth-child(5n) {
+  animation: confetti-firework 1.8s ease-out forwards;
+}
+
+.confetti-piece:nth-child(7n) {
+  animation: confetti-tornado 2s ease-out forwards;
+}
+
+// Animación de rebote - desde abajo hacia arriba
+@keyframes confetti-bounce {
+  0% {
+    transform: translateY(100vh) translateX(50vw) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  25% {
+    transform: translateY(70vh) translateX(60vw) scale(1.6) rotate(120deg);
+    opacity: 1;
+  }
+  
+  50% {
+    transform: translateY(40vh) translateX(40vw) scale(1.1) rotate(240deg);
+    opacity: 0.8;
+  }
+  
+  100% {
+    transform: translateY(10vh) translateX(70vw) scale(0.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+// Animación en espiral - desde abajo hacia arriba
+@keyframes confetti-spiral {
+  0% {
+    transform: translateY(100vh) translateX(50vw) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  20% {
+    transform: translateY(80vh) translateX(35vw) scale(1.5) rotate(90deg);
+    opacity: 1;
+  }
+  
+  40% {
+    transform: translateY(60vh) translateX(65vw) scale(1.1) rotate(180deg);
+    opacity: 0.9;
+  }
+  
+  60% {
+    transform: translateY(30vh) translateX(25vw) scale(0.8) rotate(270deg);
+    opacity: 0.6;
+  }
+  
+  100% {
+    transform: translateY(5vh) translateX(55vw) scale(0.3) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+// Animación arcoíris - desde abajo hacia arriba
+@keyframes confetti-rainbow {
+  0% {
+    transform: translateY(100vh) translateX(50vw) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  30% {
+    transform: translateY(70vh) translateX(75vw) scale(1.5) rotate(200deg);
+    opacity: 1;
+  }
+  
+  70% {
+    transform: translateY(30vh) translateX(15vw) scale(0.9) rotate(400deg);
+    opacity: 0.7;
+  }
+  
+  100% {
+    transform: translateY(5vh) translateX(85vw) scale(0.2) rotate(600deg);
+    opacity: 0;
+  }
+}
+
+// Animación fuegos artificiales - desde abajo hacia arriba
+@keyframes confetti-firework {
+  0% {
+    transform: translateY(100vh) translateX(50vw) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  15% {
+    transform: translateY(85vh) translateX(45vw) scale(2.2) rotate(90deg);
+    opacity: 1;
+  }
+  
+  35% {
+    transform: translateY(65vh) translateX(65vw) scale(1.6) rotate(180deg);
+    opacity: 0.9;
+  }
+  
+  55% {
+    transform: translateY(40vh) translateX(25vw) scale(1.1) rotate(270deg);
+    opacity: 0.7;
+  }
+  
+  75% {
+    transform: translateY(20vh) translateX(85vw) scale(0.7) rotate(360deg);
+    opacity: 0.4;
+  }
+  
+  100% {
+    transform: translateY(5vh) translateX(5vw) scale(0.1) rotate(450deg);
+    opacity: 0;
+  }
+}
+
+// Animación tornado - desde abajo hacia arriba
+@keyframes confetti-tornado {
+  0% {
+    transform: translateY(100vh) translateX(50vw) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  20% {
+    transform: translateY(80vh) translateX(55vw) scale(1.3) rotate(120deg);
+    opacity: 1;
+  }
+  
+  45% {
+    transform: translateY(55vh) translateX(30vw) scale(1.1) rotate(240deg);
+    opacity: 0.8;
+  }
+  
+  70% {
+    transform: translateY(30vh) translateX(70vw) scale(0.8) rotate(360deg);
+    opacity: 0.5;
+  }
+  
+  100% {
+    transform: translateY(8vh) translateX(10vw) scale(0.2) rotate(480deg);
+    opacity: 0;
+  }
+}
+
+// Efectos especiales para algunas piezas
+.confetti-piece:nth-child(11n) {
+  box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+  filter: brightness(1.2);
+}
+
+.confetti-piece:nth-child(13n) {
+  animation-duration: 1s;
+  filter: saturate(1.5);
+}
+
+.confetti-piece:nth-child(17n) {
+  animation-duration: 1.8s;
+  filter: hue-rotate(45deg);
+}
+
+// Contenido del modal
+.modal-content {
+  position: relative;
+  z-index: 2;
+}
+
+.modal-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--primary-lilac);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  position: relative;
+  animation: icon-bounce 0.4s ease-out 0.2s both;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--primary-lilac);
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+
+  &::before {
+    top: -8px;
+    left: 20px;
+    animation: float 1.5s ease-in-out infinite 0.3s both;
+  }
+
+  &::after {
+    bottom: -8px;
+    right: 20px;
+    animation: float 1.5s ease-in-out infinite reverse 0.5s both;
+  }
+
+  .material-symbols-outlined {
+    font-size: 40px;
+    color: white;
+  }
+}
+
+@keyframes icon-bounce {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  
+  50% {
+    transform: scale(1.3) rotate(0deg);
+  }
+  
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.1);
+  }
+}
+
+.points-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ffa726);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+  animation: badge-slide 0.3s ease-out 0.4s both;
+}
+
+@keyframes badge-slide {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.points-number {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.points-label {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0 0 16px;
+  line-height: 1.2;
+  animation: title-fade 0.3s ease-out 0.5s both;
+}
+
+@keyframes title-fade {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-description {
+  font-size: 16px;
+  color: var(--gray-600);
+  margin: 0 0 32px;
+  line-height: 1.5;
+  animation: description-fade 0.3s ease-out 0.6s both;
+}
+
+@keyframes description-fade {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes button-bounce {
+  0% {
+    transform: scale(0) translateY(20px);
+    opacity: 0;
+  }
+  
+  50% {
+    transform: scale(1.2) translateY(0);
+  }
+  
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .confetti-modal__content {
+    width: 95%;
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+
+  .modal-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+
+    .material-symbols-outlined {
+      font-size: 32px;
+    }
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .modal-description {
+    font-size: 14px;
+  }
+}

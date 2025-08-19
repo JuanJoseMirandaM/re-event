@@ -10,7 +10,7 @@ export enum UserRole {
   SPEAKER = 'SPEAKER',
   SPONSOR = 'SPONSOR',
   VOLUNTEER = 'VOLUNTEER',
-  ORGANIZER = 'ORGANIZER',
+  ORGANIZER = 'ORGANIZER'
 }
 
 export interface User {
@@ -27,9 +27,20 @@ export interface User {
   updatedAt: string;
 }
 
-export interface ApiResponse {
+export interface ApiResponse<T> {
   success: boolean;
-  data: User;
+  data: T;
+}
+
+export interface VerifyCodeRequest {
+  verificationCode: string;
+  userId: string;
+}
+
+export interface VerifyCodeResponse {
+  success: boolean;
+  message: string;
+  user?: User;
 }
 
 @Injectable({
@@ -39,8 +50,8 @@ export class UserService {
   private readonly baseUrl = '/api';
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly authService: AuthService
+    private http: HttpClient,
+    private authService: AuthService
   ) {}
 
   getCurrentUser(): Observable<User> {
@@ -55,7 +66,7 @@ export class UserService {
   }
 
   getUser(userId: string): Observable<User> {
-    return this.http.get<ApiResponse>(`${this.baseUrl}/users/${userId}`).pipe(
+    return this.http.get<ApiResponse<User>>(`${this.baseUrl}/users/${userId}`).pipe(
       map(response => response.data)
     );
   }
@@ -72,7 +83,7 @@ export class UserService {
   }
 
   updateUser(userId: string, userData: Partial<User>): Observable<User> {
-    return this.http.put<ApiResponse>(`${this.baseUrl}/users/${userId}`, userData).pipe(
+    return this.http.put<ApiResponse<User>>(`${this.baseUrl}/users/${userId}`, userData).pipe(
       map(response => response.data)
     );
   }
@@ -85,6 +96,18 @@ export class UserService {
           'be8be8ca-2e18-4ac1-a04e-e9c91ec7c131'  // jjsmm97@gmail.com
         ];
         return adminUserIds.includes(user.userId);
+      })
+    );
+  }
+
+  verifyCode(verificationCode: string): Observable<VerifyCodeResponse> {
+    return this.authService.getCurrentUserId().pipe(
+      switchMap(userId => {
+        const requestBody: VerifyCodeRequest = { verificationCode, userId };
+        return this.http.post<VerifyCodeResponse>(
+          `${this.baseUrl}/users/verify-code`,
+          requestBody
+        );
       })
     );
   }
