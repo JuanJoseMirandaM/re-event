@@ -26,4 +26,10 @@
       }
     </ul>
   </nav>
+  <div class="p-4">
+    <small class="text-xs">
+      {{ versionInfo().name }} v{{ versionInfo().version }}
+      <span class="build-date">• Build: {{ versionInfo().buildDate }}</span>
+    </small>
+  </div>
 </aside>

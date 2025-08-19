@@ -28,12 +28,10 @@ export default class LoginComponent {
   #authService = inject(AuthService);
   #router = inject(Router);
   #loader = inject(LoaderService);
-  #versionService = inject(VersionService);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);
 
   installPromptEvent = signal<BeforeInstallPromptEvent | null>(null);
   appInstalled = signal(false);
-  versionInfo = signal(this.#versionService.getVersionInfo());
 
   loginState = toSignal(
     toObservable(this.#loginTrigger).pipe(

@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input, output, signal} from '@angular/core';
 import {RouterLink} from "@angular/router";
+import {VersionService} from "../../core/services/version.service";
 
 @Component({
   selector: 'app-side-menu',
@@ -12,7 +13,11 @@ import {RouterLink} from "@angular/router";
 })
 export class SideMenuComponent {
   isMenuOpen = input(false);
+
   menuClosed = output<boolean>();
+
+  #versionService = inject(VersionService);
+  versionInfo = signal(this.#versionService.getVersionInfo());
 
   navItems = [
     {label: 'Account', link: './account', icon: 're-icon-user'},
