@@ -41,7 +41,7 @@ exports.handler = async (event) => {
         }
 
         // Verificar que el código no haya sido usado
-        if (verificationResult.used) {
+        if (verificationResult.used == 'true') {
             return {
                 statusCode: 409,
                 headers,
@@ -79,16 +79,16 @@ exports.handler = async (event) => {
         }
 
         // Verificar que el usuario no esté ya verificado
-        if (userResult.verified && userResult.role !== 'GUEST') {
-            return {
-                statusCode: 409,
-                headers,
-                body: JSON.stringify({
-                    success: false,
-                    error: 'User is already verified'
-                })
-            };
-        }
+        // if (userResult.verified && userResult.role !== 'GUEST') {
+        //     return {
+        //         statusCode: 409,
+        //         headers,
+        //         body: JSON.stringify({
+        //             success: false,
+        //             error: 'User is already verified'
+        //         })
+        //     };
+        // }
 
         // Actualizar usuario con nuevo rol y sumar puntos iniciales
         const updatedUser = await updateUserRole(userId, verificationResult.role, verificationResult.initialPoints, verificationCode);
@@ -187,7 +187,7 @@ async function markCodeAsUsed(code, userId) {
             Key: { verificationCode: code },
             UpdateExpression: 'SET used = :used, usedBy = :usedBy, usedAt = :usedAt',
             ExpressionAttributeValues: {
-                ':used': true,
+                ':used': 'true',
                 ':usedBy': userId,
                 ':usedAt': new Date().toISOString()
             }
