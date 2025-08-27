@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service';
-import { User, UserService } from '../../core/services/user.service';
-import { VerificationPanelComponent } from '../../components/verification-panel/verification-panel.component';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AuthService} from '../../core/services/auth.service';
+import {User, UserService} from '../../core/services/user.service';
+import {VerificationPanelComponent} from '../../components/verification-panel/verification-panel.component';
 
 @Component({
   selector: 'app-my-account',
-  imports: [CommonModule, ReactiveFormsModule, VerificationPanelComponent],
+  imports: [ReactiveFormsModule, VerificationPanelComponent],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

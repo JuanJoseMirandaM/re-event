@@ -5,24 +5,28 @@
     <div class="floating-menu">
       <div class="floating-menu-items" [class.open]="isMenuOpen()">
         @if (admin) {
-          <button class="floating-menu-item" (click)="createEvent()">
+          <button class="floating-menu-item" (click)="createEvent()" aria-label="Create new event">
             <span class="material-symbols-outlined">edit_calendar</span>
           </button>
         }
 
         @if (admin) {
-          <button class="floating-menu-item" (click)="createNotification()">
+          <button class="floating-menu-item" (click)="createNotification()" aria-label="Create new notification">
             <span class="material-symbols-outlined">notification_important</span>
           </button>
         }
 
-        <button class="floating-menu-item" (click)="redirectToQrScanner()">
+        <button class="floating-menu-item" (click)="redirectToQrScanner()" aria-label="Open QR code scanner">
           <span class="material-symbols-outlined">qr_code_scanner</span>
         </button>
       </div>
 
-      <button class="floating-menu-btn btn btn--primary" [class.open]="isMenuOpen()" (click)="toggleMenu()"
-              type="button">
+      <button class="floating-menu-btn btn btn--primary"
+              [class.open]="isMenuOpen()"
+              (click)="toggleMenu()"
+              type="button"
+              [attr.aria-expanded]="isMenuOpen()"
+              aria-controls="floating-menu-items">
         <span class="material-symbols-outlined">add</span>
       </button>
     </div>

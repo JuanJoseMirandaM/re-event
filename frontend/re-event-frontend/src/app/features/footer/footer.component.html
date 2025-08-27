@@ -1,23 +1,23 @@
-<button class="re-btn flex flex--col">
+<button class="re-btn flex flex--col" aria-label="Home">
   <span class="text-2xl re-icon-footer re-icon-home"></span>
   <span class="text-sm">Home</span>
 </button>
 
-<button class="re-btn flex flex--col" routerLink="./agenda">
+<button class="re-btn flex flex--col" routerLink="./agenda" aria-label="Agenda">
   <span class="text-2xl re-icon-footer re-icon-calendar"></span>
   <span class="text-sm">Agenda</span>
 </button>
 
-<button class="re-btn re-flex re-flex-column re-flex-jc-center re-qr-container" routerLink="./qr">
-  <span class="text-2xl re-icon-footer re-icon-qr"></span>
+<button class="re-btn re-flex re-flex-column re-flex-jc-center re-points" routerLink="./points" aria-label="Points">
+  <span class="material-symbols-outlined">rewarded_ads</span>
 </button>
 
-<button class="re-btn flex flex--col" routerLink="./points">
-  <span class="text-2xl re-icon-footer re-icon-goal"></span>
-  <span class="text-sm">Points</span>
+<button class="re-btn flex flex--col" routerLink="./gallery" disabled aria-label="Gallery">
+  <span class="material-symbols-outlined">photo</span>
+  <span class="text-sm">Gallery</span>
 </button>
 
-<button class="re-btn flex flex--col" routerLink="./account">
-  <span class="text-2xl re-icon-footer re-icon-person"></span>
+<button class="re-btn flex flex--col" routerLink="./account" aria-label="Account">
+  <span class="material-symbols-outlined">manage_accounts</span>
   <span class="text-sm">Account</span>
 </button>

@@ -21,12 +21,11 @@
   color: var(--text-secondary);
 }
 
-.re-qr-container {
-  background: var(--first-color-alt);
+.re-points {
   border-radius: var(--border-radius-xl);
-  color: currentColor;
-  outline: 2px solid var(--first-color);
   padding: 1.2rem;
   position: relative;
-  top: -43px;
+  top: -5px;
+  background: var(--primary-lilac);
+  color: white;
 }
