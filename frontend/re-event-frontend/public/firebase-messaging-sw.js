@@ -2,7 +2,7 @@
 importScripts('https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging-compat.js');
 
-// Inicializa Firebase con tu configuración
+// Inicializa Firebase
 firebase.initializeApp({
     apiKey: "AIzaSyAPgmfnx8zGQuShmjmA-QO_ulwueVZR42k",
     authDomain: "reevent-fcm.firebaseapp.com",
@@ -13,12 +13,12 @@ firebase.initializeApp({
     measurementId: "G-DN6DXETYRM"
 });
 
-// Obtén instancia de Messaging
+// Instancia de Messaging
 const messaging = firebase.messaging();
 
 // Maneja mensajes en background
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    console.log('[firebase-messaging-sw.js] Received background message', payload);
 
     const notificationTitle = payload.notification?.title || 'Nueva Notificación';
     const notificationOptions = {
@@ -26,9 +26,26 @@ messaging.onBackgroundMessage((payload) => {
         icon: '/assets/icons/icon-192x192.png',
         data: payload.data,
         actions: [
-            { action: 'open_url', title: 'Abrir'}
+            { action: 'open', title: 'Abrir'}
         ]
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// Manejar click en notificación
+self.addEventListener('notificationclick', function(event) {
+    console.log('[firebase-messaging-sw.js] Clicked notification:', event);
+
+    event.notification.close();
+
+    const actionData = event.notification.data;
+
+    if (actionData?.actionType === 'link') {
+        event.waitUntil(clients.openWindow(actionData.actionValue));
+    } else if (actionData?.actionType === 'screen') {
+        event.waitUntil(clients.openWindow('/' + actionData.actionValue));
+    } else {
+        event.waitUntil(clients.openWindow('/')); // fallback
+    }
 });

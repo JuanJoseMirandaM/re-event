@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import {inject, Injectable} from "@angular/core";
 import {getToken, Messaging} from "@angular/fire/messaging";
 import {environment} from "../../../environments/environment";
 
@@ -7,8 +7,7 @@ import {environment} from "../../../environments/environment";
 })
 export class FcmService {
 
-  constructor(private messaging: Messaging) {
-  }
+  #messaging = inject(Messaging);
 
   async installFCMServiceWorker() {
     const registrations: ReadonlyArray<ServiceWorkerRegistration> = await navigator.serviceWorker.getRegistrations();
@@ -81,7 +80,7 @@ export class FcmService {
   async getFcmToken(registration: ServiceWorkerRegistration) {
     console.log("Solicitando token de notificacion.");
     try {
-      const token = await getToken(this.messaging, {
+      const token = await getToken(this.#messaging, {
         vapidKey: environment.vapidKey,
         serviceWorkerRegistration: registration
       });

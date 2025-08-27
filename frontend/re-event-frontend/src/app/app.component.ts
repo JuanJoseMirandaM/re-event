@@ -7,6 +7,7 @@ import {filter} from 'rxjs/operators';
 import {ToastContainerComponent} from './shared/components/toast-container/toast-container.component';
 import {FcmService} from "./core/services/fcm.service";
 import {FloatingMenuComponent} from './features/shared/floating-menu/floating-menu.component';
+import {NotificationsService} from "./core/services/notifications.service";
 
 @Component({
   selector: 'app-root',
@@ -17,15 +18,16 @@ import {FloatingMenuComponent} from './features/shared/floating-menu/floating-me
 })
 export class AppComponent implements OnInit {
   #fcmService = inject(FcmService);
+  #notificationService = inject(NotificationsService);
 
   constructor(public authService: AuthService) {
   }
 
   ngOnInit() {
-    this.#listenToAuthChanges();
+    this.listenToAuthChanges();
   }
 
-  #listenToAuthChanges(): void {
+  listenToAuthChanges(): void {
     this.authService.authState$
       .pipe(filter(state => !state.loading))
       .subscribe({
@@ -34,6 +36,7 @@ export class AppComponent implements OnInit {
             if (authState.isAuthenticated) {
               console.log('User is authenticated');
               await this.#fcmService.installFCMServiceWorker();
+              this.#notificationService.initForegroundListener();
             }
           } catch (error) {
             console.error('Error handling auth state change:', error);
