@@ -43,14 +43,3 @@ module "api" {
   s3_bucket_name                = var.s3_bucket_name
   cognito_user_pool_arn         = module.auth.user_pool_arn
 }
-
-# AppSync Module
-module "appsync" {
-  source                   = "./modules/appsync"
-  project_name             = var.project_name
-  environment              = var.environment
-  common_tags              = var.common_tags
-  notifications_table_name = module.database.notifications_table_name
-  notifications_table_arn  = module.database.notifications_table_arn
-  cognito_user_pool_id     = module.auth.user_pool_id
-}
