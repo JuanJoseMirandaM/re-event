@@ -84,7 +84,7 @@ export class CreateNotificationComponent {
       };
 
       try {
-        await this.#notificationsService.createNotification(notificationData);
+        // await this.#notificationsService.createNotification(notificationData);
         this.resetForm();
         this.onClose();
       } catch (error) {

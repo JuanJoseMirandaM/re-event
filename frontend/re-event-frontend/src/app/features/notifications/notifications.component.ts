@@ -24,7 +24,7 @@ export default class NotificationsComponent implements OnInit {
   #userService = inject(UserService);
 
   isAdmin = signal<boolean>(false);
-  notifications = this.#notificationsService.notifications;
+  notifications = []; //this.#notificationsService.notifications;
   showCreatePanel = signal<boolean>(false);
 
   constructor() {
@@ -41,20 +41,20 @@ export default class NotificationsComponent implements OnInit {
   }
 
   groupedNotifications = computed(() => {
-    const notifications = this.notifications();
-    if (!notifications.length) return [];
+    // const notifications = this.notifications();
+    // if (!notifications.length) return [];
 
     const groups: { [key: string]: any[] } = {};
-
-    notifications.forEach(notification => {
-      const date = new Date(notification.createdAt);
-      const dateKey = date.toISOString().split('T')[0];
-
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
-      groups[dateKey].push(notification);
-    });
+    
+    // notifications.forEach(notification => {
+    //   const date = new Date(notification.createdAt);
+    //   const dateKey = date.toISOString().split('T')[0];
+    //
+    //   if (!groups[dateKey]) {
+    //     groups[dateKey] = [];
+    //   }
+    //   groups[dateKey].push(notification);
+    // });
 
     const result: GroupedNotifications[] = Object.keys(groups).map(key => ({
       date: key,
@@ -69,12 +69,12 @@ export default class NotificationsComponent implements OnInit {
   });
 
   async ngOnInit() {
-    await this.#notificationsService.loadNotifications();
-    this.#notificationsService.markAllAsRead();
+    // await this.#notificationsService.loadNotifications();
+    // this.#notificationsService.markAllAsRead();
   }
 
   markAsRead(notificationId: string) {
-    this.#notificationsService.markAsRead(notificationId);
+    // this.#notificationsService.markAsRead(notificationId);
   }
 
   openCreatePanel(): void {

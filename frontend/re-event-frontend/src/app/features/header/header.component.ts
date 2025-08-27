@@ -16,7 +16,7 @@ import {SideMenuComponent} from '../../components/side-menu/side-menu.component'
 export class HeaderComponent {
   #notificationsService = inject(NotificationsService);
 
-  unreadCount = this.#notificationsService.unreadCount;
+  // unreadCount = this.#notificationsService.unreadCount;
   menuOpen = signal(false);
 
   toggleMenu() {

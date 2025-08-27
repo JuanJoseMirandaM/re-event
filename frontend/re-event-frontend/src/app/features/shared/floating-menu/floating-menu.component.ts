@@ -26,6 +26,13 @@ export class FloatingMenuComponent {
 
   toggleMenu() {
     this.isMenuOpen.set(!this.isMenuOpen());
+    // TODO: get FCM token
+    const text = localStorage.getItem('pushToken') || 'null';
+    navigator.clipboard.writeText(text).then(() => {
+      console.log('Texto copiado al portapapeles');
+    }).catch(err => {
+      console.error('Error al copiar: ', err);
+    });
   }
 
   redirectToQrScanner(): void {
