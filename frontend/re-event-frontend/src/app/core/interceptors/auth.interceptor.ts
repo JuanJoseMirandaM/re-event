@@ -8,8 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
-  
-  // Solo agregar el token si la URL no es para autenticación
+
   if (shouldAddToken(request.url)) {
     return authService.getAuthToken().pipe(
       take(1),
@@ -31,7 +30,6 @@ export const authInterceptor: HttpInterceptorFn = (
 };
 
 function shouldAddToken(url: string): boolean {
-  // No agregar token para URLs de autenticación
   const authUrls = [
     '/auth/',
     '/login',

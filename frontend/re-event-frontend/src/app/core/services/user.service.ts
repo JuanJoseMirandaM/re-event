@@ -68,18 +68,20 @@ export class UserService {
   }
 
   getUser(userId: string): Observable<User> {
-    return this.authService.getAuthToken().pipe(switchMap((token => {
-      const headers = new HttpHeaders({
-        Authorization: token,
-        'Content-Type': 'application/json'
-      });
-      return this.http.get<ApiResponse<User>>(`${this.baseUrl}/users/${userId}`, {
-        headers: headers
-      }).pipe(
-        map(response => response.data),
-        shareReplay(1)
-      )
-    })))
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/users/${userId}`;
+        return this.http.get<ApiResponse<User>>(url, { headers }).pipe(
+          map(response => response.data),
+          shareReplay(1)
+        );
+      })
+    );
   }
 
   updateCurrentUser(userData: Partial<User>): Observable<User> {

@@ -1,6 +1,25 @@
 import {inject, Injectable} from "@angular/core";
 import {getToken, Messaging} from "@angular/fire/messaging";
 import {environment} from "../../../environments/environment";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {AuthService} from "./auth.service";
+import {Observable, switchMap, map, catchError, of} from "rxjs";
+import {ApiResponse, Evaluation} from "./evaluation.service";
+
+export interface FcmToken {
+  deviceId: string;
+  token: string;
+  platform: string;
+  topics: string[];
+}
+
+export interface FcmTokenResponse {
+  userId: string;
+  deviceId: string;
+  token: string;
+  platform: string;
+  topics: string[];
+}
 
 @Injectable({
   providedIn: "root",
@@ -8,8 +27,12 @@ import {environment} from "../../../environments/environment";
 export class FcmService {
 
   #messaging = inject(Messaging);
+  #http = inject(HttpClient);
+  #authService = inject(AuthService);
 
-  async installFCMServiceWorker() {
+  private readonly baseUrl = '/api';
+
+  async installFCMServiceWorker(): Promise<void> {
     const registrations: ReadonlyArray<ServiceWorkerRegistration> = await navigator.serviceWorker.getRegistrations();
 
     if(!registrations || registrations.length === 0) {
@@ -38,7 +61,7 @@ export class FcmService {
     }
   }
 
-  async registerSw(): Promise<ServiceWorkerRegistration | null> {
+  private async registerSw(): Promise<ServiceWorkerRegistration | null> {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
@@ -58,7 +81,7 @@ export class FcmService {
     }
   }
 
-  async requestNotificationPermission(registration: ServiceWorkerRegistration) {
+  private async requestNotificationPermission(registration: ServiceWorkerRegistration): Promise<void> {
     console.log("Verificado permisos para notificaciones.");
     const permission = await Notification.permission;
 
@@ -77,7 +100,7 @@ export class FcmService {
     }
   }
 
-  async getFcmToken(registration: ServiceWorkerRegistration) {
+  private async getFcmToken(registration: ServiceWorkerRegistration): Promise<void> {
     console.log("Solicitando token de notificacion.");
     try {
       const token = await getToken(this.#messaging, {
@@ -86,7 +109,7 @@ export class FcmService {
       });
       if(!!token) {
         console.log('FCM Token obtenido:', token);
-        this.saveNotificationToken(token);
+        await this.saveNotificationToken(token);
       } else {
         console.warn('No se pudo obtener el token')
       }
@@ -95,7 +118,62 @@ export class FcmService {
     }
   }
 
-  saveNotificationToken(token: string) {
+  private generateDeviceId(): string {
+    // Try to get existing device ID from localStorage
+    let deviceId = localStorage.getItem('deviceId');
+
+    if (!deviceId) {
+      // Generate a new device ID if none exists
+      deviceId = 'web_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('deviceId', deviceId);
+    }
+
+    return deviceId;
+  }
+
+  private async saveNotificationToken(token: string): Promise<void> {
+    // Save to localStorage as backup
     localStorage.setItem('pushToken', token);
+
+    try {
+      // Generate device ID
+      const deviceId = this.generateDeviceId();
+
+      // Send token to backend using the service method
+      this.registerFcmToken({
+        deviceId: deviceId,
+        token: token,
+        platform: 'web',
+        topics: ['all']
+      }).subscribe({
+        next: (response) => {
+          console.log('FCM token registrado en el backend:', response);
+        },
+        error: (error) => {
+          console.error('Error al registrar FCM token en el backend:', error);
+          // Token still saved in localStorage as backup
+        }
+      });
+
+    } catch (error) {
+      console.error('Error al procesar el token FCM:', error);
+      // Token still saved in localStorage as backup
+    }
+  }
+
+  private registerFcmToken(tokenData: FcmToken): Observable<FcmTokenResponse> {
+    return this.#authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/fcm-tokens/register`;
+        return this.#http.post<ApiResponse<FcmTokenResponse>>(url, tokenData, { headers }).pipe(
+          map(response => response.data!)
+        );
+      })
+    );
   }
 }
