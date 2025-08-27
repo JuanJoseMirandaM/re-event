@@ -1,11 +1,11 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {AuthService} from './core/services/auth.service';
 import {CommonModule} from '@angular/common';
 import {LoaderOverlayComponent} from './shared/components/loader-overlay/loader-overlay.component';
-import {NotificationManagerService} from './core/services/notification-manager.service';
 import {filter} from 'rxjs/operators';
 import {ToastContainerComponent} from './shared/components/toast-container/toast-container.component';
+import {FcmService} from "./core/services/fcm.service";
 import {FloatingMenuComponent} from './features/shared/floating-menu/floating-menu.component';
 
 @Component({
@@ -15,8 +15,8 @@ import {FloatingMenuComponent} from './features/shared/floating-menu/floating-me
   standalone: true,
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit, OnDestroy {
-  #notificationManager = inject(NotificationManagerService);
+export class AppComponent implements OnInit {
+  #fcmService = inject(FcmService);
 
   constructor(public authService: AuthService) {
   }
@@ -33,9 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
           try {
             if (authState.isAuthenticated) {
               console.log('User is authenticated');
-              await this.#notificationManager.initializeAfterLogin();
-            } else {
-              await this.#notificationManager.cleanup();
+              await this.#fcmService.installFCMServiceWorker();
             }
           } catch (error) {
             console.error('Error handling auth state change:', error);
@@ -45,9 +43,5 @@ export class AppComponent implements OnInit, OnDestroy {
           console.error('Error in auth state subscription:', error);
         }
       });
-  }
-
-  ngOnDestroy() {
-    this.#notificationManager.cleanup();
   }
 }
