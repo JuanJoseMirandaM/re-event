@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {CreateEventComponent} from '../../components/create-event/create-event.component';
 import {UserService} from '../../core/services/user.service';
 
 @Component({
@@ -8,8 +7,7 @@ import {UserService} from '../../core/services/user.service';
   imports: [
     RouterOutlet,
     RouterLink,
-    RouterLinkActive,
-    CreateEventComponent
+    RouterLinkActive
   ],
   templateUrl: './agenda.component.html',
   styleUrl: './agenda.component.scss',

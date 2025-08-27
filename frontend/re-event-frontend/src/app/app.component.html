@@ -1,7 +1,9 @@
-<app-loader-overlay />
+<app-loader-overlay/>
 
-@if (authService.isAuthStateReady() | async ) {
-  <router-outlet />
+@if (authService.isAuthStateReady() | async) {
+  <router-outlet/>
 }
 
-<app-toast-container />
+<app-toast-container/>
+
+<app-floating-menu/>

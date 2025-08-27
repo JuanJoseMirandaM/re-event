@@ -91,7 +91,7 @@ export class NotificationsService {
 
       if (result.data?.createNotification) {
         const newNotification = result.data.createNotification;
-        
+
         return newNotification;
       } else {
         throw new Error('No se recibió respuesta del servidor');
@@ -306,7 +306,6 @@ export class NotificationsService {
         return notifications;
       }
 
-      console.log('✅ Notificación agregada al estado');
       this.unreadCount.update(count => count + 1);
       this.hasNewNotifications.set(true);
       this.showBrowserNotification(newNotification);
@@ -317,17 +316,14 @@ export class NotificationsService {
 
   private async showBrowserNotification(notification: Notification) {
     if (!('Notification' in window)) {
-      console.log('❌ Notificaciones no soportadas en este navegador');
       return;
     }
 
     if (Notification.permission !== 'granted') {
-      console.log('❌ Permisos de notificación no concedidos');
       return;
     }
 
     try {
-      console.log('🔔 Mostrando notificación del navegador');
       const browserNotification = new Notification(notification.title, {
         body: notification.description || '',
         icon: '/icons/icon-192x192.png',
@@ -369,10 +365,9 @@ export class NotificationsService {
       return 'denied';
     }
 
-    // Verificar el permiso actual
     if (Notification.permission === 'granted') {
-      console.log('✅ Notification permission already granted');
-      await this.registerServiceWorker();
+/*      console.log('✅ Notification permission already granted');
+      await this.registerServiceWorker();*/
       return 'granted';
     }
 
@@ -381,13 +376,10 @@ export class NotificationsService {
       return 'denied';
     }
 
-    // Solicitar permiso
-    console.log('🔄 Requesting notification permission...');
     const permission = await Notification.requestPermission();
 
     if (permission === 'granted') {
-      console.log('✅ Notification permission granted');
-      await this.registerServiceWorker();
+      // await this.registerServiceWorker();
     } else {
       console.log('❌ Notification permission denied');
     }

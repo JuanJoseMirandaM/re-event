@@ -22,7 +22,6 @@ export class AgendaCardComponent implements OnInit {
   #evaluationService = inject(EvaluationService);
 
   ngOnInit() {
-    console.log(this.event());
     if (this.isPastEvent()) {
       this.checkEvaluationStatus();
     }

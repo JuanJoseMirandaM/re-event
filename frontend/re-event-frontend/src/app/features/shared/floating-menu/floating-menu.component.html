@@ -1,0 +1,19 @@
+@if (isVisible()) {
+  <section class="floating-menu-container">
+    <div class="floating-menu">
+      <div class="floating-menu-items" [class.open]="isMenuOpen()">
+        <button class="floating-menu-item" (click)="createNotification()">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+
+        <button class="floating-menu-item" (click)="redirectToQrScanner()">
+          <span class="material-symbols-outlined">qr_code_scanner</span>
+        </button>
+      </div>
+
+      <button class="floating-menu-btn btn btn--primary" [class.open]="isMenuOpen()" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">add</span>
+      </button>
+    </div>
+  </section>
+}

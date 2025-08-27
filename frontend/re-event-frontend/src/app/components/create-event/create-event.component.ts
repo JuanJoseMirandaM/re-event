@@ -30,7 +30,6 @@ export class CreateEventComponent {
 
   #eventsService = inject(EventsService);
 
-  // Form data
   title = signal<string>('');
   description = signal<string>('');
   startDate = signal<string>('');
@@ -41,13 +40,11 @@ export class CreateEventComponent {
   speakers = signal<string>('');
   tags = signal<string>('');
 
-  // Form validation
   isFormValid = computed(() => {
     if (!this.title().trim() || !this.description().trim() || !this.startDate() || !this.endDate() || !this.location().trim()) {
       return false;
     }
-    
-    // Validar que la fecha de fin sea posterior a la fecha de inicio
+
     if (this.startDate() && this.endDate()) {
       const start = new Date(this.startDate());
       const end = new Date(this.endDate());
@@ -55,11 +52,10 @@ export class CreateEventComponent {
         return false;
       }
     }
-    
+
     return true;
   });
 
-  // Computed para mostrar error de fechas
   dateError = computed(() => {
     if (this.startDate() && this.endDate()) {
       const start = new Date(this.startDate());
@@ -71,27 +67,25 @@ export class CreateEventComponent {
     return '';
   });
 
-  // Computed para calcular la duración automáticamente
   durationInMinutes = computed(() => {
     if (!this.startDate() || !this.endDate()) return 0;
-    
+
     const start = new Date(this.startDate());
     const end = new Date(this.endDate());
-    
+
     if (start >= end) return 0;
-    
+
     const diffMs = end.getTime() - start.getTime();
     return Math.round(diffMs / (1000 * 60)); // Convertir a minutos
   });
 
-  // Computed para mostrar la duración en formato legible
   durationDisplay = computed(() => {
     const minutes = this.durationInMinutes();
     if (minutes === 0) return 'Selecciona fechas válidas';
-    
+
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    
+
     if (hours === 0) {
       return `${minutes} minuto${minutes !== 1 ? 's' : ''}`;
     } else if (remainingMinutes === 0) {

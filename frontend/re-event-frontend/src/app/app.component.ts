@@ -6,10 +6,11 @@ import {LoaderOverlayComponent} from './shared/components/loader-overlay/loader-
 import {NotificationManagerService} from './core/services/notification-manager.service';
 import {filter} from 'rxjs/operators';
 import {ToastContainerComponent} from './shared/components/toast-container/toast-container.component';
+import {FloatingMenuComponent} from './features/shared/floating-menu/floating-menu.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent],
+  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, FloatingMenuComponent],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.scss'

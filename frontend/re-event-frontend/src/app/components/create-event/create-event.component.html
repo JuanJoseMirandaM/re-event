@@ -1,13 +1,13 @@
 <app-slide-panel [isVisible]="isVisible()" (closePanel)="onClose()">
   <div class="create-event__content bg-primary flex flex--col gap-4 p-4 w-full shadow-md">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center sticky">
       <span class="text-base font-semibold">Crear Nuevo Evento</span>
       <button class="close-btn" (click)="onClose()">
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
 
-    <form class="flex flex--col gap-4" (submit)="onSubmit(); $event.preventDefault()">
+    <form class="flex flex--col gap-4 overflow-auto" (submit)="onSubmit(); $event.preventDefault()">
       <div class="form-group">
         <label for="title" class="form-label">Título del Evento *</label>
         <input

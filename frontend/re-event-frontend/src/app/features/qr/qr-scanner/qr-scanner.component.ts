@@ -133,6 +133,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('QrScannerComponent destroyed');
     this.#footerService.show();
     void this.#stopAndClear();
   }
