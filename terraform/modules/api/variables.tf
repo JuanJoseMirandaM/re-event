@@ -43,16 +43,6 @@ variable "evaluations_table_arn" {
   type        = string
 }
 
-variable "notifications_table_name" {
-  description = "DynamoDB notifications table name"
-  type        = string
-}
-
-variable "notifications_table_arn" {
-  description = "DynamoDB notifications table ARN"
-  type        = string
-}
-
 variable "cognito_user_pool_arn" {
   description = "Cognito User Pool ARN for API Gateway authorization"
   type        = string
@@ -91,5 +81,16 @@ variable "points_claims_table_name" {
 
 variable "points_claims_table_arn" {
   description = "ARN of the points claims DynamoDB table"
+  type        = string
+}
+
+# FCM Tokens Variables
+variable "fcm_tokens_table_name" {
+  description = "Name of the FCM tokens DynamoDB table"
+  type        = string
+}
+
+variable "fcm_tokens_table_arn" {
+  description = "ARN of the FCM tokens DynamoDB table"
   type        = string
 }

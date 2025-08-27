@@ -32,14 +32,14 @@ module "api" {
   events_table_arn         = module.database.events_table_arn
   evaluations_table_name   = module.database.evaluations_table_name
   evaluations_table_arn    = module.database.evaluations_table_arn
-  notifications_table_name = module.database.notifications_table_name
-  notifications_table_arn  = module.database.notifications_table_arn
   verification_codes_table_name = module.database.verification_codes_table_name
   verification_codes_table_arn  = module.database.verification_codes_table_arn
   points_codes_table_name       = module.database.points_codes_table_name
   points_codes_table_arn        = module.database.points_codes_table_arn
   points_claims_table_name      = module.database.points_claims_table_name
   points_claims_table_arn       = module.database.points_claims_table_arn
+  fcm_tokens_table_name         = module.database.fcm_tokens_table_name
+  fcm_tokens_table_arn          = module.database.fcm_tokens_table_arn
   s3_bucket_name                = var.s3_bucket_name
   cognito_user_pool_arn         = module.auth.user_pool_arn
 }

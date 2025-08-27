@@ -28,16 +28,6 @@ output "evaluations_table_arn" {
   value       = aws_dynamodb_table.evaluations.arn
 }
 
-output "notifications_table_name" {
-  description = "Name of the Notifications DynamoDB table"
-  value       = aws_dynamodb_table.notifications.name
-}
-
-output "notifications_table_arn" {
-  description = "ARN of the Notifications DynamoDB table"
-  value       = aws_dynamodb_table.notifications.arn
-}
-
 output "verification_codes_table_name" {
   description = "Name of the verification codes DynamoDB table"
   value       = aws_dynamodb_table.verification_codes.name
@@ -67,4 +57,14 @@ output "points_claims_table_name" {
 output "points_claims_table_arn" {
   description = "ARN of the points claims DynamoDB table"
   value       = aws_dynamodb_table.points_claims.arn
+}
+
+output "fcm_tokens_table_name" {
+  description = "Name of the FCM tokens DynamoDB table"
+  value       = aws_dynamodb_table.fcm_tokens.name
+}
+
+output "fcm_tokens_table_arn" {
+  description = "ARN of the FCM tokens DynamoDB table"
+  value       = aws_dynamodb_table.fcm_tokens.arn
 }

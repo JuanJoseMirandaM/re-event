@@ -498,6 +498,83 @@ resource "aws_api_gateway_integration" "generate_code" {
   uri                    = aws_lambda_function.generate_code.invoke_arn
 }
 
+# FCM Tokens resource
+resource "aws_api_gateway_resource" "fcm_tokens" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "fcm-tokens"
+}
+
+# POST /fcm-tokens/register
+resource "aws_api_gateway_resource" "fcm_tokens_register" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.fcm_tokens.id
+  path_part   = "register"
+}
+
+resource "aws_api_gateway_method" "register_fcm_token" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.fcm_tokens_register.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "register_fcm_token" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.fcm_tokens_register.id
+  http_method = aws_api_gateway_method.register_fcm_token.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.register_fcm_token.invoke_arn
+}
+
+# OPTIONS method for CORS
+resource "aws_api_gateway_method" "fcm_tokens_options" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.fcm_tokens_register.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "fcm_tokens_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.fcm_tokens_register.id
+  http_method = aws_api_gateway_method.fcm_tokens_options.http_method
+
+  type = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "fcm_tokens_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.fcm_tokens_register.id
+  http_method = aws_api_gateway_method.fcm_tokens_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "fcm_tokens_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.fcm_tokens_register.id
+  http_method = aws_api_gateway_method.fcm_tokens_options.http_method
+  status_code = aws_api_gateway_method_response.fcm_tokens_options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
 # API Gateway Deployment
 resource "aws_api_gateway_deployment" "main" {
   depends_on = [
@@ -519,7 +596,9 @@ resource "aws_api_gateway_deployment" "main" {
     aws_api_gateway_integration.get_points_history,
     aws_api_gateway_integration.get_points_history_user,
     aws_api_gateway_integration.get_total_points,
-    aws_api_gateway_integration.generate_code
+    aws_api_gateway_integration.generate_code,
+    aws_api_gateway_integration.register_fcm_token,
+    aws_api_gateway_integration.fcm_tokens_options
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id

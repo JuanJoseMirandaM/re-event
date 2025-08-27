@@ -136,3 +136,47 @@ resource "aws_dynamodb_table" "verification_codes" {
 
   tags = var.common_tags
 }
+
+# DynamoDB Table for FCM Tokens
+resource "aws_dynamodb_table" "fcm_tokens" {
+  name         = "${var.project_name}-fcm-tokens-${var.environment}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "userId"
+  range_key    = "deviceId"
+
+  attribute {
+    name = "userId"
+    type = "S"
+  }
+
+  attribute {
+    name = "deviceId"
+    type = "S"
+  }
+
+  attribute {
+    name = "token"
+    type = "S"
+  }
+
+  attribute {
+    name = "platform"
+    type = "S"
+  }
+
+  # GSI para consultar tokens por token (útil para búsquedas)
+  global_secondary_index {
+    name            = "TokenIndex"
+    hash_key        = "token"
+    projection_type = "ALL"
+  }
+
+  # GSI para consultar tokens por plataforma
+  global_secondary_index {
+    name            = "PlatformIndex"
+    hash_key        = "platform"
+    projection_type = "ALL"
+  }
+
+  tags = var.common_tags
+}
