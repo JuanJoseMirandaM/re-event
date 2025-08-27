@@ -15,17 +15,3 @@
     </div>
   }
 </div>
-
-@if (isAdmin()) {
-  <button
-          class="btn btn--primary floating-create-btn"
-          (click)="openCreatePanel()"
-          aria-label="Crear nueva notificación">
-    <span class="material-symbols-outlined">add</span>
-  </button>
-}
-
-<app-create-notification
-  [isVisible]="showCreatePanel()"
-  (closePanel)="closeCreatePanel()">
-</app-create-notification>

@@ -50,7 +50,6 @@ export class NotificationsService {
 
   async connect() {
     this.disconnect();
-
     this.#userService.getCurrentUser().pipe(
       take(1),
       switchMap(user => {
@@ -86,7 +85,7 @@ export class NotificationsService {
     try {
       const result: any = await client.graphql({
         query: mutation,
-        variables: { input }
+        variables: {input}
       });
 
       if (result.data?.createNotification) {
@@ -366,8 +365,8 @@ export class NotificationsService {
     }
 
     if (Notification.permission === 'granted') {
-/*      console.log('✅ Notification permission already granted');
-      await this.registerServiceWorker();*/
+      /*      console.log('✅ Notification permission already granted');
+            await this.registerServiceWorker();*/
       return 'granted';
     }
 

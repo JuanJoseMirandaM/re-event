@@ -1,8 +1,7 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, computed, signal, effect} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal} from '@angular/core';
 import {NotificationCardComponent} from '../../components/notification-card/notification-card.component';
 import {NotificationsService} from '../../core/services/notifications.service';
 import {RelativeDatePipe} from "../../pipes";
-import {CreateNotificationComponent} from '../../components/create-notification/create-notification.component';
 import {UserService} from "../../core/services/user.service";
 
 interface GroupedNotifications {
@@ -14,8 +13,7 @@ interface GroupedNotifications {
   selector: 'app-notifications',
   imports: [
     NotificationCardComponent,
-    RelativeDatePipe,
-    CreateNotificationComponent
+    RelativeDatePipe
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
@@ -47,11 +45,11 @@ export default class NotificationsComponent implements OnInit {
     if (!notifications.length) return [];
 
     const groups: { [key: string]: any[] } = {};
-    
+
     notifications.forEach(notification => {
       const date = new Date(notification.createdAt);
       const dateKey = date.toISOString().split('T')[0];
-      
+
       if (!groups[dateKey]) {
         groups[dateKey] = [];
       }

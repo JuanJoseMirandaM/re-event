@@ -162,7 +162,7 @@ export class AuthService {
 
   getCurrentUserId(): Observable<string> {
     return from(fetchAuthSession()).pipe(
-      map(session => session.tokens?.accessToken?.payload?.sub?.toString() || ''),
+      map(session => session.userSub || ''),
       catchError(() => of(''))
     );
   }

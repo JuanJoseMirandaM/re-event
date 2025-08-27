@@ -26,14 +26,12 @@ export class CreateNotificationComponent {
 
   #notificationsService = inject(NotificationsService);
 
-  // Form data
   title = signal<string>('');
   description = signal<string>('');
   author = signal<string>('AWS Bolivia');
   targetRole = signal<string>('none');
   userId = signal<string>('none');
 
-  // Options for selects
   targetRoleOptions = [
     { value: 'none', label: 'Sin rol específico' },
     { value: 'ALL', label: 'Todos los usuarios' },
@@ -50,7 +48,6 @@ export class CreateNotificationComponent {
     { value: 'Google_106829095484183017978', label: 'juanjosesmiranda@gmail.com' }
   ];
 
-  // Form methods
   onTitleChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.title.set(target.value);

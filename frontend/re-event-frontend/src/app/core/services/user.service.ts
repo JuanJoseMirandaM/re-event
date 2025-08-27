@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import {Injectable} from '@angular/core';
+import {map, Observable, shareReplay, switchMap} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {AuthService} from './auth.service';
 
 export enum UserRole {
   ALL = 'ALL',
@@ -52,8 +52,10 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private authService: AuthService
-  ) {}
+  ) {
+  }
 
+  /*TODO: check the method to avoid multiple calls to the backend*/
   getCurrentUser(): Observable<User> {
     return this.authService.getCurrentUserId().pipe(
       switchMap(userId => {
@@ -66,9 +68,18 @@ export class UserService {
   }
 
   getUser(userId: string): Observable<User> {
-    return this.http.get<ApiResponse<User>>(`${this.baseUrl}/users/${userId}`).pipe(
-      map(response => response.data)
-    );
+    return this.authService.getAuthToken().pipe(switchMap((token => {
+      const headers = new HttpHeaders({
+        Authorization: token,
+        'Content-Type': 'application/json'
+      });
+      return this.http.get<ApiResponse<User>>(`${this.baseUrl}/users/${userId}`, {
+        headers: headers
+      }).pipe(
+        map(response => response.data),
+        shareReplay(1)
+      )
+    })))
   }
 
   updateCurrentUser(userData: Partial<User>): Observable<User> {
@@ -103,7 +114,7 @@ export class UserService {
   verifyCode(verificationCode: string): Observable<VerifyCodeResponse> {
     return this.authService.getCurrentUserId().pipe(
       switchMap(userId => {
-        const requestBody: VerifyCodeRequest = { verificationCode, userId };
+        const requestBody: VerifyCodeRequest = {verificationCode, userId};
         return this.http.post<VerifyCodeResponse>(
           `${this.baseUrl}/users/verify-code`,
           requestBody
