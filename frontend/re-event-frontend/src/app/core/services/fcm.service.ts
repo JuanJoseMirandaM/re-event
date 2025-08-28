@@ -16,7 +16,7 @@ export interface FcmToken {
 export interface FcmTokenResponse {
   userId: string;
   deviceId: string;
-  token: string;
+  fcm_token: string;
   platform: string;
   topics: string[];
 }

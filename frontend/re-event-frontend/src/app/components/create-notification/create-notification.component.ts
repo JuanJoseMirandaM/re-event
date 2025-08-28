@@ -81,6 +81,7 @@ export class CreateNotificationComponent {
       const notificationData: NotificationRequest = {
         title: this.title().trim(),
         body: this.description().trim(),
+        actionType: 'screen',
         type: 'anuncio',
         audience: 'all',
         userId: this.userId() || 'none',
