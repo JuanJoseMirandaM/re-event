@@ -1,4 +1,7 @@
-<h1 class="re-h1-title re-txt-center login-title">Sign In</h1>
+<div class="flex flex--col gap-2 my-8">
+  <p class="text-3xl font-semibold text-center">Iniciar Sesion</p>
+  <p class="text-xl text-center">Bienvenido al AWS Community Day!</p>
+</div>
 
 @if (errorMessage()) {
   <div class="re-error-message re-txt-center re-txt-bold re-mb-2-4">
@@ -11,7 +14,8 @@
 
 <form class="login-form-container" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div>
-    <input type="text" class="re-input re-w-100 re-mb-1-6"
+    <input type="text"
+           class="re-input re-w-100"
            placeholder="Email"
            id="email"
            formControlName="email">
@@ -30,7 +34,7 @@
 
   <div>
     <input type="password"
-           class="re-input re-w-100 re-mb-1-6"
+           class="re-input re-w-100"
            placeholder="Password"
            id="password"
            formControlName="password">
