@@ -47,11 +47,9 @@ export class FcmService {
         (reg) => reg.active && reg.active.scriptURL.includes('firebase-messaging')
       );
       if(!!registration) {
-        console.log("El service worker ya esta registrado");
         await navigator.serviceWorker.ready;
         this.requestNotificationPermission(registration);
       } else {
-        console.log("El service worker no esta registrado. Procediendo a registrarlo");
         let swRegistered = await this.registerSw();
         if(swRegistered !== null) {
           await navigator.serviceWorker.ready;
@@ -82,17 +80,13 @@ export class FcmService {
   }
 
   private async requestNotificationPermission(registration: ServiceWorkerRegistration): Promise<void> {
-    console.log("Verificado permisos para notificaciones.");
     const permission = await Notification.permission;
 
     if(permission === 'granted') {
-      console.log("Permiso previamente autorizado. Obteniendo token.");
       this.getFcmToken(registration);
     } else if(permission === 'default') {
-      console.log("Solicitando permiso para notificaciones.");
       const result = await Notification.requestPermission();
       if(result === 'granted') {
-        console.log("Permiso concedido. Obteniendo token.");
         this.getFcmToken(registration);
       } else {
         console.warn('Permiso denegado por el usuario')
@@ -101,14 +95,12 @@ export class FcmService {
   }
 
   private async getFcmToken(registration: ServiceWorkerRegistration): Promise<void> {
-    console.log("Solicitando token de notificacion.");
     try {
       const token = await getToken(this.#messaging, {
         vapidKey: environment.vapidKey,
         serviceWorkerRegistration: registration
       });
       if(!!token) {
-        console.log('FCM Token obtenido:', token);
         await this.saveNotificationToken(token);
       } else {
         console.warn('No se pudo obtener el token')
@@ -151,7 +143,6 @@ export class FcmService {
         },
         error: (error) => {
           console.error('Error al registrar FCM token en el backend:', error);
-          // Token still saved in localStorage as backup
         }
       });
 

@@ -1,0 +1,18 @@
+<div class="splash-screen" [class.complete]="isComplete()" *ngIf="isVisible()">
+  <div class="splash-content">
+    <div class="logo-container" [class.show]="showLogo()">
+      <div class="logo">
+        <img src="/images/splash_icon.png" alt="re:Event Logo" class="logo-image">
+      </div>
+    </div>
+
+    <div class="welcome-text" [class.show]="showText()">
+      <p class="text-3xl">re:Event</p>
+      <p class="text-base">AWS Community Day Bolivia</p>
+    </div>
+
+    <div class="spinner-container" [class.show]="showProgress()">
+      <div class="spinner spinner--md"></div>
+    </div>
+  </div>
+</div>

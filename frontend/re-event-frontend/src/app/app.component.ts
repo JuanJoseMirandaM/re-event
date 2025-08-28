@@ -7,10 +7,11 @@ import {filter} from 'rxjs/operators';
 import {ToastContainerComponent} from './shared/components/toast-container/toast-container.component';
 import {FcmService} from "./core/services/fcm.service";
 import {NotificationsService} from "./core/services/notifications.service";
+import {SplashScreenComponent} from './shared/components/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent],
+  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, SplashScreenComponent],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.scss'
