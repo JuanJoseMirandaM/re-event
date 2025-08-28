@@ -4,8 +4,8 @@ import {Router, RouterLink} from '@angular/router';
 import {AuthService} from "../../../core/services/auth.service";
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, finalize, map, of, switchMap} from 'rxjs';
-import {BeforeInstallPromptEvent} from '../../../interfaces/before-install-prompt-event.interface';
 import {LoaderService} from '../../../core/services/loader.service';
+import {PwaInstallService} from '../../../core/services/pwa-install.service';
 
 @Component({
   selector: 'app-login',
@@ -15,22 +15,15 @@ import {LoaderService} from '../../../core/services/loader.service';
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(window:beforeinstallprompt)': 'onBeforeInstallPrompt($event)',
-    '(window:appinstalled)': 'onAppInstalled()'
-  }
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class LoginComponent {
-  #formGroup = inject(FormBuilder);
+  #formBuilder = inject(FormBuilder);
   #authService = inject(AuthService);
   #router = inject(Router);
   #loader = inject(LoaderService);
+  #pwaService = inject(PwaInstallService);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);
-
-  installPromptEvent = signal<BeforeInstallPromptEvent | null>(null);
-  appInstalled = signal(false);
 
   loginState = toSignal(
     toObservable(this.#loginTrigger).pipe(
@@ -61,21 +54,8 @@ export default class LoginComponent {
     ), {initialValue: {loading: false, error: null}}
   );
 
-  loginStateEffect = effect(() => {
-    if (this.loginState().status === 'success') {
-      this.#router.navigate(['/secure/agenda']);
-    }
-  });
-
-  googleLoginStateEffect = effect(() => {
-    const state = this.googleLoginState();
-    if (state.error) {
-      this.errorMessage.set(state.error);
-    }
-  });
-
   errorMessage = signal('');
-  loginForm = this.#formGroup.group({
+  loginForm = this.#formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   })
@@ -83,6 +63,9 @@ export default class LoginComponent {
   get lf() {
     return this.loginForm.controls;
   }
+
+  showInstallButton = this.#pwaService.showInstallButton;
+  isIOS = this.#pwaService.isIOS;
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
@@ -116,26 +99,16 @@ export default class LoginComponent {
     this.#authService.clearError();
   }
 
-  onInstallPwa() {
-    const promptEvent = this.installPromptEvent();
-    if (!promptEvent) return;
-    /*TODO ADD ERRORS LOG*/
-    promptEvent.prompt()
-      .then(() => promptEvent.userChoice)
-      .then(choice => {
-        if (choice.outcome === 'accepted') {
-          this.installPromptEvent.set(null);
-        }
-      })
-  }
-
-  onBeforeInstallPrompt(event: Event) {
-    event.preventDefault();
-    this.installPromptEvent.set(event as BeforeInstallPromptEvent);
-  }
-
-  onAppInstalled() {
-    this.appInstalled.set(true);
-    this.installPromptEvent.set(null);
+  async onInstallPwa() {
+    try {
+      const result = await this.#pwaService.installPwa();
+      if (result.success) {
+        console.log('Instalación iniciada exitosamente');
+      } else {
+        console.error('Error en la instalación:', result.error);
+      }
+    } catch (error) {
+      console.error('Error inesperado durante la instalación:', error);
+    }
   }
 }

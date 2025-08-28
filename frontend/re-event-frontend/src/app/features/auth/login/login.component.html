@@ -87,11 +87,15 @@
 
 <small class="create-account-text">Don't have an account? <a routerLink="/register">Sign Up</a></small>
 
-@if (installPromptEvent() && !appInstalled()) {
+@if (showInstallButton()) {
   <div class="re-txt-center re-mt-1-6">
     <button type="button" class="re-secondary-btn re-w-100" (click)="onInstallPwa()"
             aria-label="Install App">
-      Install App
+      @if (isIOS()) {
+        Instalar App (iOS)
+      } @else {
+        Instalar App
+      }
     </button>
   </div>
 }
