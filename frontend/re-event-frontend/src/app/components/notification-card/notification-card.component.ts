@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {Notification} from '../../core/services/notifications.service';
+import {NotificationResponse} from '../../core/services/notifications.service';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -12,7 +12,7 @@ import {DatePipe} from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCardComponent {
-  notification = input.required<Notification>();
+  notification = input.required<NotificationResponse>();
   markAsRead = output<string>();
 
   onMarkAsRead() {

@@ -5,8 +5,7 @@
 
     @for (notification of group.notifications; track notification.notificationId) {
       <app-notification-card
-        [notification]="notification"
-        (markAsRead)="markAsRead($event)">
+        [notification]="notification">
       </app-notification-card>
     }
   } @empty {

@@ -1,7 +1,10 @@
 import {ChangeDetectionStrategy, Component, inject, input, output, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {SlidePanelComponent} from "../slide-panel/slide-panel.component";
-import {NotificationsService, NotificationInput} from "../../core/services/notifications.service";
+import {
+  NotificationRequest,
+  NotificationsService
+} from "../../core/services/notifications.service";
 
 export interface CreateNotificationData {
   title: string;
@@ -75,18 +78,23 @@ export class CreateNotificationComponent {
 
   async onSubmit() {
     if (this.title().trim() && this.description().trim()) {
-      const notificationData: NotificationInput = {
+      const notificationData: NotificationRequest = {
         title: this.title().trim(),
-        description: this.description().trim(),
-        author: this.author().trim() || 'AWS Bolivia',
-        targetRole: this.targetRole() || 'none',
-        userId: this.userId() || 'none'
+        body: this.description().trim(),
+        type: 'anuncio',
+        audience: 'all',
+        userId: this.userId() || 'none',
+        segmentId: 'all'
       };
 
       try {
-        // await this.#notificationsService.createNotification(notificationData);
-        this.resetForm();
-        this.onClose();
+        this.#notificationsService.createNotification(notificationData).subscribe({
+          next: (response) => {
+            console.log(response);
+            this.resetForm();
+            this.onClose();
+          }
+        });
       } catch (error) {
         console.error('Error creando notificación:', error);
       }

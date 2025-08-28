@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal} from '@angular/core';
 import {NotificationCardComponent} from '../../components/notification-card/notification-card.component';
-import {NotificationsService} from '../../core/services/notifications.service';
+import {NotificationResponse, NotificationsService} from '../../core/services/notifications.service';
 import {RelativeDatePipe} from "../../pipes";
 import {UserService} from "../../core/services/user.service";
+import {Event} from "../../core/services/events.service";
 
 interface GroupedNotifications {
   date: string;
@@ -24,7 +25,7 @@ export default class NotificationsComponent implements OnInit {
   #userService = inject(UserService);
 
   isAdmin = signal<boolean>(false);
-  notifications = []; //this.#notificationsService.notifications;
+  notifications = signal<NotificationResponse[]>([]);
   showCreatePanel = signal<boolean>(false);
 
   constructor() {
@@ -41,20 +42,20 @@ export default class NotificationsComponent implements OnInit {
   }
 
   groupedNotifications = computed(() => {
-    // const notifications = this.notifications();
-    // if (!notifications.length) return [];
+    const notifications = this.notifications();
+    if (!notifications.length) return [];
 
     const groups: { [key: string]: any[] } = {};
-    
-    // notifications.forEach(notification => {
-    //   const date = new Date(notification.createdAt);
-    //   const dateKey = date.toISOString().split('T')[0];
-    //
-    //   if (!groups[dateKey]) {
-    //     groups[dateKey] = [];
-    //   }
-    //   groups[dateKey].push(notification);
-    // });
+
+    notifications.forEach(notification => {
+      const date = new Date(notification.createdAt);
+      const dateKey = date.toISOString().split('T')[0];
+
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(notification);
+    });
 
     const result: GroupedNotifications[] = Object.keys(groups).map(key => ({
       date: key,
@@ -69,12 +70,10 @@ export default class NotificationsComponent implements OnInit {
   });
 
   async ngOnInit() {
-    // await this.#notificationsService.loadNotifications();
-    // this.#notificationsService.markAllAsRead();
-  }
-
-  markAsRead(notificationId: string) {
-    // this.#notificationsService.markAsRead(notificationId);
+    this.#notificationsService.getNotifications().subscribe({
+      next: (response) => this.notifications.set(response.items),
+      error: (error) => console.error('Error loading past events:', error)
+    });
   }
 
   openCreatePanel(): void {
