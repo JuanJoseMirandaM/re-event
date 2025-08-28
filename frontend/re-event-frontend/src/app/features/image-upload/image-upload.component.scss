@@ -1,0 +1,214 @@
+/* Área de Drag & Drop */
+.drag-drop-area {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer transition-all duration-300;
+  min-height: 200px;
+  
+  &:hover {
+    @apply border-primary-lilac bg-gray-50;
+  }
+  
+  &.drag-over {
+    @apply border-primary-lilac bg-primary-lilac bg-opacity-10;
+    transform: scale(1.02);
+  }
+}
+
+.drag-drop-content {
+  @apply flex flex-col items-center justify-center gap-2 text-center;
+  height: 100%;
+}
+
+/* Barras de progreso */
+.progress-container {
+  @apply flex items-center gap-3;
+}
+
+.progress-bar {
+  @apply flex-1 bg-gray-200 rounded-full h-2 overflow-hidden;
+}
+
+.progress-fill {
+  @apply bg-primary-lilac h-full transition-all duration-300 ease-out;
+}
+
+/* Lista de imágenes */
+.image-list {
+  @apply flex flex-col gap-3 max-h-96 overflow-y-auto;
+}
+
+.image-item {
+  @apply flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 transition-all duration-200;
+  
+  &.status-pending {
+    @apply border-gray-300;
+  }
+  
+  &.status-uploading {
+    @apply border-blue-300 bg-blue-50;
+  }
+  
+  &.status-success {
+    @apply border-green-300 bg-green-50;
+  }
+  
+  &.status-error {
+    @apply border-red-300 bg-red-50;
+  }
+}
+
+/* Preview de imagen */
+.image-preview {
+  @apply relative flex-shrink-0;
+  width: 60px;
+  height: 60px;
+}
+
+.image-thumbnail {
+  @apply w-full h-full object-cover rounded-md border border-gray-200;
+}
+
+.image-overlay {
+  @apply absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md opacity-0 transition-opacity duration-200;
+  
+  .image-item:hover & {
+    @apply opacity-100;
+  }
+}
+
+.status-icon {
+  @apply text-xl;
+}
+
+/* Información del archivo */
+.image-info {
+  @apply flex-1 min-w-0;
+}
+
+.image-name {
+  @apply text-sm font-medium text-gray-900 truncate;
+}
+
+.image-details {
+  @apply flex items-center gap-2 text-xs text-gray-500 mt-1;
+}
+
+.file-size {
+  @apply text-gray-600;
+}
+
+.upload-progress {
+  @apply text-blue-600 font-medium;
+}
+
+.error-message {
+  @apply text-red-600;
+}
+
+.success-message {
+  @apply text-green-600;
+}
+
+/* Barra de progreso individual */
+.individual-progress {
+  @apply w-full bg-gray-200 rounded-full h-1 mt-2 overflow-hidden;
+}
+
+.individual-progress-fill {
+  @apply bg-blue-500 h-full transition-all duration-300 ease-out;
+}
+
+/* Acciones */
+.image-actions {
+  @apply flex gap-1 flex-shrink-0;
+}
+
+.action-btn {
+  @apply w-8 h-8 flex items-center justify-center rounded-full border-none cursor-pointer transition-all duration-200;
+  font-size: 14px;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.retry-btn {
+  @apply bg-blue-100 text-blue-600;
+  
+  &:hover {
+    @apply bg-blue-200;
+  }
+}
+
+.remove-btn {
+  @apply bg-red-100 text-red-600;
+  
+  &:hover {
+    @apply bg-red-200;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .drag-drop-area {
+    @apply p-4;
+    min-height: 150px;
+  }
+  
+  .image-item {
+    @apply flex-col items-start gap-2;
+  }
+  
+  .image-preview {
+    @apply self-center;
+  }
+  
+  .image-actions {
+    @apply self-end;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.image-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de carga */
+.status-uploading .image-thumbnail {
+  @apply opacity-75;
+}
+
+.status-success .image-thumbnail {
+  @apply opacity-100;
+}
+
+.status-error .image-thumbnail {
+  @apply opacity-60;
+}
+
+/* Scrollbar personalizado */
+.image-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.image-list::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+.image-list::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+.image-list::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}

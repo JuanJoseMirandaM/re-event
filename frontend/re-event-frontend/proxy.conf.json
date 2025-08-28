@@ -7,5 +7,32 @@
     "pathRewrite": {
       "^/api": ""
     }
+  },
+  "/presigned-api": {
+    "target": "https://9mszstbuql.execute-api.us-east-1.amazonaws.com/dev",
+    "secure": false,
+    "logLevel": "info",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/presigned-api": ""
+    }
+  },
+  "/s3-upload": {
+    "target": "https://facefinder-amazon-community-bolivia-2025-dev.s3.amazonaws.com",
+    "secure": true,
+    "logLevel": "info",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/s3-upload": ""
+    }
+  },
+  "/cloudfront": {
+    "target": "https://dy2mh83jjyrq6.cloudfront.net",
+    "secure": true,
+    "logLevel": "info",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/cloudfront": ""
+    }
   }
 }

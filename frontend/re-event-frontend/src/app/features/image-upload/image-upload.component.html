@@ -1,0 +1,185 @@
+<div class="flex flex--col items-center gap-1 bg-primary rounded-md w-full p-4">
+  <span class="text-2xl re-icon-footer re-icon-photo"></span>
+  <span class="text-base font-medium">Subir Imágenes</span>
+  <span class="text-sm text-gray-600">Máximo {{ MAX_FILES }} imágenes</span>
+</div>
+
+<!-- Área de Drag & Drop -->
+<div 
+  class="drag-drop-area"
+  [class.drag-over]="isDragOver()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  (click)="fileInput.click()">
+  
+  <div class="drag-drop-content">
+    @if (isDragOver()) {
+      <span class="text-4xl">📤</span>
+      <span class="text-lg font-medium text-primary-lilac">Suelta las imágenes aquí</span>
+    } @else {
+      <span class="text-4xl">📷</span>
+      <span class="text-lg font-medium">Arrastra imágenes aquí</span>
+      <span class="text-sm text-gray-500">o haz clic para seleccionar</span>
+      <div class="flex gap-2 mt-2">
+        <span class="text-xs bg-gray-100 px-2 py-1 rounded">JPG</span>
+        <span class="text-xs bg-gray-100 px-2 py-1 rounded">PNG</span>
+        <span class="text-xs bg-gray-100 px-2 py-1 rounded">GIF</span>
+        <span class="text-xs bg-gray-100 px-2 py-1 rounded">WEBP</span>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Input oculto para selección de archivos -->
+<input 
+  #fileInput
+  type="file" 
+  multiple 
+  accept="image/*"
+  class="hidden"
+  (change)="onFileSelect($event)">
+
+<!-- Estadísticas -->
+@if (totalImages() > 0) {
+  <div class="flex flex--col gap-2 bg-primary rounded w-full p-4">
+    <div class="flex justify-between items-center">
+      <span class="text-base font-medium">Imágenes ({{ totalImages() }})</span>
+      <div class="flex gap-2">
+        @if (pendingUploads() > 0 && !isUploading()) {
+          <button 
+            class="btn btn--primary btn--sm"
+            (click)="uploadAllImages()">
+            📤 Subir Todo
+          </button>
+        }
+        @if (!isUploading()) {
+          <button 
+            class="btn btn--secondary btn--sm"
+            (click)="clearAllImages()">
+            🗑️ Limpiar
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Estadísticas de estado -->
+    <div class="flex gap-4 text-sm">
+      @if (pendingUploads() > 0) {
+        <span class="flex items-center gap-1 text-gray-500">
+          ⏳ {{ pendingUploads() }} pendientes
+        </span>
+      }
+      @if (successfulUploads() > 0) {
+        <span class="flex items-center gap-1 text-green-500">
+          ✅ {{ successfulUploads() }} exitosas
+        </span>
+      }
+      @if (failedUploads() > 0) {
+        <span class="flex items-center gap-1 text-red-500">
+          ❌ {{ failedUploads() }} fallidas
+        </span>
+      }
+    </div>
+
+    <!-- Barra de progreso general -->
+    @if (isUploading()) {
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div 
+            class="progress-fill"
+            [style.width.%]="uploadProgress()">
+          </div>
+        </div>
+        <span class="text-sm text-gray-600">{{ uploadProgress() }}%</span>
+      </div>
+    }
+  </div>
+}
+
+<!-- Lista de imágenes -->
+@if (totalImages() > 0) {
+  <div class="flex flex--col gap-3 bg-primary rounded w-full p-4">
+    <span class="text-base font-medium">Lista de Imágenes</span>
+    
+    <div class="image-list">
+      @for (image of images(); track image.id) {
+        <div class="image-item" [class]="'status-' + image.status">
+          <!-- Preview de la imagen -->
+          <div class="image-preview">
+            <img 
+              [src]="image.file | filePreview" 
+              [alt]="image.file.name"
+              class="image-thumbnail">
+            
+            <!-- Overlay de estado -->
+            <div class="image-overlay">
+              <span class="status-icon">
+                @if (image.status === 'pending') { ⏳ }
+                @if (image.status === 'uploading') { 📤 }
+                @if (image.status === 'success') { ✅ }
+                @if (image.status === 'error') { ❌ }
+              </span>
+            </div>
+          </div>
+
+          <!-- Información del archivo -->
+          <div class="image-info">
+            <div class="image-name">{{ image.file.name }}</div>
+            <div class="image-details">
+              <span class="file-size">{{ formatFileSize(image.file.size) }}</span>
+              @if (image.status === 'uploading') {
+                <span class="upload-progress">{{ image.progress }}%</span>
+              }
+              @if (image.status === 'error' && image.error) {
+                <span class="error-message">{{ image.error }}</span>
+              }
+              @if (image.status === 'success' && image.s3Key) {
+                <span class="success-message">Subida exitosa</span>
+              }
+            </div>
+
+            <!-- Barra de progreso individual -->
+            @if (image.status === 'uploading') {
+              <div class="individual-progress">
+                <div 
+                  class="individual-progress-fill"
+                  [style.width.%]="image.progress">
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Acciones -->
+          <div class="image-actions">
+            @if (image.status === 'error') {
+              <button 
+                class="action-btn retry-btn"
+                (click)="retryUpload(image.id)"
+                title="Reintentar">
+                🔄
+              </button>
+            }
+            @if (image.status !== 'uploading') {
+              <button 
+                class="action-btn remove-btn"
+                (click)="removeImage(image.id)"
+                title="Eliminar">
+                ❌
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- Mensaje cuando no hay imágenes -->
+@if (totalImages() === 0) {
+  <div class="flex flex--col items-center gap-2 bg-primary rounded w-full p-8 text-center">
+    <span class="text-4xl">📷</span>
+    <span class="text-lg font-medium text-gray-500">No hay imágenes seleccionadas</span>
+    <span class="text-sm text-gray-400">Arrastra imágenes o haz clic en el área de arriba para comenzar</span>
+  </div>
+}

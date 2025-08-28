@@ -104,3 +104,57 @@
     content: $re-icon-close;
   }
 }
+
+.re-icon-photo {
+  &:before {
+    content: $re-icon-photo;
+  }
+}
+
+.re-icon-camera {
+  &:before {
+    content: $re-icon-camera;
+  }
+}
+
+.re-icon-cloud-upload {
+  &:before {
+    content: $re-icon-cloud-upload;
+  }
+}
+
+.re-icon-add-photo {
+  &:before {
+    content: $re-icon-add-photo;
+  }
+}
+
+.re-icon-delete {
+  &:before {
+    content: $re-icon-delete;
+  }
+}
+
+.re-icon-schedule {
+  &:before {
+    content: $re-icon-schedule;
+  }
+}
+
+.re-icon-check-circle {
+  &:before {
+    content: $re-icon-check-circle;
+  }
+}
+
+.re-icon-error {
+  &:before {
+    content: $re-icon-error;
+  }
+}
+
+.re-icon-refresh {
+  &:before {
+    content: $re-icon-refresh;
+  }
+}
