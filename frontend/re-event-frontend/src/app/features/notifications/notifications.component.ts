@@ -25,6 +25,7 @@ export default class NotificationsComponent implements OnInit {
   #userService = inject(UserService);
 
   isAdmin = signal<boolean>(false);
+  isLoading = signal<boolean>(true);
   notifications = signal<NotificationResponse[]>([]);
   showCreatePanel = signal<boolean>(false);
 
@@ -70,9 +71,17 @@ export default class NotificationsComponent implements OnInit {
   });
 
   async ngOnInit() {
+    this.isLoading.set(true);
+    
     this.#notificationsService.getNotifications().subscribe({
-      next: (response) => this.notifications.set(response.items),
-      error: (error) => console.error('Error loading past events:', error)
+      next: (response) => {
+        this.notifications.set(response.items);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+        this.isLoading.set(false);
+      }
     });
   }
 
