@@ -50,8 +50,8 @@ export default class RegisterComponent {
   });
 
   registerForm = this.#formBuilder.group({
-    name: ['Jhonatan Soto', Validators.required],
-    email: ['jhonatansotogz@gmail.com', [Validators.required, Validators.email]],
+    name: ['', Validators.required, Validators.minLength(3)],
+    email: ['', [Validators.required, Validators.email, Validators.minLength(6)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
   }, {

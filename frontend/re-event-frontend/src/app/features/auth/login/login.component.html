@@ -13,39 +13,39 @@
 }
 
 <form class="login-form-container" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div>
+  <div class="form-group">
     <input type="text"
-           class="re-input re-w-100"
+           class="form-input"
            placeholder="Email"
            id="email"
            formControlName="email">
     @if (lf['email'].invalid && lf['email'].dirty || lf['email'].touched) {
-      <div class="invalid-feedback">
+      <div class="form-error">
         @if (lf['email'].errors?.['required']) {
-          <small class="re-small-font re-error-message">Email is required.</small>
+          <small class="text-error">Email is required.</small>
         }
 
         @if (lf['email'].errors?.['email']) {
-          <small class="re-small-font re-error-message">Invalid Email</small>
+          <small class="text-error">Invalid Email</small>
         }
       </div>
     }
   </div>
 
-  <div>
+  <div class="form-group">
     <input type="password"
-           class="re-input re-w-100"
+           class="form-input"
            placeholder="Password"
            id="password"
            formControlName="password">
     @if (lf['password'].invalid && lf['password'].dirty || lf['password'].touched) {
-      <div class="invalid-feedback">
+      <div class="form-error">
         @if (lf['password'].errors?.['required']) {
-          <small class="re-small-font re-error-message">Password is required.</small>
+          <small class="text-error">Password is required.</small>
         }
 
         @if (lf['password'].errors?.['minlength']) {
-          <small class="re-small-font re-error-message">Password must be at least 6 characters.</small>
+          <small class="text-error">Password must be at least 6 characters.</small>
         }
       </div>
     }

@@ -1,11 +1,13 @@
-<h1 class="re-h1-title re-txt-center re-mb-2-4">Verify your email</h1>
-<p class="re-txt-center re-mb-1-6">We sent a 6-digit code to <strong>{{ email() || 'your email' }}</strong></p>
+<div class="flex flex--col gap-2 my-8">
+  <p class="text-2xl font-medium text-center">Verificar tu correo</p>
+  <p class="text-lg text-center">Enviamos un codigo de 6 digito a <span class="font-medium">{{ email() || 'your email' }}</span></p>
+</div>
 
 <form [formGroup]="codeForm" (ngSubmit)="onSubmit()" novalidate>
-  <div class="re-flex re-flex-column re-mb-1-6">
-    <label for="code" class="re-font-500 re-mb-1-6">Verification Code</label>
+  <div class="form-group">
+    <label for="code" class="form-label">Codigo de verificacion</label>
 
-    <input id="code" class="re-input re-w-100" placeholder="Enter 6-digit code" maxlength="6" formControlName="code"/>
+    <input id="code" class="form-input" placeholder="Enter 6-digit code" maxlength="6" formControlName="code"/>
     @if (cf.code.touched && cf.code.errors?.['required']) {
       <small class="re-error">Code is required.</small>
     }
