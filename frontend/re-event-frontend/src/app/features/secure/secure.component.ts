@@ -12,13 +12,15 @@ import {RouterOutlet} from '@angular/router';
 import {FooterComponent} from '../footer/footer.component';
 import {SecureContainersService} from '../../core/services/secure-containers.service';
 import {ContainerNames} from '../../utils/container-names.enum';
+import {FloatingMenuComponent} from '../shared/floating-menu/floating-menu.component';
 
 @Component({
   selector: 'app-secure',
   imports: [
     HeaderComponent,
     RouterOutlet,
-    FooterComponent
+    FooterComponent,
+    FloatingMenuComponent
   ],
   templateUrl: './secure.component.html',
   styleUrl: './secure.component.scss',
