@@ -80,13 +80,12 @@ exports.handler = async (event) => {
                         userId: userId,
                         deviceId: deviceId
                     },
-                    UpdateExpression: 'SET #token = :token, #updatedAt = :updatedAt',
+                    UpdateExpression: 'SET fcm_token = :fcm_token, #updatedAt = :updatedAt',
                     ExpressionAttributeNames: {
-                        '#token': 'token',
                         '#updatedAt': 'updatedAt'
                     },
                     ExpressionAttributeValues: {
-                        ':token': token,
+                        ':fcm_token': token,
                         ':updatedAt': now
                     },
                     ReturnValues: 'ALL_NEW'
@@ -123,7 +122,7 @@ exports.handler = async (event) => {
                 const newTokenItem = {
                     userId: userId,
                     deviceId: deviceId,
-                    token: token,
+                    fcm_token: token,
                     platform: platform || 'web',
                     topics: topics || ['all'],
                     createdAt: now,

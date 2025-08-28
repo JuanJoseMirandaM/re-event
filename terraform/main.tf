@@ -40,7 +40,7 @@ module "api" {
   
   verification_codes_table_name = module.database.verification_codes_table_name
   verification_codes_table_arn  = module.database.verification_codes_table_arn
-
+  
   points_codes_table_name       = module.database.points_codes_table_name
   points_codes_table_arn        = module.database.points_codes_table_arn
 
@@ -56,5 +56,9 @@ module "api" {
   # Required variables that need to be defined
   s3_bucket_name        = var.s3_bucket_name
   cognito_user_pool_arn = module.auth.user_pool_arn
-
+  
+  # Firebase Configuration
+  firebase_project_id   = var.firebase_project_id
+  firebase_client_email = var.firebase_client_email
+  firebase_private_key  = var.firebase_private_key
 }

@@ -5,11 +5,15 @@ resource "aws_lambda_function" "create_notification" {
   role            = aws_iam_role.lambda_role.arn
   handler         = "create-notification.handler"
   runtime         = "nodejs18.x"
-  timeout         = 30
+  timeout         = 60  # Aumentado para dar tiempo a FCM
   
   environment {
     variables = {
       NOTIFICATIONS_TABLE = var.notifications_table_name
+      FCM_TOKENS_TABLE   = var.fcm_tokens_table_name
+      FIREBASE_PROJECT_ID = var.firebase_project_id
+      FIREBASE_CLIENT_EMAIL = var.firebase_client_email
+      FIREBASE_PRIVATE_KEY = var.firebase_private_key
     }
   }
   

@@ -104,3 +104,23 @@ variable "notifications_table_arn" {
   description = "ARN of the notifications DynamoDB table"
   type        = string
 }
+
+# Firebase Configuration Variables
+variable "firebase_project_id" {
+  description = "Firebase Project ID for FCM"
+  type        = string
+  default     = ""
+}
+
+variable "firebase_client_email" {
+  description = "Firebase Client Email for FCM"
+  type        = string
+  default     = ""
+}
+
+variable "firebase_private_key" {
+  description = "Firebase Private Key for FCM"
+  type        = string
+  default     = ""
+  sensitive   = true
+}

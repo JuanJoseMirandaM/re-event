@@ -155,7 +155,7 @@ resource "aws_dynamodb_table" "fcm_tokens" {
   }
 
   attribute {
-    name = "token"
+    name = "fcm_token"
     type = "S"
   }
 
@@ -164,10 +164,10 @@ resource "aws_dynamodb_table" "fcm_tokens" {
     type = "S"
   }
 
-  # GSI para consultar tokens por token (útil para búsquedas)
+  # GSI para consultar tokens por fcm_token (útil para búsquedas)
   global_secondary_index {
-    name            = "TokenIndex"
-    hash_key        = "token"
+    name            = "FcmTokenIndex"
+    hash_key        = "fcm_token"
     projection_type = "ALL"
   }
 

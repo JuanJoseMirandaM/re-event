@@ -56,3 +56,23 @@ variable "s3_bucket_name" {
   type        = string
   default     = "reevent-verification-codes-dev"
 }
+
+# Firebase Configuration Variables
+variable "firebase_project_id" {
+  description = "Firebase Project ID for FCM notifications"
+  type        = string
+  default     = ""
+}
+
+variable "firebase_client_email" {
+  description = "Firebase Client Email for FCM notifications"
+  type        = string
+  default     = ""
+}
+
+variable "firebase_private_key" {
+  description = "Firebase Private Key for FCM notifications"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
