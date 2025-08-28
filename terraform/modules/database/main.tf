@@ -180,3 +180,94 @@ resource "aws_dynamodb_table" "fcm_tokens" {
 
   tags = var.common_tags
 }
+
+# Notifications Table
+resource "aws_dynamodb_table" "notifications" {
+  name           = "${var.project_name}-notifications-${var.environment}"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "notificationId"
+
+  attribute {
+    name = "notificationId"
+    type = "S"
+  }
+
+  attribute {
+    name = "type"
+    type = "S"
+  }
+
+  attribute {
+    name = "audience"
+    type = "S"
+  }
+
+  attribute {
+    name = "status"
+    type = "S"
+  }
+
+  attribute {
+    name = "authorId"
+    type = "S"
+  }
+
+  attribute {
+    name = "targetUserId"
+    type = "S"
+  }
+
+  attribute {
+    name = "segmentId"
+    type = "S"
+  }
+
+  attribute {
+    name = "createdAt"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "TypeIndex"
+    hash_key        = "type"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "AudienceIndex"
+    hash_key        = "audience"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "StatusIndex"
+    hash_key        = "status"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "AuthorIndex"
+    hash_key        = "authorId"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "UserTargetIndex"
+    hash_key        = "targetUserId"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "SegmentIndex"
+    hash_key        = "segmentId"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  tags = var.common_tags
+}

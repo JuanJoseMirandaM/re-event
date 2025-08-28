@@ -94,3 +94,13 @@ variable "fcm_tokens_table_arn" {
   description = "ARN of the FCM tokens DynamoDB table"
   type        = string
 }
+
+variable "notifications_table_name" {
+  description = "Name of the notifications DynamoDB table"
+  type        = string
+}
+
+variable "notifications_table_arn" {
+  description = "ARN of the notifications DynamoDB table"
+  type        = string
+}

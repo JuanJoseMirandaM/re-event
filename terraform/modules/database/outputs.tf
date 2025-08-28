@@ -68,3 +68,13 @@ output "fcm_tokens_table_arn" {
   description = "ARN of the FCM tokens DynamoDB table"
   value       = aws_dynamodb_table.fcm_tokens.arn
 }
+
+output "notifications_table_name" {
+  description = "Name of the notifications DynamoDB table"
+  value       = aws_dynamodb_table.notifications.name
+}
+
+output "notifications_table_arn" {
+  description = "ARN of the notifications DynamoDB table"
+  value       = aws_dynamodb_table.notifications.arn
+}
