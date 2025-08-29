@@ -10,39 +10,31 @@ const s3 = new S3Client();
 const CARD_TYPES = {
     'common': { 
         points: 5, 
-        rarity: 'COMMON',
-        color: '#151729',
-        borderColor: '#151729',
+        color: '#E2C0FF', // Lila
+        borderColor: '#FF8C00',
         textColor: '#FFFFFF',
-        description: 'Escaneá para acumular rewrites y puntos',
-        expiresAt: '2025-12-31T23:59:59.000Z'
+        flameIcon: 'https://raw.githubusercontent.com/JuanJoseMirandaM/re-event/main/frontend/re-event-frontend/public/images/app_card_1.png'
     },
     'rare': { 
         points: 10, 
-        rarity: 'RARE',
-        color: '#F39C12',
-        borderColor: '#F39C12',
+        color: '#9AD8F0', // Celeste
+        borderColor: '#FFA500',
         textColor: '#FFFFFF',
-        description: 'Reclamá tus puntos en la nube',
-        expiresAt: '2025-12-31T23:59:59.000Z'
+        flameIcon: 'https://raw.githubusercontent.com/JuanJoseMirandaM/re-event/main/frontend/re-event-frontend/public/images/app_card_2.png'
     },
     'epic': { 
         points: 20, 
-        rarity: 'EPIC',
-        color: '#9B59B6',
-        borderColor: '#9B59B6',
+        color: '#EBA06B', // Naranja claro
+        borderColor: '#FF7F00',
         textColor: '#FFFFFF',
-        description: '¡Escaneá este tesoro dorado!',
-        expiresAt: '2025-12-31T23:59:59.000Z'
+        flameIcon: 'https://raw.githubusercontent.com/JuanJoseMirandaM/re-event/main/frontend/re-event-frontend/public/images/app_card_3.jpeg'
     },
-    'dinamic': { 
-        points: null, // Se define en la request
-        rarity: 'DINAMIC',
-        color: '#E74C3C',
-        borderColor: '#E74C3C',
+    'secret': { 
+        points: null, // Se genera aleatoriamente entre 10-50
+        color: '#173851', // Azul oscuro
+        borderColor: '#FF6B35',
         textColor: '#FFFFFF',
-        description: null, // Se define en la request
-        expiresAt: null // Se define en la request
+        flameIcon: 'https://raw.githubusercontent.com/JuanJoseMirandaM/re-event/main/frontend/re-event-frontend/public/images/app_card_4.png'
     }
 };
 
@@ -50,19 +42,19 @@ const CARD_TYPES = {
 const CARD_DESIGNS = {
     'common': {
         name: 'Llama Backendera',
-        description: 'Escaneá para acumular puntos'
+        description: 'Tarjeta Common - Comienza tu colección de puntos.'
     },
     'rare': {
         name: 'Cloud Walker',
-        description: 'Reclamá tus puntos en la nube'
+        description: 'Tarjeta Rare - Avanzar más rápido en tu ranking de puntos.'
     },
     'epic': {
         name: 'Token Dorado',
-        description: '¡Escaneá este tesoro dorado!'
+        description: 'Tarjeta Epic - La tarjeta más valiosa del evento.'
     },
-    'dinamic': {
-        name: 'Código Dinámico',
-        description: 'Código personalizable'
+    'secret': {
+        name: 'Código Secreto',
+        description: 'Tarjeta Secreta - Una sorpresa espero te guste!'
     }
 };
 
@@ -106,118 +98,84 @@ exports.handler = async (event) => {
         }
 
         const body = JSON.parse(event.body);
-        const { cardType, quantity = 1, customName, customDescription, points, maxUses, expiresAt } = body;
+        const { sheets = 1 } = body; // Solo pedimos cantidad de hojas
 
         // Validaciones
-        if (!cardType || !CARD_TYPES[cardType]) {
+        if (sheets <= 0 || sheets > 100) {
             return {
                 statusCode: 400,
                 headers,
                 body: JSON.stringify({
                     success: false,
-                    error: `Tipo de card inválido. Tipos válidos: ${Object.keys(CARD_TYPES).join(', ')}`
+                    error: 'La cantidad de hojas debe estar entre 1 y 100'
                 })
             };
         }
 
-        // Validaciones específicas para dinamic
-        if (cardType === 'dinamic') {
-            if (!points || points <= 0) {
-                return {
-                    statusCode: 400,
-                    headers,
-                    body: JSON.stringify({
-                        success: false,
-                        error: 'Para cards dinámicas, los puntos deben ser mayores a 0'
-                    })
-                };
-            }
-            
-            if (quantity !== 1) {
-                return {
-                    statusCode: 400,
-                    headers,
-                    body: JSON.stringify({
-                        success: false,
-                        error: 'Las cards dinámicas solo pueden generar 1 código'
-                    })
-                };
-            }
-        } else {
-            // Para cards predefinidas, cantidad entre 1 y 1000
-            if (quantity <= 0 || quantity > 1000) {
-                return {
-                    statusCode: 400,
-                    headers,
-                    body: JSON.stringify({
-                        success: false,
-                        error: 'La cantidad debe estar entre 1 y 1000'
-                    })
-                };
-            }
-        }
-
-        const cardConfig = CARD_TYPES[cardType];
-        const cardDesign = CARD_DESIGNS[cardType];
         const now = new Date();
         const codes = [];
         const cardImages = [];
 
-        // Determinar puntos y configuración según el tipo (una vez fuera del bucle)
-        let finalPoints, finalMaxUses, finalExpiresAt, finalDescription;
+        // Generar hojas completas con distribución específica
+        const cardsPerSheet = 10; // 5 common + 3 rare + 1 epic + 1 secret
         
-        if (cardType === 'dinamic') {
-            finalPoints = points;
-            finalMaxUses = maxUses || 1;
-            finalExpiresAt = expiresAt || null;
-            finalDescription = customDescription || 'Código dinámico personalizable';
-        } else {
-            finalPoints = cardConfig.points;
-            finalMaxUses = 1; // Una vez por usuario para cards predefinidas
-            finalExpiresAt = cardConfig.expiresAt;
-            finalDescription = customDescription || cardDesign.description;
-        }
+        for (let sheet = 0; sheet < sheets; sheet++) {
+            // Generar distribución para esta hoja
+            const sheetCards = generateSheetDistribution();
+            
+            for (const cardInfo of sheetCards) {
+                // Generar código de 6 caracteres sin prefijos
+                const code = generateRandomCode(6);
+                
+                // Determinar puntos según el tipo
+                let cardPoints;
+                let cardDescription;
+                
+                if (cardInfo.type === 'secret') {
+                    cardPoints = Math.floor(Math.random() * 41) + 10; // 10-50 puntos
+                    cardDescription = `Tarjeta Secreta - Una sorpresa esperándote. ¡Descubre cuántos puntos vale!`;
+                } else {
+                    cardPoints = CARD_TYPES[cardInfo.type].points;
+                    cardDescription = CARD_DESIGNS[cardInfo.type].description;
+                }
 
-        // Generar códigos
-        for (let i = 0; i < quantity; i++) {
-            // Generar código de 6 caracteres sin prefijos
-            const code = generateRandomCode(6);
+                const codeItem = {
+                    code,
+                    type: 'card',
+                    points: cardPoints,
+                    maxUses: 1, // Una vez por usuario
+                    createdAt: now.toISOString(),
+                    expiresAt: '2025-12-31T23:59:59.000Z',
+                    description: cardDescription,
+                    cardType: cardInfo.type,
+                    generatedBy: userId
+                };
 
-            const codeItem = {
-                code,
-                type: 'card',
-                points: finalPoints,
-                maxUses: finalMaxUses,
-                createdAt: now.toISOString(),
-                expiresAt: finalExpiresAt,
-                description: finalDescription,
-                cardType,
-                generatedBy: userId
-            };
+                codes.push(codeItem);
 
-            codes.push(codeItem);
+                // Generar QR code con solo el código
+                const qrImageDataURL = await QRCode.toDataURL(code, {
+                    width: 120, // QR más pequeño para cards compactas
+                    margin: 1, // Margen mínimo para aprovechar espacio
+                    color: { dark: '#000000', light: '#FFFFFF' },
+                    errorCorrectionLevel: 'M' // Nivel medio de corrección de errores
+                });
 
-            // Generar QR code con solo el código
-            const qrImageDataURL = await QRCode.toDataURL(code, {
-                width: 200,
-                margin: 2,
-                color: { dark: '#000000', light: '#FFFFFF' }
-            });
-
-            cardImages.push({
-                code,
-                qrDataURL: qrImageDataURL,
-                cardType,
-                points: finalPoints,
-                name: customName || cardDesign.name,
-                description: finalDescription,
-                rarity: cardConfig.rarity,
-                color: cardConfig.color,
-                borderColor: cardConfig.borderColor,
-                textColor: cardConfig.textColor,
-                maxUses: finalMaxUses,
-                expiresAt: finalExpiresAt
-            });
+                cardImages.push({
+                    code,
+                    qrDataURL: qrImageDataURL,
+                    cardType: cardInfo.type,
+                    points: cardPoints,
+                    name: CARD_DESIGNS[cardInfo.type].name,
+                    description: cardDescription,
+                    color: CARD_TYPES[cardInfo.type].color,
+                    borderColor: CARD_TYPES[cardInfo.type].borderColor,
+                    textColor: CARD_TYPES[cardInfo.type].textColor,
+                    flameIcon: CARD_TYPES[cardInfo.type].flameIcon,
+                    maxUses: 1,
+                    expiresAt: '2025-12-31T23:59:59.000Z'
+                });
+            }
         }
 
         // Guardar códigos en DynamoDB
@@ -247,8 +205,8 @@ exports.handler = async (event) => {
         }
 
         // Generar HTML con las cards
-        const htmlContent = generateCardsHTML(cardImages, cardType);
-        const fileName = `cards-${cardType}-${Date.now()}.html`;
+        const htmlContent = generateCardsHTML(cardImages);
+        const fileName = `cards-mixed-${sheets}-sheets-${Date.now()}.html`;
         
         await s3.send(new PutObjectCommand({
             Bucket: process.env.S3_BUCKET,
@@ -275,8 +233,14 @@ exports.handler = async (event) => {
                         expiresAt: c.expiresAt
                     })),
                     totalCards: codes.length,
-                    cardType,
-                    points: finalPoints,
+                    totalSheets: sheets,
+                    cardsPerSheet: cardsPerSheet,
+                    distribution: {
+                        common: 5,
+                        rare: 3,
+                        epic: 1,
+                        secret: 1
+                    },
                     htmlUrl,
                     generatedAt: now.toISOString()
                 }
@@ -307,8 +271,38 @@ function generateRandomCode(length) {
     return result;
 }
 
-function generateCardsHTML(cardImages, cardType) {
-    const cardsPerPage = 6; // 3x2 grid = 6 cards por página
+function generateSheetDistribution() {
+    // Distribución fija por hoja: 5 common + 3 rare + 1 epic + 1 secret
+    const distribution = [
+        { type: 'common', count: 5 },
+        { type: 'rare', count: 3 },
+        { type: 'epic', count: 1 },
+        { type: 'secret', count: 1 }
+    ];
+    
+    const sheetCards = [];
+    
+    distribution.forEach(({ type, count }) => {
+        for (let i = 0; i < count; i++) {
+            sheetCards.push({ type });
+        }
+    });
+    
+    // Mezclar aleatoriamente las cards para que no sean predecibles
+    return shuffleArray(sheetCards);
+}
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+function generateCardsHTML(cardImages) {
+    const cardsPerPage = 10; // 5 filas x 2 columnas = 10 cards por página
     const pages = [];
     
     for (let i = 0; i < cardImages.length; i += cardsPerPage) {
@@ -321,154 +315,158 @@ function generateCardsHTML(cardImages, cardType) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Cards de Puntos - reEvent</title>
+        <title>Cards de Puntos - AWS</title>
         <style>
-            @page { size: letter; margin: 0.3in; }
+            @page { 
+                size: letter portrait; 
+                margin: 0.2in; /* Márgenes más estrechos */
+            }
             body { 
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
                 margin: 0; 
                 padding: 0; 
-                font-size: 10px; 
+                font-size: 8px; /* Texto más pequeño para cards compactos */
                 background: #f5f5f5;
             }
             .page { 
                 width: 8.5in; 
                 height: 11in; 
-                padding: 0.3in; 
+                padding: 0.2in; /* Padding más estrecho */
                 box-sizing: border-box; 
                 page-break-after: always; 
                 background: white;
             }
             .page:last-child { page-break-after: avoid; }
-            .header { 
-                text-align: center; 
-                margin-bottom: 20px; 
-                border-bottom: 2px solid #333; 
-                padding-bottom: 10px; 
-            }
-            .header h1 { 
-                margin: 0; 
-                font-size: 24px; 
-                color: #333; 
-                font-weight: bold;
-            }
-            .header p { 
-                margin: 5px 0; 
-                color: #666; 
-                font-size: 12px;
-            }
+            
+            /* Grid de 5x2 para 10 cards por página en portrait */
             .cards-grid { 
                 display: grid; 
-                grid-template-columns: repeat(3, 70mm); 
-                grid-template-rows: repeat(2, 100mm); 
-                gap: 2mm; 
+                grid-template-columns: repeat(2, 3.5in); /* 2 columnas de 3.5" cada una */
+                grid-template-rows: repeat(5, 2in); /* 5 filas de 2" cada una */
+                gap: 0.1in; /* Gap muy estrecho entre cards */
                 justify-content: center;
                 align-content: center;
-                height: calc(11in - 0.6in - 80px); 
+                height: calc(11in - 0.4in); /* Altura total menos padding */
             }
+            
             .card { 
-                width: 70mm;
-                height: 100mm;
+                width: 3.5in; /* Ancho exacto de 3.5" */
+                height: 2in; /* Alto exacto de 2" */
                 border-radius: 12px; 
-                padding: 20px; 
-                text-align: center; 
+                padding: 12px; 
+                text-align: left; 
                 display: flex; 
                 flex-direction: column; 
                 justify-content: space-between; 
-                align-items: center; 
                 position: relative; 
-                box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-                border: 2px solid;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+                border: 2px solid #111111;
                 overflow: hidden;
                 box-sizing: border-box;
             }
-            .card .rarity { 
-                font-size: 10px; 
-                font-weight: bold; 
-                margin-bottom: 16px; 
-                text-transform: uppercase; 
-                padding: 3px 8px;
-                border-radius: 10px;
-                background: #018858;
-                letter-spacing: 1px;
+            
+            .card .header { 
+                text-align: center; 
             }
-            .card .name { 
-                font-size: 25px;
-                font-weight: 500;
-                padding-bottom: 80px;
-                padding-right: 40px;
-                color: #FFFFFF;
-                line-height: 1.1;
-                text-align: start;
-                width: 150px;
+            
+            .card .header-text { 
+                font-size: 16px; 
+                font-weight: 500; 
+                color: #FFFFFF; 
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin: 0;
             }
-            .card .description { 
-                font-size: 9px;
-                line-height: 1.2;
-                opacity: 0.9;
-                text-align: center;
-                padding: 8px 4px;
+            
+            .card .content { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
             }
-            .card .qr-section { 
+            
+            .card .left-section { 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                flex: 1;
+            }
+            
+            .card .flame-icon { 
+                width: auto; 
+                height: 100px; 
                 display: flex; 
                 align-items: center; 
-                justify-content: space-between; 
-                width: 100%;
-                padding: 0 12px;
+                justify-content: center;
             }
-            .card .points-left, .card .points-right { 
-                font-size: 20px; 
+            
+            .card .flame-icon img { 
+                width: 100%; 
+                height: 100%; 
+            }
+            
+            .card .points-text { 
+                font-size: 18px; 
                 font-weight: bold; 
+                color: #FFFFFF; 
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin: 0;
+            }
+            
+            .card .right-section { 
                 display: flex; 
-                align-items: center;
+                flex-direction: column; 
+                align-items: center; 
                 justify-content: center;
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                background: #fea300;
-                border: 2px solid #f38b0f;
+                height: 100%;
+                flex: 1;
             }
+            
             .card .qr-code { 
-                flex: 1; 
-                margin: 0; 
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .card .qr-code img { 
-                width: 90px; 
-                height: 90px; 
-                border: 2px solid rgba(255,255,255,0.4); 
-                border-radius: 8px;
-                background: white;
-                padding: 4px;
-            }
-            .card .code { 
-                font-size: 16px; 
-                font-weight: bold; 
-                letter-spacing: 2px; 
-                font-family: 'Courier New', monospace;
-                background: rgba(0,0,0,0.1);
-                padding: 4px 8px;
+                width: 100px; 
+                height: 100px; 
+                border: 2px solid #FFFFFF; 
                 border-radius: 6px;
+                background: white;
+                padding: 2px;
             }
-            .card .details { 
-                font-size: 7px;
-                opacity: 0.7;
-                text-align: center;
+            
+            .code-container { 
+                background: #FFFFFF; 
+                padding: 6px 12px; 
+                border-radius: 6px; 
+                border: 1px solid #DDD;
+                width: fit-content;
+                margin: 0 auto;
             }
+            
+            .code { 
+                font-size: 16px;
+                font-weight: bold;
+                color: #000000;
+                font-family: 'Courier New', monospace;
+                letter-spacing: 1px;
+                margin: 0;
+                background: #FFF;
+                padding: 5px;
+            }
+            
             .footer { 
                 text-align: center; 
-                margin-top: 15px; 
-                font-size: 9px; 
+                font-size: 8px; 
                 color: #666; 
                 border-top: 1px solid #ccc; 
-                padding-top: 8px; 
+                padding-top: 5px; 
             }
+
+            .footer p { 
+                margin: 0;
+            }
+
             @media print { 
                 body { margin: 0; } 
                 .page { page-break-after: always; } 
-                .cards-grid { gap: 2mm; }
+                .cards-grid { gap: 0.1in; }
             }
         </style>
     </head>
@@ -478,11 +476,6 @@ function generateCardsHTML(cardImages, cardType) {
     pages.forEach((pageCards, pageIndex) => {
         html += `
         <div class="page">
-            <div class="header">
-                <h1>Cards de Puntos - reEvent</h1>
-                <p>Tipo: ${cardType.toUpperCase()} | Página ${pageIndex + 1} de ${pages.length} | Generado: ${new Date().toLocaleDateString()}</p>
-            </div>
-            
             <div class="cards-grid">
         `;
         
@@ -497,19 +490,24 @@ function generateCardsHTML(cardImages, cardType) {
             }
             
             html += `
-                <div class="card" style="background: ${card.color}; color: ${card.textColor}; border: 2px solid ${card.borderColor};">
-                    <div class="rarity">${card.rarity}</div>
-                    <div class="name">${card.name}</div>
-                    <div class="description">${card.description}</div>
-                    <div class="qr-section">
-                        <div class="points-left">${card.points}</div>
-                        <div class="qr-code">
-                            <img src="${card.qrDataURL}" alt="QR Code ${card.code}">
-                        </div>
-                        <div class="points-right">${card.points}</div>
+                <div class="card" style="background: ${card.color};">
+                    <div class="header">
+                        <p class="header-text">AWS Community Day</p>
                     </div>
-                    <div class="code">${card.code}</div>
-                    ${details.length > 0 ? `<div class="details">${details.join(' | ')}</div>` : ''}
+                    <div class="content">
+                        <div class="left-section">
+                            <div class="flame-icon">
+                                <img src="${card.flameIcon}" alt="Flame Icon">
+                            </div>
+                            <p class="points-text">${card.cardType === 'secret' ? '? POINTS' : `${card.points} POINTS`}</p>
+                        </div>
+                        <div class="right-section">
+                            <img class="qr-code" src="${card.qrDataURL}" alt="QR Code ${card.code}">
+                        </div>
+                    </div>
+                    <div class="code-container">
+                        <span class="code">${card.code}</span>
+                    </div>
                 </div>
             `;
         });
@@ -517,18 +515,26 @@ function generateCardsHTML(cardImages, cardType) {
         // Rellenar espacios vacíos
         const emptySlots = cardsPerPage - pageCards.length;
         for (let i = 0; i < emptySlots; i++) {
-            html += `<div class="card" style="border: 2px dashed #ccc; background: #f0f0f0; color: #999;">
-                <div class="rarity">VACÍO</div>
-                <div class="name">Sin Card</div>
-                <div class="description">Espacio disponible</div>
-                <div class="qr-section">
-                    <div class="points-left">0</div>
-                    <div class="qr-code">
-                        <div style="width: 90px; height: 90px; background: #f0f0f0; border: 2px solid #ccc; border-radius: 8px;"></div>
-                    </div>
-                    <div class="points-right">0</div>
+            html += `<div class="card" style="border: 2px dashed #ccc; background: #f0f0f0;">
+                <div class="header">
+                    <p class="header-text" style="color: #999;">VACÍO</p>
                 </div>
-                <div class="code">------</div>
+                <div class="content">
+                    <div class="left-section">
+                        <div class="flame-icon">
+                            <div style="width: 40px; height: 40px; background: #ccc; border-radius: 50%;"></div>
+                        </div>
+                        <p class="points-text" style="color: #999;">0 POINTS</p>
+                    </div>
+                    <div class="right-section">
+                        <div class="qr-code">
+                            <div style="width: 60px; height: 60px; background: #f0f0f0; border: 2px solid #ccc; border-radius: 6px;"></div>
+                        </div>
+                        <div class="code-container">
+                            <p class="code" style="color: #999;">------</p>
+                        </div>
+                    </div>
+                </div>
             </div>`;
         }
         
@@ -536,7 +542,13 @@ function generateCardsHTML(cardImages, cardType) {
             </div>
             
             <div class="footer">
-                <p>Total de cards: ${cardImages.length} | Cada código solo puede ser usado una vez por usuario</p>
+                <p>Generado el: ${new Date().toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })} | Total: ${cardImages.length} cards</p>
             </div>
         </div>
         `;
