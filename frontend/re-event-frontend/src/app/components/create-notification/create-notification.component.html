@@ -1,6 +1,6 @@
 <app-slide-panel [isVisible]="isVisible()" (closePanel)="onClose()">
   <div class="create-notification__content bg-primary flex flex--col gap-4 p-4 w-full shadow-md">
-    <div class="flex justify-between items-center sticky ">
+    <div class="flex justify-between items-center sticky">
       <span class="text-base font-semibold">Crear Notificación</span>
       <button class="close-btn" (click)="onClose()">
         <span class="material-symbols-outlined">close</span>
@@ -8,6 +8,22 @@
     </div>
 
     <form class="flex flex--col gap-4 p-3 overflow-auto" (submit)="onSubmit(); $event.preventDefault()">
+      
+      <!-- Select de Templates Predefinidos -->
+      <div class="form-group">
+        <label for="template" class="form-label">Template de Notificación</label>
+        <select
+          id="template"
+          class="form-select"
+          (change)="onTemplateSelect($event)">
+          <option value="custom">Crear desde cero</option>
+          @for (template of notificationTemplates; track template.title) {
+            <option [value]="template.title">{{ template.description }}</option>
+          }
+        </select>
+        <small class="form-help">Selecciona un template para llenar automáticamente los campos</small>
+      </div>
+
       <div class="form-group">
         <label for="title" class="form-label">Título *</label>
         <input
@@ -21,54 +37,113 @@
       </div>
 
       <div class="form-group">
-        <label for="description" class="form-label">Descripción *</label>
+        <label for="body" class="form-label">Mensaje *</label>
         <textarea
-          id="description"
+          id="body"
           class="form-textarea"
-          placeholder="Descripción de la notificación"
+          placeholder="Mensaje detallado de la notificación"
           rows="4"
-          [value]="description()"
-          (input)="onDescriptionChange($event)"
+          [value]="body()"
+          (input)="onBodyChange($event)"
           required>
         </textarea>
       </div>
 
       <div class="form-group">
-        <label for="author" class="form-label">Autor</label>
+        <label for="type" class="form-label">Tipo de Notificación</label>
+        <select
+          id="type"
+          class="form-select"
+          [value]="type()"
+          (change)="onTypeChange($event)">
+          <option value="evento">Evento</option>
+          <option value="anuncio">Anuncio</option>
+          <option value="recompensa">Recompensa</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="audience" class="form-label">Audiencia</label>
+        <select
+          id="audience"
+          class="form-select"
+          [value]="audience()"
+          (change)="onAudienceChange($event)">
+          <option value="all">Todos los usuarios</option>
+<!--          <option value="segment">Segmento específico</option>-->
+<!--          <option value="user">Usuario específico</option>-->
+        </select>
+      </div>
+
+      <!-- Campos condicionales según la audiencia -->
+      @if (audience() === 'segment') {
+        <div class="form-group">
+          <label for="segmentId" class="form-label">ID del Segmento</label>
+          <input
+            id="segmentId"
+            type="text"
+            class="form-input"
+            placeholder="ID del segmento objetivo"
+            [value]="segmentId()"
+            (input)="onSegmentIdChange($event)">
+        </div>
+      }
+
+      @if (audience() === 'user') {
+        <div class="form-group">
+          <label for="userId" class="form-label">ID del Usuario</label>
+          <input
+            id="userId"
+            type="text"
+            class="form-input"
+            placeholder="ID del usuario objetivo"
+            [value]="userId()"
+            (input)="onUserIdChange($event)">
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="image" class="form-label">URL de Imagen (Opcional)</label>
         <input
-          id="author"
-          type="text"
+          id="image"
+          type="url"
           class="form-input"
-          placeholder="Autor de la notificación"
-          [value]="author()"
-          (input)="onAuthorChange($event)">
+          placeholder="https://ejemplo.com/imagen.jpg"
+          [value]="image()"
+          (input)="onImageChange($event)">
+        <small class="form-help">URL de una imagen para la notificación</small>
       </div>
 
       <div class="form-group">
-        <label for="targetRole" class="form-label">Rol Objetivo</label>
+        <label for="actionType" class="form-label">Tipo de Acción</label>
         <select
-          id="targetRole"
+          id="actionType"
           class="form-select"
-          [value]="targetRole()"
-          (change)="onTargetRoleChange($event)">
-          @for (option of targetRoleOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
+          [value]="actionType()"
+          (change)="onActionTypeChange($event)">
+          <option value="screen">Pantalla de la app</option>
+          <option value="link">Enlace externo</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="userId" class="form-label">Usuario Específico</label>
-        <select
-          id="userId"
-          class="form-select"
-          [value]="userId()"
-          (change)="onUserIdChange($event)">
-          @for (option of userIdOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
-      </div>
+      @if (actionType()) {
+        <div class="form-group">
+          <label for="actionValue" class="form-label">
+            @if (actionType() === 'screen') {
+              Ruta de la App
+            } @else {
+              URL del Enlace
+            }
+          </label>
+          <input
+            id="actionValue"
+            type="text"
+            class="form-input"
+            [placeholder]="actionType() === 'screen' ? '/agenda' : 'https://ejemplo.com'"
+            [value]="actionValue()"
+            (input)="onActionValueChange($event)">
+        </div>
+      }
 
       <button
         type="submit"
