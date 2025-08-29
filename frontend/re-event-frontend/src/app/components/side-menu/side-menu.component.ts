@@ -22,8 +22,6 @@ export class SideMenuComponent {
   navItems = [
     {label: 'Account', link: './account', icon: 're-icon-user'},
     {label: 'QR', link: './qr', icon: 're-icon-qr'},
-    {label: 'Scan Your Role', link: './qr', icon: 're-icon-qr'},
-    // {label: 'Cerrar sesión', link: '/auth/logout', icon: 're-icon-logout'},
   ];
 
   closeMenu() {

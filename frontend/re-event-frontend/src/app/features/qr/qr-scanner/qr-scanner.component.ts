@@ -1,12 +1,13 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, inject, OnDestroy, signal} from '@angular/core';
 import {Html5Qrcode} from 'html5-qrcode';
 import {fromPromise} from 'rxjs/internal/observable/innerFrom';
-import {filter, take, timer} from 'rxjs';
+import {catchError, filter, from, take, timer} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PointsService} from '../../../core/services/points.service';
 import {FooterService} from '../../../core/services/footer.service';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
+import {LoaderService} from '../../../core/services/loader.service';
 
 interface CameraDevice {
   id: string;
@@ -35,6 +36,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   #pointsService = inject(PointsService);
   #footerService = inject(FooterService);
   #location = inject(Location);
+  #loader = inject(LoaderService);
   #router = inject(Router);
 
   hasMultipleCameras = false;
@@ -45,8 +47,13 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   #initializeQrPreview() {
+    this.#loader.show();
     fromPromise(Html5Qrcode.getCameras())
       .pipe(
+        catchError(() => {
+          this.#loader.hide();
+          return from([]);
+        }),
         filter(devices => devices && devices.length > 0),
         take(1),
         takeUntilDestroyed(this.#destroyRef)
@@ -66,17 +73,19 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   #initializeHtml5QrCode() {
-    this.#html5QrCode = new Html5Qrcode("reader");
-    this.#html5QrCode.start(
-      this.#cameraId!,
-      {
-        fps: 10,
-        qrbox: 250,
-        aspectRatio: this.#calculateAspectRatio(),
-      },
-      (decodedText) => this.#onSuccess(decodedText),
-      (errorMessage) => this.#onError(errorMessage))
-      .catch((err) => console.error('Error init html5QRCode', err))
+    this.#html5QrCode = new Html5Qrcode('reader');
+    from(this.#html5QrCode.start(
+        this.#cameraId!,
+        {
+          fps: 10,
+          qrbox: 250,
+          aspectRatio: this.#calculateAspectRatio(),
+        },
+        (decodedText) => this.#onSuccess(decodedText),
+        (errorMessage) => this.#onError(errorMessage)
+      )
+    ).pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({error: (err) => console.error('Error init html5QRCode', err), complete: () => this.#loader.hide()});
   }
 
   async switchCamera() {
