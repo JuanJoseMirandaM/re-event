@@ -168,11 +168,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   onClose() {
-    try {
-      this.#location.back();
-    } catch {
-      void this.#router.navigate(['/secure/points']);
-    }
+    this.#router.navigate(['/secure/points']);
   }
 
   onEnterCode(): void {
