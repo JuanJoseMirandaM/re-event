@@ -45,6 +45,7 @@ export class CreateNotificationComponent {
   audience = signal<'all' | 'segment' | 'user'>('all');
   userId = signal<string>('');
   segmentId = signal<string>('');
+  isLoading = signal<boolean>(false); // Estado de loading
 
   // Templates predefinidos de notificaciones
   notificationTemplates: NotificationTemplate[] = [
@@ -166,6 +167,9 @@ export class CreateNotificationComponent {
 
   async onSubmit() {
     if (this.title().trim() && this.body().trim()) {
+      // Activar estado de loading
+      this.isLoading.set(true);
+      
       const notificationData: NotificationRequest = {
         title: this.title().trim(),
         body: this.body().trim(),
@@ -188,10 +192,18 @@ export class CreateNotificationComponent {
           },
           error: (error) => {
             console.error('Error creando notificación:', error);
+            // Desactivar loading en caso de error
+            this.isLoading.set(false);
+          },
+          complete: () => {
+            // Asegurar que el loading se desactive al completar
+            this.isLoading.set(false);
           }
         });
       } catch (error) {
         console.error('Error creando notificación:', error);
+        // Desactivar loading en caso de error
+        this.isLoading.set(false);
       }
     }
   }
@@ -211,9 +223,10 @@ export class CreateNotificationComponent {
     this.userId.set('');
     this.segmentId.set('');
     this.selectedTemplate.set(null);
+    this.isLoading.set(false); // Resetear estado de loading
   }
 
   isFormValid(): boolean {
-    return this.title().trim().length > 0 && this.body().trim().length > 0;
+    return this.title().trim().length > 0 && this.body().trim().length > 0 && !this.isLoading();
   }
 }

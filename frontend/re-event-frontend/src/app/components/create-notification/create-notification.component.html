@@ -149,8 +149,13 @@
         type="submit"
         class="btn btn--primary"
         [disabled]="!isFormValid()">
-        <span class="material-symbols-outlined">add</span>
-        Crear Notificación
+        @if (isLoading()) {
+          <div class="spinner spinner--sm"></div>
+          <span>Creando...</span>
+        } @else {
+          <span class="material-symbols-outlined">add</span>
+          <span>Crear Notificación</span>
+        }
       </button>
     </form>
   </div>
