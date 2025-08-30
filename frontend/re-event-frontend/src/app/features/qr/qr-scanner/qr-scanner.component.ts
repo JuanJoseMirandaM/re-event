@@ -8,6 +8,7 @@ import {FooterService} from '../../../core/services/footer.service';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {LoaderService} from '../../../core/services/loader.service';
+import {ToastService} from '../../../core/services/toast.service';
 
 interface CameraDevice {
   id: string;
@@ -38,6 +39,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   #location = inject(Location);
   #loader = inject(LoaderService);
   #router = inject(Router);
+  #toast = inject(ToastService);
 
   hasMultipleCameras = false;
 
@@ -78,7 +80,14 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
         this.#cameraId!,
         {
           fps: 10,
-          qrbox: 250,
+          qrbox: (viewfinderWidth, viewfinderHeight) => {
+            const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+            const qrboxSize = Math.floor(minEdge * 0.8);
+            return {
+              width: qrboxSize,
+              height: qrboxSize,
+            };
+          },
           aspectRatio: this.#calculateAspectRatio(),
         },
         (decodedText) => this.#onSuccess(decodedText),
@@ -107,9 +116,18 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
 
   #onSuccess(decodedText: string): void {
     this.isQrScanSuccessful.set(true)
-    timer(500).subscribe(() => this.#html5QrCode?.stop());
-    this.#pointsService.claimPoints(decodedText)
-      .subscribe(value => this.#router.navigate(['/secure/points']))
+    timer(500).subscribe(() => void this.#stopAndClear());
+    this.onClose();
+    this.#pointsService.claimPoints(decodedText).subscribe({
+      next: value => {
+        this.#toast.success(`Congratulations! You\'ve earned ${value.pointsEarned} points.`);
+        this.onClose();
+      },
+      error: error => {
+        console.error('Error claiming points:', error);
+        this.#toast.error('Error claiming points');
+      }
+    });
   }
 
   #onError(errorMessage: string) {
