@@ -9,6 +9,7 @@ import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {LoaderService} from '../../../core/services/loader.service';
 import {ToastService} from '../../../core/services/toast.service';
+import {ConfettiModalComponent, ConfettiModalConfig} from "../../../components/confetti-modal/confetti-modal.component";
 
 interface CameraDevice {
   id: string;
@@ -17,7 +18,7 @@ interface CameraDevice {
 
 @Component({
   selector: 'app-qr-scanner',
-  imports: [],
+  imports: [ConfettiModalComponent],
   templateUrl: './qr-scanner.component.html',
   styleUrl: './qr-scanner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,14 @@ interface CameraDevice {
 })
 export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   isQrScanSuccessful = signal(false);
+  showConfetti = signal<boolean>(false);
+  confettiConfig = signal<ConfettiModalConfig>({
+    title: '',
+    description: '',
+    buttonText: '¡Genial!',
+    icon: 'celebration',
+    points: 0
+  });
 
   #html5QrCode: Html5Qrcode | null = null;
   #cameraId: string | null = null;
@@ -37,7 +46,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   #pointsService = inject(PointsService);
   #footerService = inject(FooterService);
   #location = inject(Location);
-  #loader = inject(LoaderService);
+  #loaderService = inject(LoaderService);
   #router = inject(Router);
   #toast = inject(ToastService);
 
@@ -49,11 +58,11 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
   }
 
   #initializeQrPreview() {
-    this.#loader.show();
+    this.#loaderService.show();
     fromPromise(Html5Qrcode.getCameras())
       .pipe(
         catchError(() => {
-          this.#loader.hide();
+          this.#loaderService.hide();
           return from([]);
         }),
         filter(devices => devices && devices.length > 0),
@@ -94,7 +103,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
         (errorMessage) => this.#onError(errorMessage)
       )
     ).pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({error: (err) => console.error('Error init html5QRCode', err), complete: () => this.#loader.hide()});
+      .subscribe({error: (err) => console.error('Error init html5QRCode', err), complete: () => this.#loaderService.hide()});
   }
 
   async switchCamera() {
@@ -119,9 +128,16 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
     timer(500).subscribe(() => void this.#stopAndClear());
     this.onClose();
     this.#pointsService.claimPoints(decodedText).subscribe({
-      next: value => {
-        this.#toast.success(`Congratulations! You\'ve earned ${value.pointsEarned} points.`);
-        this.onClose();
+      next: (response) => {
+        this.confettiConfig.set({
+          title: '¡Puntos Canjeados!',
+          description: `¡Felicidades! Has ganado ${response.pointsEarned} puntos.`,
+          buttonText: '¡Genial!',
+          icon: 'celebration',
+          points: response.pointsEarned
+        });
+        this.showConfetti.set(true);
+        this.#loaderService.hide();
       },
       error: error => {
         console.error('Error claiming points:', error);
@@ -147,11 +163,16 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  onConfettiClose(): void {
+    this.showConfetti.set(false);
+    this.onClose()
+  }
+
   onClose() {
     try {
       this.#location.back();
     } catch {
-      void this.#router.navigate(['/secure']);
+      void this.#router.navigate(['/secure/points']);
     }
   }
 

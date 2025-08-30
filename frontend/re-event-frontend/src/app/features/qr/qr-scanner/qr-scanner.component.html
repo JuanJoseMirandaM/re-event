@@ -8,3 +8,11 @@
 <div class="qr-overlay qr-footer" role="contentinfo">
   <button type="button" class="qr-manual-btn" (click)="onEnterCode()">Enter Code Manually</button>
 </div>
+
+@if (showConfetti()) {
+  <app-confetti-modal
+          [isVisible]="showConfetti()"
+          [config]="confettiConfig()"
+          (closeModal)="onConfettiClose()">
+  </app-confetti-modal>
+}

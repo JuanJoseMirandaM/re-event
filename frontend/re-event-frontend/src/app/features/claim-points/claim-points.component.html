@@ -1,9 +1,31 @@
-<h2 class="text-center">Enter Code Manually</h2>
+<div class="flex flex--col gap-2 p-2">
+  <p class="text-xl text-center">Ingresar Codigo</p>
 
-<input type="text"
-       class="form-input"
-       id="code"
-       placeholder="Enter Code"
-       (keydown.enter)="submit(code.value)" #code>
+  <div class="form-group">
+    <input type="text"
+           class="form-input"
+           id="code"
+           placeholder="Ingresa el código aquí..."
+           (keydown.enter)="submit(code.value)"
+           #code>
+    <button class="btn"
+            (click)="goToQRScanner()"
+            type="button"
+            title="Escanear código QR">
+      <span class="material-symbols-outlined">qr_code_scanner</span>
+    </button>
+  </div>
 
-<button class="btn btn--primary" (click)="submit(code.value)">Submit</button>
+  <button class="btn btn--primary"
+          (click)="submit(code.value)">
+    Canjear Puntos
+  </button>
+</div>
+
+@if (showConfetti()) {
+  <app-confetti-modal
+          [isVisible]="showConfetti()"
+          [config]="confettiConfig()"
+          (closeModal)="onConfettiClose()">
+  </app-confetti-modal>
+}
