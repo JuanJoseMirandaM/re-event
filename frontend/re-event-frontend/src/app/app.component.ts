@@ -8,10 +8,12 @@ import {ToastContainerComponent} from './shared/components/toast-container/toast
 import {FcmService} from "./core/services/fcm.service";
 import {NotificationsService} from "./core/services/notifications.service";
 import {SplashScreenComponent} from './shared/components/splash-screen/splash-screen.component';
+import {WalkthroughComponent} from './shared/components/walkthrough/walkthrough.component';
+import {WalkthroughService} from './core/services/walkthrough.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, SplashScreenComponent],
+  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, SplashScreenComponent, WalkthroughComponent],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.scss'
@@ -19,6 +21,7 @@ import {SplashScreenComponent} from './shared/components/splash-screen/splash-sc
 export class AppComponent implements OnInit {
   #fcmService = inject(FcmService);
   #notificationService = inject(NotificationsService);
+  walkthroughService = inject(WalkthroughService);
 
   constructor(public authService: AuthService) {
   }

@@ -2,7 +2,9 @@
 
 <app-loader-overlay/>
 
-@if (authService.isAuthStateReady() | async) {
+@if (walkthroughService.shouldShowWalkthrough()) {
+  <app-walkthrough/>
+} @else if (authService.isAuthStateReady() | async) {
   <router-outlet/>
 }
 
