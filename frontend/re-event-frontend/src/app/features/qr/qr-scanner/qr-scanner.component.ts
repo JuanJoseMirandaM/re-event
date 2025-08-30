@@ -125,8 +125,6 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
 
   #onSuccess(decodedText: string): void {
     this.isQrScanSuccessful.set(true)
-    timer(500).subscribe(() => void this.#stopAndClear());
-    this.onClose();
     this.#pointsService.claimPoints(decodedText).subscribe({
       next: (response) => {
         this.confettiConfig.set({
@@ -140,8 +138,8 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
         this.#loaderService.hide();
       },
       error: error => {
-        console.error('Error claiming points:', error);
-        this.#toast.error('Error claiming points');
+        this.#toast.error('Error al canjear puntos');
+        this.#loaderService.hide();
       }
     });
   }
@@ -165,7 +163,8 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
 
   onConfettiClose(): void {
     this.showConfetti.set(false);
-    this.onClose()
+    timer(500).subscribe(() => void this.#stopAndClear());
+    this.onClose();
   }
 
   onClose() {
