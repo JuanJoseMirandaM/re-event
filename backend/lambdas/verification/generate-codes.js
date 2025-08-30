@@ -214,7 +214,7 @@ function generateHTMLContent(codesWithQR) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Códigos de Verificación - reEvent</title>
+        <title>Códigos de Verificación - Kinua</title>
         <style>
             @page {
                 size: letter;
@@ -340,7 +340,7 @@ function generateHTMLContent(codesWithQR) {
         html += `
         <div class="page">
             <div class="header">
-                <h1>Códigos de Verificación - reEvent</h1>
+                <h1>Códigos de Verificación - Kinua</h1>
                 <p>Página ${pageIndex + 1} de ${pages.length} | Generado: ${new Date().toLocaleDateString()}</p>
             </div>
             
