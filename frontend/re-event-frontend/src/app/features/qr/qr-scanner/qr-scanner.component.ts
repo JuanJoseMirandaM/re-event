@@ -125,7 +125,7 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
 
   #onSuccess(decodedText: string): void {
     this.isQrScanSuccessful.set(true)
-    timer(500).subscribe(() => void this.#stopAndClear());
+    timer(100).subscribe(() => void this.#stopAndClear());
     this.#pointsService.claimPoints(decodedText).subscribe({
       next: (response) => {
         this.confettiConfig.set({
