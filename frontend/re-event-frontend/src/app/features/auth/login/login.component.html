@@ -33,11 +33,18 @@
   </div>
 
   <div class="form-group">
-    <input type="password"
-           class="form-input"
-           placeholder="Password"
-           id="password"
-           formControlName="password">
+    <div class="password-input-container relative">
+      <input [type]="passwordVisible() ? 'text' : 'password'"
+             class="form-input"
+             placeholder="Password"
+             id="password"
+             formControlName="password">
+      <button type="button" class="btn btn-visibility" (click)="togglePasswordVisibility()">
+        <span class="material-symbols-outlined">
+          {{ passwordVisible() ? 'visibility_off' : 'visibility' }}
+        </span>
+      </button>
+    </div>
     @if (lf['password'].invalid && lf['password'].dirty || lf['password'].touched) {
       <div class="form-error">
         @if (lf['password'].errors?.['required']) {
@@ -58,10 +65,10 @@
       <span>Sign In</span>
     }
   </button>
-  
+
   <div class="re-flex re-flex-jc-center re-gap-flex-1-2">
     <button class="re-secondary-btn google-btn" type="button"
-            (click)="onGoogleSignIn()" 
+            (click)="onGoogleSignIn()"
             [disabled]="googleLoginState().loading"
             aria-label="Sign in with Google">
       @if (googleLoginState().loading) {

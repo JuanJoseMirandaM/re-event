@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from "../../../core/services/auth.service";
@@ -24,6 +24,8 @@ export default class LoginComponent {
   #loader = inject(LoaderService);
   #pwaService = inject(PwaInstallService);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);
+
+  passwordVisible = signal(false);
 
   loginState = toSignal(
     toObservable(this.#loginTrigger).pipe(
@@ -66,6 +68,10 @@ export default class LoginComponent {
 
   showInstallButton = this.#pwaService.showInstallButton;
   isIOS = this.#pwaService.isIOS;
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible.update(value => !value);
+  }
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
