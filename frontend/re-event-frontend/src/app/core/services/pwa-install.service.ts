@@ -147,7 +147,7 @@ export class PwaInstallService {
       modal.className = 'ios-install-modal';
       modal.innerHTML = `
         <div class="ios-install-content">
-          <p class="text-xl my-2">Instalar re:Event en iOS</p>
+          <p class="text-xl my-2">Instalar Kinua en iOS</p>
           <p class="text-base">Sigue estos pasos para instalar la app:</p>
           <ol class="ios-install-steps">
             <li>
