@@ -9,6 +9,8 @@ import { routes } from './app.routes';
 import { configureAmplify } from "./core/config/amplify-config";
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { environment } from "../environments/environment";
+import {provideTranslateService} from '@ngx-translate/core';
+import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,5 +27,13 @@ export const appConfig: ApplicationConfig = {
     provideEnvironmentInitializer(() => () => configureAmplify()),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: '/i18n/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en',
+      lang: 'en'
+    })
   ]
 };

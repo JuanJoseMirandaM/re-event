@@ -1,0 +1,26 @@
+{
+  "agenda": {
+    "icon": "Agenda",
+    "proxEvents": "Próximos eventos",
+    "pastEvents": "Eventos pasados",
+    "rate": "Dejar una reseña",
+    "rated": "Calificado",
+    "rateTalkTitle": "Calificar una charla",
+    "hwTalk": "¿Cómo calificarías esta charla?",
+    "selectRate": "Por favor, selecciona una calificación",
+    "comment": "Comentarios (opcional)",
+    "shareExp": "Comparte tu experiencia: qué te gustó y qué se podría mejorar.",
+    "1": "Muy mala",
+    "2": "Mala",
+    "3": "Regular",
+    "4": "Buena",
+    "5": "Excelente"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "loadingProfile": "Cargando perfil",
+    "edit": "Editar",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  }
+}

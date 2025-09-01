@@ -7,19 +7,27 @@
 @if (isLoading()) {
   <div class="flex flex--col gap-2 items-center justify-center p-2">
     <div class="spinner spinner--md"></div>
-    <span>Cargando perfil...</span>
+    <span>{{ "profile.loadingProfile" | translate }}</span>
   </div>
 } @else if (currentUser) {
   <form class="flex flex--col gap-2 p-6 rounded-md bg-primary" [formGroup]="profileForm">
     <div class="flex items-center justify-between py-2">
-      <span class="text-lg font-medium">Mi perfil</span>
+      <span class="text-lg font-medium">{{ "profile.title" |translate }}</span>
 
       @if (!isEditing()) {
-        <button type="button" class="btn btn--secondary btn--sm w-auto" (click)="toggleEditMode()">Editar</button>
+        <button type="button" class="btn btn--secondary btn--sm w-auto"
+                (click)="toggleEditMode()">{{ "profile.edit" | translate }}
+        </button>
       } @else {
         <div class="flex gap-2">
-          <button type="button" class="btn btn--primary btn--sm w-auto" (click)="saveProfile()">Guardar</button>
-          <button type="button" class="btn btn--secondary btn--sm w-auto" (click)="cancelEdit()">Cancel</button>
+          <button type="button" class="btn btn--primary btn--sm w-auto"
+                  (click)="saveProfile()">{{ "profile.save" | translate }}
+          </button>
+
+          <button type="button"
+                  class="btn btn--secondary btn--sm w-auto"
+                  (click)="cancelEdit()">{{ "profile.cancel" | translate }}
+          </button>
         </div>
       }
     </div>

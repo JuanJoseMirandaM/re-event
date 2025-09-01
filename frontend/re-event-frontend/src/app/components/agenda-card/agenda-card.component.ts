@@ -3,10 +3,11 @@ import {Event} from '../../core/services/events.service';
 import {DurationPipe} from '../../pipes';
 import {RatingData, RatingPanelComponent} from '../rating-panel/rating-panel.component';
 import {Evaluation, EvaluationService, SingleEvaluationResponse} from '../../core/services/evaluation.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-agenda-card',
-  imports: [DurationPipe, RatingPanelComponent],
+  imports: [DurationPipe, RatingPanelComponent, TranslatePipe],
   templateUrl: './agenda-card.component.html',
   styleUrl: './agenda-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

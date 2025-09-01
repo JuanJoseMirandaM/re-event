@@ -3,10 +3,11 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../core/services/auth.service';
 import {User, UserService} from '../../core/services/user.service';
 import {VerificationPanelComponent} from '../../components/verification-panel/verification-panel.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-account',
-  imports: [ReactiveFormsModule, VerificationPanelComponent],
+  imports: [ReactiveFormsModule, VerificationPanelComponent, TranslatePipe],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

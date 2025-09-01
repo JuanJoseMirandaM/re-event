@@ -18,9 +18,9 @@
 <div class="flex gap-2">
   <span class="text-lg material-symbols-outlined">location_on</span>
   @if (event().locationLink) {
-    <a 
-      [href]="event().locationLink" 
-      target="_blank" 
+    <a
+      [href]="event().locationLink"
+      target="_blank"
       rel="noopener noreferrer"
       class="location-link"
       (click)="onLocationClick()">
@@ -45,15 +45,15 @@
 @if (isPastEvent()) {
   @if (evaluation()?.sessionId) {
     <button class="btn btn--secondary btn--sm" disabled>
-      Calificada
-      @for ( start of [1,2,3,4,5]; track start) {
+      {{ "agenda.rated" | translate }}
+      @for (start of [1, 2, 3, 4, 5]; track start) {
         <span [style.color]="start > evaluation()!.rating ? 'var(--gray-400)' : 'var(--primary-lilac)'">&starf;</span>
       }
     </button>
   } @else {
     <button class="btn btn--secondary btn--sm"
             (click)="openRatingPanel()">
-      Calificar
+      {{ "agenda.rate" | translate }}
     </button>
   }
 }

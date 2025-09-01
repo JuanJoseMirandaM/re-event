@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {SlidePanelComponent} from "../slide-panel/slide-panel.component";
+import {TranslatePipe} from '@ngx-translate/core';
 
 export interface RatingData {
   eventId: string;
@@ -13,7 +14,7 @@ export interface RatingData {
 @Component({
   selector: 'app-rating-panel',
   standalone: true,
-  imports: [FormsModule, SlidePanelComponent],
+  imports: [FormsModule, SlidePanelComponent, TranslatePipe],
   templateUrl: './rating-panel.component.html',
   styleUrl: './rating-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

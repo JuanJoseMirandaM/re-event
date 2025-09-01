@@ -7,13 +7,15 @@ import {filter} from 'rxjs/operators';
 import {ToastContainerComponent} from './shared/components/toast-container/toast-container.component';
 import {FcmService} from "./core/services/fcm.service";
 import {NotificationsService} from "./core/services/notifications.service";
-import {SplashScreenComponent} from './shared/components/splash-screen/splash-screen.component';
 import {WalkthroughComponent} from './shared/components/walkthrough/walkthrough.component';
 import {WalkthroughService} from './core/services/walkthrough.service';
+import {TranslateService} from '@ngx-translate/core';
+import {noop} from 'rxjs';
+import {SplashScreenComponent} from './shared/components/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, SplashScreenComponent, WalkthroughComponent],
+  imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, WalkthroughComponent, SplashScreenComponent],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.scss'
@@ -21,6 +23,7 @@ import {WalkthroughService} from './core/services/walkthrough.service';
 export class AppComponent implements OnInit {
   #fcmService = inject(FcmService);
   #notificationService = inject(NotificationsService);
+  #translate = inject(TranslateService);
   walkthroughService = inject(WalkthroughService);
 
   constructor(public authService: AuthService) {
@@ -28,6 +31,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.listenToAuthChanges();
+    this.#detectLanguage();
   }
 
   listenToAuthChanges(): void {
@@ -49,5 +53,9 @@ export class AppComponent implements OnInit {
           console.error('Error in auth state subscription:', error);
         }
       });
+  }
+
+  #detectLanguage(): void {
+    this.#translate.use(this.#translate.getBrowserLang() || 'en').subscribe(noop)
   }
 }

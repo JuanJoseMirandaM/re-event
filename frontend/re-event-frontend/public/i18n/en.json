@@ -1,0 +1,26 @@
+{
+  "agenda": {
+    "icon": "Agenda",
+    "proxEvents": "Upcoming",
+    "pastEvents": "Past events",
+    "rate": "Leave a Review",
+    "rated": "Rated",
+    "rateTalkTitle": "Rate a Talk",
+    "hwTalk": "How would you rate this talk?",
+    "selectRate": "Please select a rating",
+    "comment": "Comments (optional)",
+    "shareExp": "Share your experience: what you liked, and what could be improved.",
+    "1": "Very bad",
+    "2": "Bad",
+    "3": "Okay",
+    "4": "Good",
+    "5": "Excellent"
+  },
+  "profile": {
+    "title": "Profile",
+    "loadingProfile": "Loading Profile",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
+  }
+}

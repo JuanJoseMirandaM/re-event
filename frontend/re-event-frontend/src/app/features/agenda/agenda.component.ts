@@ -1,13 +1,15 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {UserService} from '../../core/services/user.service';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-agenda',
   imports: [
     RouterOutlet,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    TranslatePipe
   ],
   templateUrl: './agenda.component.html',
   styleUrl: './agenda.component.scss',
