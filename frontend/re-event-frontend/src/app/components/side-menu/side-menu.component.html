@@ -1,5 +1,5 @@
 @if (isMenuOpen()) {
-  <div class="re-menu-overlay" (click)="closeMenu()" aria-hidden="true"></div>
+  <div class="re-menu-overlay" (click)="closeMenu()" (touchstart)="closeMenu()" aria-hidden="true"></div>
 }
 
 <aside id="app-side-menu"
