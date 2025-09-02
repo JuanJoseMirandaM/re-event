@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, effect, ElementRef, inject, viewChild} from '@angular/core';
-import {UserService} from '../../core/services/user.service';
 import {map} from 'rxjs';
 import {toSignal} from '@angular/core/rxjs-interop';
 import QRCode from 'qrcode';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
+import {UserStoreFacade} from '../../core/store/facades/user-store.facade';
 
 @Component({
   selector: 'app-my-qr',
@@ -20,24 +20,31 @@ import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
 export default class MyQrComponent {
   qrCanvas = viewChild<ElementRef<HTMLCanvasElement>>('myQrContentRef');
 
-  #userService = inject(UserService);
+  #userStoreFacade = inject(UserStoreFacade);
 
-  userId = toSignal(this.#userService.getCurrentUser().pipe(map(user => user?.userId ?? '')), {initialValue: ''})
+  userId = toSignal(
+    this.#userStoreFacade.userProfile$.pipe(map(user => user?.userId ?? '')),
+    {initialValue: ''}
+  );
 
   qrCanvasEffect = effect(() => {
-    if (!this.qrCanvas()) return;
-    this.#generateQrCode();
-  })
+    const canvasEl = this.qrCanvas();
+    const userId = this.userId();
 
-  #generateQrCode() {
-    const canvas = this.qrCanvas()!.nativeElement;
-    if (!canvas) return;
-    QRCode.toCanvas(canvas, this.userId(), {
+    if (!canvasEl || !userId) {
+      return;
+    }
+
+    this.#generateQrCode(canvasEl.nativeElement, userId);
+  });
+
+  #generateQrCode(canvas: HTMLCanvasElement, userId: string) {
+    QRCode.toCanvas(canvas, userId, {
       width: canvas.offsetWidth,
     }, (error) => {
       if (error) {
         console.error('Error generating QR code:', error);
       }
-    })
+    });
   }
 }
