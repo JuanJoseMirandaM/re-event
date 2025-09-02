@@ -11,6 +11,7 @@ import {WalkthroughComponent} from './shared/components/walkthrough/walkthrough.
 import {WalkthroughService} from './core/services/walkthrough.service';
 import {TranslateService} from '@ngx-translate/core';
 import {noop} from 'rxjs';
+import {UserStoreFacade} from './core/store/facades/user-store.facade';
 import {SplashScreenComponent} from './shared/components/splash-screen/splash-screen.component';
 
 @Component({
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
   #notificationService = inject(NotificationsService);
   #translate = inject(TranslateService);
   walkthroughService = inject(WalkthroughService);
+  #userStoreFacade = inject(UserStoreFacade);
 
   constructor(public authService: AuthService) {
   }
@@ -41,7 +43,7 @@ export class AppComponent implements OnInit {
         next: async (authState) => {
           try {
             if (authState.isAuthenticated) {
-              console.log('User is authenticated');
+              this.#userStoreFacade.loadUserProfile()
               await this.#fcmService.installFCMServiceWorker();
               this.#notificationService.initForegroundListener();
             }

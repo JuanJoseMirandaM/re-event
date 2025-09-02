@@ -27,9 +27,10 @@ import {FloatingMenuComponent} from '../shared/floating-menu/floating-menu.compo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class SecureComponent implements OnDestroy {
+  secureViewContainer = viewChild('secureContainerRef', {read: ViewContainerRef});
+
   #secureContainersService = inject(SecureContainersService);
 
-  secureViewContainer = viewChild('secureContainerRef', {read: ViewContainerRef});
   registerContainerEffect = effect(() => {
     const viewContainer = this.secureViewContainer();
     viewContainer && this.#secureContainersService.register(ContainerNames.SECURE, viewContainer);
