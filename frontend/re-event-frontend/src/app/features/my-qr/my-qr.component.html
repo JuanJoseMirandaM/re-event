@@ -1,0 +1,13 @@
+<div class="my-qr-container flex items-center justify-center">
+  @if (userId()) {
+    <canvas #myQrContentRef></canvas>
+  } @else {
+    <p class="qr-placeholder">Your QR code will appear here</p>
+  }
+</div>
+
+<p class="font-bold text-center">My User Id:
+  <span class="block font-medium" [cdkCopyToClipboard]="userId()">
+    {{ userId() }} <span class="material-symbols-outlined align-middle text-base">content_copy</span>
+  </span>
+</p>

@@ -67,6 +67,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/claim-points/claim-points.component')
       },
       {
+        path: 'my-qr',
+        loadComponent: () => import('./features/my-qr/my-qr.component')
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'notifications'

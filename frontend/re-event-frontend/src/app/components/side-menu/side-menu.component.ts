@@ -22,6 +22,7 @@ export class SideMenuComponent {
   navItems = [
     {label: 'Account', link: './account', icon: 're-icon-user'},
     {label: 'QR', link: './qr', icon: 're-icon-qr'},
+    {label: 'My Qr', link: './my-qr', icon: 're-icon-qr'},
   ];
 
   closeMenu() {
