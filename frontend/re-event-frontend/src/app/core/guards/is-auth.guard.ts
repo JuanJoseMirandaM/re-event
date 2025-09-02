@@ -12,6 +12,8 @@ export const isAuthGuard: CanMatchFn = (route, segments) => {
     take(1),
     map(state => {
       if (state.isAuthenticated) {
+        const url = segments.map(s => s.path).join('/');
+        localStorage.setItem('lastVisitedUrl', `/${url}`);
         return true;
       } else {
         return router.createUrlTree(['/login']);

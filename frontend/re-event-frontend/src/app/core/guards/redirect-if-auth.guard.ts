@@ -1,7 +1,7 @@
-import { CanMatchFn, Router } from '@angular/router';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { map, filter, take } from 'rxjs';
+import {CanMatchFn, Router} from '@angular/router';
+import {inject} from '@angular/core';
+import {AuthService} from '../services/auth.service';
+import {filter, map, take} from 'rxjs';
 
 export const redirectIfAuthGuard: CanMatchFn = (route, segments) => {
   const authService = inject(AuthService);
@@ -12,7 +12,8 @@ export const redirectIfAuthGuard: CanMatchFn = (route, segments) => {
     take(1),
     map(state => {
       if (state.isAuthenticated) {
-        return router.createUrlTree(['/secure/home']);
+        const lastVisitedUrl = localStorage.getItem('lastVisitedUrl');
+        return router.createUrlTree([lastVisitedUrl || '/secure/home']);
       } else {
         return true;
       }
