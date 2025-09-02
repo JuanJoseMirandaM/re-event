@@ -12,10 +12,8 @@ export const redirectIfAuthGuard: CanMatchFn = (route, segments) => {
     take(1),
     map(state => {
       if (state.isAuthenticated) {
-        // Si está autenticado, redirigir al dashboard
-        return router.createUrlTree(['/secure/agenda']);
+        return router.createUrlTree(['/secure/home']);
       } else {
-        // Si no está autenticado, permitir acceso a rutas públicas
         return true;
       }
     })

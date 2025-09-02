@@ -1,0 +1,17 @@
+@let user = userProfile$();
+
+@if (user) {
+  <div class="flex gap-5 flex--col w-full text-center">
+    <div class="card">
+      <h3 class="re-h1-title">Welcome</h3>
+      <p>{{ user.name }}</p>
+    </div>
+
+    <div class="card">
+      <h3 class="re-h1-title">Your Points</h3>
+      <p>{{ user.points }}</p>
+    </div>
+  </div>
+}
+
+

@@ -71,10 +71,15 @@ export const routes: Routes = [
         loadComponent: () => import('./features/my-qr/my-qr.component')
       },
       {
+        path: 'home',
+        loadComponent: () => import('./features/home/home.component')
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'notifications'
       },
+
     ],
     canMatch: [isAuthGuard],
     providers: [PointsService, EventsService]
