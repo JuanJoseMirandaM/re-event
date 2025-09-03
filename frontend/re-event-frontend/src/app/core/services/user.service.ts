@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {map, Observable, shareReplay, switchMap} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AuthService} from './auth.service';
+import {environment} from "../../../environments/environment";
 
 export enum UserRole {
   ALL = 'ALL',
@@ -47,7 +48,7 @@ export interface VerifyCodeResponse {
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${environment.apiUrl}`;
 
   constructor(
     private http: HttpClient,

@@ -7,8 +7,8 @@ export const environment = {
     userPoolId: 'us-east-1_koSnqucA2',
     userPoolClientId: '162d0f9irj230mhiuhhh2t3o8m',
     domain: 'reevent-auth-dev.auth.us-east-1.amazoncognito.com',
-    redirectSignIn: 'https://re-event-rho.vercel.app/auth/callback',  // Reemplazar con tu IP real
-    redirectSignOut: 'https://re-event-rho.vercel.app/auth/logout'    // Reemplazar con tu IP real
+    redirectSignIn: 'https://main.durqidc9rs9op.amplifyapp.com/auth/callback',  // Reemplazar con tu IP real
+    redirectSignOut: 'https://main.durqidc9rs9op.amplifyapp.com/auth/logout'    // Reemplazar con tu IP real
   },
   firebaseConfig: {
     apiKey: "AIzaSyAPgmfnx8zGQuShmjmA-QO_ulwueVZR42k",

@@ -30,7 +30,7 @@ export class FcmService {
   #http = inject(HttpClient);
   #authService = inject(AuthService);
 
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${environment.apiUrl}`;
 
   async installFCMServiceWorker(): Promise<void> {
     const registrations: ReadonlyArray<ServiceWorkerRegistration> = await navigator.serviceWorker.getRegistrations();

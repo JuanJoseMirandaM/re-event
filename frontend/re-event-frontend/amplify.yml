@@ -1,0 +1,18 @@
+version: 1
+applications:
+  - appRoot: frontend/re-event-frontend
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: dist/re-event-frontend/browser
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*

@@ -19,28 +19,30 @@ import {UserEffects} from './core/store/effects/user.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
     provideAnimationsAsync(),
     provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        registrationStrategy: 'registerWhenStable:30000'
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
     }),
     provideEnvironmentInitializer(() => () => configureAmplify()),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
     provideTranslateService({
-        loader: provideTranslateHttpLoader({
-            prefix: '/i18n/',
-            suffix: '.json'
-        }),
-        fallbackLang: 'en',
-        lang: 'en'
+      loader: provideTranslateHttpLoader({
+        prefix: '/i18n/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en',
+      lang: 'en'
     }),
     provideStore(),
     provideEffects(UserEffects),
-    provideState({ name: 'user', reducer: userReducer }),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
-]
+    provideState({name: 'user', reducer: userReducer}),
+    provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()})
+  ]
 };

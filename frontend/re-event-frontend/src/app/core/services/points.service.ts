@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {catchError, map, Observable, of, switchMap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
+import {environment} from "../../../environments/environment";
 
 export interface PointsClaim {
   userId: string;
@@ -65,7 +66,7 @@ export interface DeductPointsResponse {
 
 @Injectable()
 export class PointsService {
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${environment.apiUrl}`;
 
   constructor(private readonly http: HttpClient,
               private readonly authService: AuthService) {
