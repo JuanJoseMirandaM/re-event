@@ -56,77 +56,23 @@ registerRoute(
 );
 
 // ============================
-// Push Notifications
+// Push Notifications - DISABLED
 // ============================
+// Las notificaciones push son manejadas por firebase-messaging-sw.js
+// para evitar duplicados. Este service worker solo maneja el cache.
 self.addEventListener('push', (event) => {
-  log('📱 Push received:', event);
-
-  if (!event.data) {
-    event.waitUntil(
-      self.registration.showNotification('Nueva notificación', {
-        body: 'Tienes una nueva notificación',
-        icon: '/assets/icons/icon-192x192.png',
-        tag: 'default',
-      })
-    );
-    return;
-  }
-
-  let data: any;
-  try {
-    data = event.data.json();
-  } catch {
-    data = { title: 'Nueva notificación', body: event.data.text() };
-  }
-
-  const options: NotificationOptions = {
-    body: data.body || data.description || 'Notificación disponible',
-    icon: '/assets/icons/icon-192x192.png',
-    badge: '/assets/icons/icon-72x72.png',
-    tag: data.tag || data.notificationId || `notif-${Date.now()}`,
-    data: {
-      ...data.data,
-      notificationId: data.notificationId,
-      link: data.link,
-      url: data.link || '/notifications',
-    },
-    renotify: true,
-    // Safari iOS fix → quitar opciones que no soporta
-    vibrate: [200, 100, 200],
-    dir: 'auto',
-    lang: 'es',
-  };
-
-  event.waitUntil(self.registration.showNotification(data.title || 'Notificación', options));
+  log('📱 Push received by Angular SW (ignored - handled by Firebase SW)');
+  // No hacer nada - Firebase SW se encarga de las notificaciones
 });
 
 // ============================
-// Notification Click
+// Notification Click - DISABLED
 // ============================
+// Los clicks en notificaciones son manejados por firebase-messaging-sw.js
+// para evitar conflictos. Este service worker solo maneja el cache.
 self.addEventListener('notificationclick', (event) => {
-  log('Clicked:', event);
-  event.notification.close();
-
-  const data = event.notification.data || {};
-  let targetUrl = data.link || data.url || '/';
-
-  const handleClick = async () => {
-    const clientList = await clients.matchAll({ type: 'window', includeUncontrolled: true });
-
-    if (clientList.length > 0) {
-      // Enfocar y notificar a todas las ventanas abiertas
-      clientList.forEach((client) => {
-        client.focus();
-        client.postMessage({ type: 'NOTIFICATION_CLICK', data: { ...data, targetUrl } });
-      });
-    } else {
-      // Abrir nueva ventana
-      const fullUrl = targetUrl.startsWith('http') ? targetUrl : self.location.origin + targetUrl;
-      await clients.openWindow(fullUrl);
-    }
-  };
-
-  event.waitUntil(handleClick());
+  log('Notification clicked in Angular SW (ignored - handled by Firebase SW)');
+  // No hacer nada - Firebase SW se encarga de los clicks
 });
 
 // ============================

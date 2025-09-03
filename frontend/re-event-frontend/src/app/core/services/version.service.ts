@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class VersionService {
 
   getVersion(): string {
-    return '0.0.9';
+    return '0.0.10';
   }
 
   getAppName(): string {
