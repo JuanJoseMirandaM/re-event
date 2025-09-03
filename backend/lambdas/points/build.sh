@@ -8,6 +8,7 @@ npm install
 
 # Remove existing zips
 rm -f claim-points.zip
+rm -f deduct-points.zip
 rm -f get-points-history.zip
 rm -f get-total-points.zip
 rm -f generate-code.zip
@@ -15,6 +16,9 @@ rm -f generate-code.zip
 # Create individual zips for each lambda
 echo "Creating claim-points.zip..."
 zip -r claim-points.zip claim-points.js package.json node_modules -x "*.git*" "build.sh" "README.md"
+
+echo "Creating deduct-points.zip..."
+zip -r deduct-points.zip deduct-points.js package.json node_modules -x "*.git*" "build.sh" "README.md"
 
 echo "Creating get-points-history.zip..."
 zip -r get-points-history.zip get-points-history.js package.json node_modules -x "*.git*" "build.sh" "README.md"

@@ -398,6 +398,31 @@ resource "aws_api_gateway_integration" "claim_points" {
   uri                    = aws_lambda_function.claim_points.invoke_arn
 }
 
+# POST /points/deduct
+resource "aws_api_gateway_resource" "points_deduct" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.points.id
+  path_part   = "deduct"
+}
+
+resource "aws_api_gateway_method" "deduct_points" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.points_deduct.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "deduct_points" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.points_deduct.id
+  http_method = aws_api_gateway_method.deduct_points.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.deduct_points.invoke_arn
+}
+
 # GET /points/history
 resource "aws_api_gateway_resource" "points_history" {
   rest_api_id = aws_api_gateway_rest_api.main.id

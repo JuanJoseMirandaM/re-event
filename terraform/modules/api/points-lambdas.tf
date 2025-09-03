@@ -19,6 +19,26 @@ resource "aws_lambda_function" "claim_points" {
   tags = var.common_tags
 }
 
+# Deduct Points Lambda
+resource "aws_lambda_function" "deduct_points" {
+  filename         = "${path.module}/../../../backend/lambdas/points/deduct-points.zip"
+  function_name    = "${var.project_name}-deduct-points-${var.environment}"
+  role            = aws_iam_role.lambda_role.arn
+  handler         = "deduct-points.handler"
+  runtime         = "nodejs18.x"
+  timeout         = 30
+
+  environment {
+    variables = {
+      POINTS_CLAIMS_TABLE = var.points_claims_table_name
+      USERS_TABLE = var.users_table_name
+    }
+  }
+
+  depends_on = [data.archive_file.deduct_points_zip]
+  tags = var.common_tags
+}
+
 # Generate Code Lambda
 resource "aws_lambda_function" "generate_code" {
   filename         = "${path.module}/../../../backend/lambdas/points/generate-code.zip"
@@ -82,6 +102,14 @@ resource "aws_lambda_permission" "claim_points_api_gateway" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.claim_points.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "deduct_points_api_gateway" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.deduct_points.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
 }
