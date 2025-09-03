@@ -8,8 +8,9 @@ export interface PointsClaim {
   timestamp: string;
   code: string;
   points: number;
-  sourceType: 'QR_CODE' | 'COLLECTIBLE_CARD';
+  sourceType: 'QR_CODE' | 'COLLECTIBLE_CARD' | 'deduction';
   description?: string;
+  organizerId?: string;
 }
 
 export interface PointsHistoryResponse {
@@ -35,7 +36,7 @@ export interface ApiResponse<T> {
 export interface PointsParams {
   limit?: number;
   lastKey?: string;
-  sourceType?: 'QR_CODE' | 'COLLECTIBLE_CARD';
+  sourceType?: 'QR_CODE' | 'COLLECTIBLE_CARD' | 'deduction';
 }
 
 export interface ClaimPointsResponse {
@@ -45,6 +46,21 @@ export interface ClaimPointsResponse {
   pointsEarned: number;
   sourceType: string;
   totalPoints: number;
+}
+
+export interface DeductPointsRequest {
+  targetUserId: string;
+  points: number;
+  description: string;
+}
+
+export interface DeductPointsResponse {
+  pointsDeducted: number;
+  totalPoints: number;
+  targetUserId: string;
+  description: string;
+  deductedAt: string;
+  organizerId: string;
 }
 
 @Injectable()
@@ -67,6 +83,28 @@ export class PointsService {
         const request: ClaimPointsRequest = {code};
 
         return this.http.post<ApiResponse<ClaimPointsResponse>>(url, request, {headers}).pipe(
+          map(response => response.data!)
+        );
+      })
+    );
+  }
+
+  deductPoints(targetUserId: string, points: number, description: string): Observable<DeductPointsResponse> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/points/deduct`;
+        const request: DeductPointsRequest = {
+          targetUserId,
+          points,
+          description
+        };
+
+        return this.http.post<ApiResponse<DeductPointsResponse>>(url, request, {headers}).pipe(
           map(response => response.data!)
         );
       })
@@ -124,7 +162,8 @@ export class PointsService {
   getSourceTypeIcon(sourceType: string): string {
     const icons = {
       'QR_CODE': 'qr_code',
-      'COLLECTIBLE_CARD': 'style'
+      'COLLECTIBLE_CARD': 'style',
+      'deduction': 'remove_shopping_cart'
     };
     return icons[sourceType as keyof typeof icons] || 'help';
   }
@@ -133,7 +172,8 @@ export class PointsService {
   getSourceTypeColor(sourceType: string): string {
     const colors = {
       'QR_CODE': '#10B981', // green
-      'COLLECTIBLE_CARD': '#8B5CF6' // purple
+      'COLLECTIBLE_CARD': '#8B5CF6', // purple
+      'deduction': '#EF4444' // red
     };
     return colors[sourceType as keyof typeof colors] || '#6B7280';
   }
