@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev',
   graphqlUrl: 'https://b65pumrqendyhkpg2o2k6tto4a.appsync-api.us-east-1.amazonaws.com/graphql',
   cognitoConfig: {
@@ -7,8 +7,8 @@ export const environment = {
     userPoolId: 'us-east-1_koSnqucA2',
     userPoolClientId: '162d0f9irj230mhiuhhh2t3o8m',
     domain: 'reevent-auth-dev.auth.us-east-1.amazoncognito.com',
-    redirectSignIn: 'https://re-event-rho.vercel.app/auth/callback',  // Reemplazar con tu IP real
-    redirectSignOut: 'https://re-event-rho.vercel.app/auth/logout'    // Reemplazar con tu IP real
+    redirectSignIn: 'https://main.durqidc9rs9op.amplifyapp.com/auth/callback',  // Reemplazar con tu IP real
+    redirectSignOut: 'https://main.durqidc9rs9op.amplifyapp.com/auth/logout'    // Reemplazar con tu IP real
   },
   firebaseConfig: {
     apiKey: "AIzaSyAPgmfnx8zGQuShmjmA-QO_ulwueVZR42k",

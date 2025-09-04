@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {map, Observable, switchMap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
+import {environment} from "../../../environments/environment";
 
 export interface Evaluation {
   evaluationId: string;
@@ -51,7 +52,7 @@ export interface ApiResponse<T> {
 })
 export class EvaluationService {
 
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${environment.apiUrl}`;
 
   constructor(private readonly http: HttpClient,
               private readonly authService: AuthService) {

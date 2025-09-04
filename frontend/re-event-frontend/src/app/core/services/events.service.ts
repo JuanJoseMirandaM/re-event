@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {map, Observable, switchMap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
+import {environment} from "../../../environments/environment";
 
 export interface Event {
   eventId: string;
@@ -48,7 +49,7 @@ export interface EventsParams {
 
 @Injectable({providedIn: 'root'})
 export class EventsService {
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${environment.apiUrl}`;
 
   constructor(private readonly http: HttpClient,
               private readonly authService: AuthService) {

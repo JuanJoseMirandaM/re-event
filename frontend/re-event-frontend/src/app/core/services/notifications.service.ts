@@ -5,6 +5,7 @@ import { Observable, switchMap, map, catchError, of } from 'rxjs';
 import { ApiResponse } from './evaluation.service';
 import {Router} from "@angular/router";
 import {Messaging, onMessage} from "@angular/fire/messaging";
+import {environment} from "../../../environments/environment";
 
 export interface NotificationRequest {
   title: string;
@@ -61,7 +62,7 @@ export class NotificationsService {
   #router = inject(Router);
   #messaging = inject(Messaging);
 
-  private readonly baseUrl = '/api';
+  private readonly baseUrl = `${environment.apiUrl}`;
 
   initForegroundListener() {
     // Escuchar notificaciones en primer plano
