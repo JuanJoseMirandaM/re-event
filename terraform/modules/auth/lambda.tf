@@ -13,7 +13,6 @@ resource "aws_lambda_function" "create_user" {
     }
   }
 
-  depends_on = [data.archive_file.create_user_zip]
   tags = var.common_tags
 }
 

@@ -15,7 +15,6 @@ resource "aws_lambda_function" "create_evaluation" {
     }
   }
 
-  depends_on = [data.archive_file.create_evaluation_zip]
   tags       = var.common_tags
 }
 
@@ -34,7 +33,6 @@ resource "aws_lambda_function" "get_evaluation" {
     }
   }
 
-  depends_on = [data.archive_file.get_evaluation_zip]
   tags       = var.common_tags
 }
 
@@ -53,7 +51,6 @@ resource "aws_lambda_function" "get_evaluations_by_session" {
     }
   }
 
-  depends_on = [data.archive_file.get_evaluations_by_session_zip]
   tags       = var.common_tags
 }
 
@@ -72,7 +69,6 @@ resource "aws_lambda_function" "get_evaluations_by_user" {
     }
   }
 
-  depends_on = [data.archive_file.get_evaluations_by_user_zip]
   tags       = var.common_tags
 }
 

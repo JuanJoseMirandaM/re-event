@@ -13,7 +13,6 @@ resource "aws_lambda_function" "get_user" {
     }
   }
 
-  depends_on = [data.archive_file.get_user_zip]
   tags = var.common_tags
 }
 
@@ -32,7 +31,6 @@ resource "aws_lambda_function" "update_user" {
     }
   }
 
-  depends_on = [data.archive_file.update_user_zip]
   tags = var.common_tags
 }
 

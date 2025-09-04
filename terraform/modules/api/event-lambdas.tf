@@ -13,7 +13,6 @@ resource "aws_lambda_function" "create_event" {
     }
   }
 
-  depends_on = [data.archive_file.create_event_zip]
   tags = var.common_tags
 }
 
@@ -32,7 +31,6 @@ resource "aws_lambda_function" "get_event" {
     }
   }
 
-  depends_on = [data.archive_file.get_event_zip]
   tags = var.common_tags
 }
 
@@ -51,7 +49,6 @@ resource "aws_lambda_function" "update_event" {
     }
   }
 
-  depends_on = [data.archive_file.update_event_zip]
   tags = var.common_tags
 }
 
@@ -73,7 +70,6 @@ resource "aws_lambda_function" "get_events" {
     }
   }
 
-  depends_on = [data.archive_file.get_events_zip]
   tags = var.common_tags
 }
 
@@ -92,7 +88,6 @@ resource "aws_lambda_function" "delete_event" {
     }
   }
 
-  depends_on = [data.archive_file.delete_event_zip]
   tags = var.common_tags
 }
 

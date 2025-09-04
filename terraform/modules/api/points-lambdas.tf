@@ -15,7 +15,6 @@ resource "aws_lambda_function" "claim_points" {
     }
   }
 
-  depends_on = [data.archive_file.claim_points_zip]
   tags = var.common_tags
 }
 
@@ -35,7 +34,6 @@ resource "aws_lambda_function" "deduct_points" {
     }
   }
 
-  depends_on = [data.archive_file.deduct_points_zip]
   tags = var.common_tags
 }
 
@@ -55,7 +53,6 @@ resource "aws_lambda_function" "generate_code" {
     }
   }
 
-  depends_on = [data.archive_file.generate_code_zip]
   tags = var.common_tags
 }
 
@@ -74,7 +71,6 @@ resource "aws_lambda_function" "get_points_history" {
     }
   }
 
-  depends_on = [data.archive_file.get_points_history_zip]
   tags = var.common_tags
 }
 
@@ -93,7 +89,6 @@ resource "aws_lambda_function" "get_total_points" {
     }
   }
 
-  depends_on = [data.archive_file.get_total_points_zip]
   tags = var.common_tags
 }
 

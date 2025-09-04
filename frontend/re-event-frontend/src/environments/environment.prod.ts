@@ -11,13 +11,13 @@ export const environment = {
     redirectSignOut: 'https://main.durqidc9rs9op.amplifyapp.com/auth/logout'    // Reemplazar con tu IP real
   },
   firebaseConfig: {
-    apiKey: "AIzaSyAPgmfnx8zGQuShmjmA-QO_ulwueVZR42k",
-    authDomain: "reevent-fcm.firebaseapp.com",
-    projectId: "reevent-fcm",
-    storageBucket: "reevent-fcm.firebasestorage.app",
-    messagingSenderId: "145026622801",
-    appId: "1:145026622801:web:c82d01ccbdc175619e9f70",
-    measurementId: "G-DN6DXETYRM"
+    apiKey: "AIzaSyA5e4Qf0nUW-ALm40oAUrNImuyrZkBXMVY",
+    authDomain: "kinua-fcm.firebaseapp.com",
+    projectId: "kinua-fcm",
+    storageBucket: "kinua-fcm.firebasestorage.app",
+    messagingSenderId: "62396424616",
+    appId: "1:62396424616:web:145f9df7cf9270105ebd9d",
+    measurementId: "G-YFNCEBPK0H"
   },
   vapidKey: "BPQV-lieDnlXX6eTj85i0XbNwhsjRXYcXUcTPAEL4sGyGDXGmRkVMWEzi1ob3OQYyLZcfUHngU15kvoCN9JB9nM"
 };

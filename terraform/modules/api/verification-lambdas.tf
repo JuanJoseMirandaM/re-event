@@ -14,7 +14,6 @@ resource "aws_lambda_function" "generate_codes" {
     }
   }
 
-  depends_on = [data.archive_file.generate_codes_zip]
   tags = var.common_tags
 }
 
@@ -34,7 +33,6 @@ resource "aws_lambda_function" "verify_code" {
     }
   }
 
-  depends_on = [data.archive_file.verify_code_zip]
   tags = var.common_tags
 }
 

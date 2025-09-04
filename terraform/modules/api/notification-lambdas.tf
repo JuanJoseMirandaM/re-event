@@ -17,7 +17,6 @@ resource "aws_lambda_function" "create_notification" {
     }
   }
   
-  depends_on = [data.archive_file.create_notification_zip]
   tags = var.common_tags
 }
 
@@ -36,7 +35,6 @@ resource "aws_lambda_function" "get_notifications" {
     }
   }
   
-  depends_on = [data.archive_file.get_notifications_zip]
   tags = var.common_tags
 }
 

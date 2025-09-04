@@ -13,7 +13,6 @@ resource "aws_lambda_function" "register_fcm_token" {
     }
   }
 
-  depends_on = [data.archive_file.register_fcm_token_zip]
   tags = var.common_tags
 }
 

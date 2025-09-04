@@ -26,7 +26,7 @@ Todos los módulos siguen la misma estructura organizacional:
 
 ## Generación Automática de ZIPs
 
-Todos los módulos que usan Lambda functions generan automáticamente los archivos ZIP usando `data.archive_file` en `data.tf`, eliminando la necesidad de generar ZIPs manualmente.
+Todos los módulos que usan Lambda functions utilizan archivos ZIP pre-generados usando el script `build-all.sh` en el directorio `backend/lambdas/`, lo que mejora la performance del despliegue y reduce la complejidad de Terraform.
 
 ## Convenciones de Naming
 
