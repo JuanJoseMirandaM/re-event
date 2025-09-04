@@ -6,16 +6,10 @@ Esta carpeta contiene toda la infraestructura como código (IaC) para la aplicac
 
 La infraestructura está organizada en módulos reutilizables:
 
-- **Database**: DynamoDB con tabla unificada y GSI
-- **Auth**: Cognito User Pool con Google OAuth + Lambda
-- **API**: Lambda functions + API Gateway completo
-- **Storage**: S3 para imágenes de FaceFinder
-- **AI**: Rekognition para reconocimiento facial
-- **Messaging**: SQS para procesamiento batch
-- **Security**: IAM roles unificados
-- **Compute**: Lambda functions para ambos proyectos
-- **CDN**: CloudFront para servir imágenes
-- **Frontend**: S3 + CloudFront (próximamente)
+- **✅ Database**: DynamoDB con todas las tablas necesarias
+- **✅ Auth**: Cognito User Pool con Google OAuth + Lambda
+- **✅ API**: Lambda functions + API Gateway con CORS configurado
+- **📋 Frontend**: S3 + CloudFront (pendiente)
 
 ## 📁 Estructura
 
@@ -99,36 +93,43 @@ aws_profile = "terraform"
 ## ⚙️ Recursos Creados
 
 ### 🗄️ DynamoDB
-- **Tabla Unificada**: `reevent-users-{environment}`
-- **Partition Key**: `userId` (re:Event) / `PK` (FaceFinder)
-- **Sort Key**: `SK` (para FaceFinder)
-- **GSI**: `EmailIndex` + índices para FaceFinder
-- **Billing**: Pay-per-request
+- **Users**: `reevent-users-{environment}` - Gestión de usuarios
+- **Events**: `reevent-events-{environment}` - Gestión de eventos
+- **Evaluations**: `reevent-evaluations-{environment}` - Evaluaciones de sesiones
+- **Points**: `reevent-points-claims-{environment}` y `reevent-points-codes-{environment}` - Sistema de puntos
+- **Notifications**: `reevent-notifications-{environment}` - Notificaciones
+- **FCM**: `reevent-fcm-tokens-{environment}` - Tokens de notificaciones push
+- **Verification**: `reevent-verification-codes-{environment}` - Códigos de verificación
 
 ### 🔐 Cognito
-- **User Pool**: Autenticación de usuarios
+- **User Pool**: `us-east-1_koSnqucA2`
+- **Client ID**: `162d0f9irj230mhiuhhh2t3o8m`
 - **OAuth**: Integración con Google
 - **Atributos**: email, name, phone_number, custom:company
-- **Dominio**: `reevent-auth-{environment}.auth.{region}.amazoncognito.com`
+- **Dominio**: `reevent-auth-dev.auth.us-east-1.amazoncognito.com`
 
-### ⚡ Lambda
-**re:Event Functions:**
-- `reevent-auth-post-confirmation-{environment}`: Post-confirmación Cognito
-- `reevent-*-{environment}`: API endpoints
+### ⚡ Lambda Functions
+- **Auth**: `reevent-create-user-dev` - Post-confirmación de Cognito
+- **Users**: `reevent-get-user-dev`, `reevent-update-user-dev`
+- **Events**: `reevent-create-event-dev`, `reevent-get-events-dev`, `reevent-get-event-dev`, `reevent-update-event-dev`, `reevent-delete-event-dev`
+- **Evaluations**: `reevent-create-evaluation-dev`, `reevent-get-evaluation-dev`, `reevent-get-evaluations-by-session-dev`, `reevent-get-evaluations-by-user-dev`
+- **Points**: `reevent-get-total-points-dev`, `reevent-get-points-history-dev`, `reevent-claim-points-dev`, `reevent-deduct-points-dev`, `reevent-generate-code-dev`, `reevent-generate-codes-dev`
+- **Notifications**: `reevent-create-notification-dev`, `reevent-get-notifications-dev`
+- **FCM**: `reevent-register-fcm-token-dev`
+- **Verification**: `reevent-verify-code-dev`
 
-**FaceFinder Functions:**
-- `reevent-presigned-batch-{environment}`: URLs pre-firmadas batch
-- `reevent-presigned-search-{environment}`: URLs pre-firmadas búsqueda
-- `reevent-search-by-face-{environment}`: Búsqueda facial
-- `reevent-save-analyze-{environment}`: Procesamiento batch
-- `reevent-brand-publish-{environment}`: Watermarks
-- `reevent-get-paginated-items-{environment}`: Paginación
+### 🌐 API Gateway
+- **REST API**: `67e15rhdb7`
+- **Base URL**: `https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev`
+- **CORS**: Configurado para todos los endpoints
+- **Authorizer**: Cognito JWT para autenticación
 
 ### 🔑 IAM
-- **Rol**: `ReEventLambdaRole-{environment}`
+- **Rol**: `reevent-api-lambda-role-dev`
 - **Políticas**: 
   - AWSLambdaBasicExecutionRole
-  - DynamoDBWriteAccess (PutItem)
+  - DynamoDBReadWriteAccess
+  - S3Access (para archivos)
 
 ## 📊 Outputs Disponibles
 
@@ -138,21 +139,18 @@ Después del despliegue:
 terraform output
 ```
 
-**re:Event Outputs:**
-- `users_table_name`: Nombre de la tabla DynamoDB
-- `users_table_arn`: ARN de la tabla DynamoDB
+- `api_gateway_id`: ID del API Gateway (`67e15rhdb7`)
+- `api_gateway_url`: URL base de la API (`https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev`)
+- `cognito_domain`: Dominio de autenticación (`https://reevent-auth-dev.auth.us-east-1.amazoncognito.com`)
+- `user_pool_id`: ID del User Pool de Cognito (`us-east-1_koSnqucA2`)
+- `user_pool_client_id`: ID del cliente SPA (`162d0f9irj230mhiuhhh2t3o8m`)
+- `users_table_name`: Nombre de la tabla de usuarios (`reevent-users-dev`)
+- `users_table_arn`: ARN de la tabla de usuarios
+- `events_table_name`: Nombre de la tabla de eventos (`reevent-events-dev`)
+- `events_table_arn`: ARN de la tabla de eventos
+- `evaluations_table_name`: Nombre de la tabla de evaluaciones (`reevent-evaluations-dev`)
+- `evaluations_table_arn`: ARN de la tabla de evaluaciones
 - `lambda_role_arn`: ARN del rol de Lambda
-- `user_pool_id`: ID del User Pool de Cognito
-- `user_pool_client_id`: ID del cliente SPA
-- `cognito_domain`: Dominio de autenticación
-- `api_gateway_url`: URL del API Gateway
-
-**FaceFinder Outputs:**
-- `facefinder_s3_bucket_name`: Bucket S3 para imágenes
-- `rekognition_collection_id`: Collection ID de Rekognition
-- `sqs_queue_url`: URL de la cola SQS
-- `cloudfront_domain_name`: Dominio de CloudFront
-- `facefinder_lambda_functions`: Detalles de funciones Lambda
 
 ## 🔧 Módulos
 
