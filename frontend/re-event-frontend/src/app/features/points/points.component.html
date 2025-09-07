@@ -3,7 +3,7 @@
   <span class="text-base font-normal">Total Puntos</span>
 </div>
 
-@if (isLoading()) {
+@if (isLoading() && itemPoints().length === 0) {
   <div class="flex flex--col gap-2 items-center justify-center p-2">
     <div class="spinner spinner--md"></div>
     <span>Cargando puntos...</span>
@@ -19,5 +19,15 @@
         <p>No hay puntos</p>
       }
     </div>
+
+    @if (canLoadMore()) {
+      <button (click)="loadMore()" [disabled]="isLoading()" class="btn btn--secondary w-full flex items-center justify-center">
+        @if (isLoading()) {
+          <div class="spinner spinner--sm"></div>
+        } @else {
+          <span>Cargar más</span>
+        }
+      </button>
+    }
   </div>
 }

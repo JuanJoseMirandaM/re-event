@@ -5,7 +5,6 @@ import {ToastItem} from '../../../interfaces/toast-item.interface';
 
 @Component({
   selector: 'app-toast-container',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './toast-container.component.html',
   styleUrl: './toast-container.component.scss',
@@ -50,7 +49,7 @@ export class ToastContainerComponent {
     const id = this.touchingId();
     if (!id) return;
     const dx = this.currentX - this.startX;
-    const threshold = 80; // px
+    const threshold = 80;
     const itemEl = this.#getItemEl(id);
 
     if (Math.abs(dx) > threshold) {

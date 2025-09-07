@@ -1,11 +1,15 @@
 import {ChangeDetectionStrategy, Component, inject, input, output, signal} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {VersionService} from "../../core/services/version.service";
+import {NavItemVisibleByRoleDirective} from '../../shared/directives/nav-item-visible-by-role.directive';
+import {NavItems} from '../../interfaces/nav-items.interface';
+import {UserRole} from '../../core/services/user.service';
 
 @Component({
   selector: 'app-side-menu',
   imports: [
-    RouterLink
+    RouterLink,
+    NavItemVisibleByRoleDirective
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
@@ -19,10 +23,11 @@ export class SideMenuComponent {
   #versionService = inject(VersionService);
   versionInfo = signal(this.#versionService.getVersionInfo());
 
-  navItems = [
-    {label: 'Account', link: './account', icon: 're-icon-user'},
-    {label: 'QR', link: './qr', icon: 're-icon-qr'},
-    {label: 'My Qr', link: './my-qr', icon: 're-icon-qr'},
+  navItems: NavItems[] = [
+    {label: 'Account', link: './account', icon: 're-icon-user', roleAllowed: []},
+    {label: 'QR', link: './qr', icon: 're-icon-qr', roleAllowed: []},
+    {label: 'My Qr', link: './my-qr', icon: 're-icon-qr', roleAllowed: []},
+    {label: 'Redeem user points', link: './qr-redeem', icon: 're-icon-qr', roleAllowed: [UserRole.ORGANIZER]},
   ];
 
   closeMenu() {

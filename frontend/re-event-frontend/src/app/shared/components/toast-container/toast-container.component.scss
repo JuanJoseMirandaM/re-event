@@ -2,7 +2,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: env(safe-area-inset-bottom);
+  top: 4rem;
   z-index: 1001;
   pointer-events: none;
 }

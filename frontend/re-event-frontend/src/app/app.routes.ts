@@ -3,6 +3,8 @@ import {isAuthGuard} from './core/guards/is-auth.guard';
 import {redirectIfAuthGuard} from './core/guards/redirect-if-auth.guard';
 import {PointsService} from './core/services/points.service';
 import {EventsService} from './core/services/events.service';
+import {UserRole} from './core/services/user.service';
+import {roleGuardGuard} from './core/guards/role-guard.guard';
 
 export const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -63,6 +65,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/qr/qr-scanner/qr-scanner.component')
       },
       {
+        path: 'qr-redeem',
+        loadComponent: () => import('./features/qr/qr-redeem/qr-redeem.component'),
+        data: {requiredRole: UserRole.ORGANIZER},
+        canMatch: [roleGuardGuard]
+      },
+      {
         path: 'claim-points',
         loadComponent: () => import('./features/claim-points/claim-points.component')
       },
@@ -75,11 +83,20 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home.component')
       },
       {
+        path: 'redeem-points/:userId',
+        loadComponent: () => import("./features/redeem-points/redeem-points.component"),
+        data: {requiredRole: UserRole.ORGANIZER},
+        canMatch: [roleGuardGuard]
+      },
+      {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'notifications'
+        redirectTo: 'home'
       },
-
+      {
+        path: '**',
+        redirectTo: 'home'
+      }
     ],
     canMatch: [isAuthGuard],
     providers: [PointsService, EventsService]

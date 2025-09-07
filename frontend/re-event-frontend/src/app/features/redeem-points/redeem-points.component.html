@@ -1,0 +1,33 @@
+<h2 class="re-h1-title">Canjear Puntos de Usuario</h2>
+
+<div class="form-group">
+  <label class="form-label" for="user-id-input">UserID del Asistente</label>
+  <input id="user-id-input" class="form-input" type="text" [(ngModel)]="userId"
+         placeholder="Escribe o escanea el UserID">
+</div>
+
+<div class="form-group">
+  <label class="form-label" for="points-input">Puntos a canjear</label>
+  <input id="points-input" class="form-input" type="number" [(ngModel)]="points"
+         (ngModelChange)="onFieldChange()" placeholder="Escribe o selecciona una cantidad">
+</div>
+
+<div class="point-buttons">
+  <button class="btn btn--secondary" (click)="setPoints(50)">50</button>
+  <button class="btn btn--secondary" (click)="setPoints(100)">100</button>
+  <button class="btn btn--secondary" (click)="setPoints(150)">150</button>
+  <button class="btn btn--secondary" (click)="setPoints(200)">200</button>
+</div>
+
+<div class="form-group">
+  <label class="form-label" for="description-input">Descripción del canje</label>
+  <input id="description-input" class="form-input" [(ngModel)]="description"
+         (ngModelChange)="onFieldChange()" placeholder="Ej: Canje por camiseta talla M">
+</div>
+
+<button class="btn btn--primary btn--lg"
+        (click)="deductPoints()"
+        [disabled]="!userId || !points || points <= 0 || !description">
+  <i class="icon-shopping-cart"></i>
+  <span>Realizar Canje</span>
+</button>

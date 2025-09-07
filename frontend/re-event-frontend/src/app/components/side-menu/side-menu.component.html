@@ -18,7 +18,9 @@
     <ul>
       @for (item of navItems; track item.link) {
         <li>
-          <a class="re-side-menu__link" routerLink="{{ item.link }}" (click)="closeMenu()">
+          <a class="re-side-menu__link" routerLink="{{ item.link }}" (click)="closeMenu()"
+             [allowedRoles]="item.roleAllowed"
+             navItemVisibleByRole>
 <!--            <span class="{{ item.icon }} re-inline-block"></span>-->
             <span class="re-side-menu__text re-big-font re-font-500">{{ item.label }}</span>
           </a>
