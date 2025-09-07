@@ -14,33 +14,36 @@ import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
 import {provideState, provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 import {userReducer} from './core/store/reducers/user.reducer';
+import {eventsReducer} from './core/store/reducers/events.reducer';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
 import {UserEffects} from './core/store/effects/user.effect';
+import {EventsEffects} from './core/store/effects/events.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimationsAsync(),
     provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        registrationStrategy: 'registerWhenStable:30000'
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
     }),
     provideEnvironmentInitializer(() => () => configureAmplify()),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
     provideTranslateService({
-        loader: provideTranslateHttpLoader({
-            prefix: '/i18n/',
-            suffix: '.json'
-        }),
-        fallbackLang: 'en',
-        lang: 'en'
+      loader: provideTranslateHttpLoader({
+        prefix: '/i18n/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en',
+      lang: 'en'
     }),
     provideStore(),
-    provideEffects(UserEffects),
-    provideState({ name: 'user', reducer: userReducer }),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
-]
+    provideEffects(UserEffects, EventsEffects),
+    provideState({name: 'user', reducer: userReducer}),
+    provideState({name: 'events', reducer: eventsReducer}),
+    provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()})
+  ]
 };

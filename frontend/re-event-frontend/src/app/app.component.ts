@@ -13,6 +13,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {noop} from 'rxjs';
 import {UserStoreFacade} from './core/store/facades/user-store.facade';
 import {SplashScreenComponent} from './shared/components/splash-screen/splash-screen.component';
+import {EventsStoreFacade} from './core/store/facades/events-store.facade';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit {
   #translate = inject(TranslateService);
   walkthroughService = inject(WalkthroughService);
   #userStoreFacade = inject(UserStoreFacade);
+  #eventsStoreFacade = inject(EventsStoreFacade);
 
   constructor(public authService: AuthService) {
   }
@@ -44,6 +46,8 @@ export class AppComponent implements OnInit {
           try {
             if (authState.isAuthenticated) {
               this.#userStoreFacade.loadUserProfile()
+              this.#eventsStoreFacade.loadUpcomingEvents();
+              this.#eventsStoreFacade.loadPastEvents();
               await this.#fcmService.installFCMServiceWorker();
               this.#notificationService.initForegroundListener();
             }

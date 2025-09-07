@@ -46,7 +46,7 @@ export interface EventsParams {
   past?: boolean;
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EventsService {
   private readonly baseUrl = '/api';
 
@@ -93,7 +93,7 @@ export class EventsService {
         });
 
         const url = `${this.baseUrl}/events`;
-        return this.http.post<{success: boolean, data: Event}>(url, eventData, {headers}).pipe(
+        return this.http.post<{ success: boolean, data: Event }>(url, eventData, {headers}).pipe(
           map(response => response.data)
         );
       })

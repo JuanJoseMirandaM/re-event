@@ -99,7 +99,7 @@ export const routes: Routes = [
       }
     ],
     canMatch: [isAuthGuard],
-    providers: [PointsService, EventsService]
+    providers: [PointsService]
   },
   {
     path: '**', redirectTo: '/login'

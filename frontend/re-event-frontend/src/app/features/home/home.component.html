@@ -1,17 +1,85 @@
-@let user = userProfile$();
+@let user = userProfile$()!;
 
-@if (user) {
-  <div class="flex gap-5 flex--col w-full text-center">
-    <div class="card">
-      <h3 class="re-h1-title">Welcome</h3>
-      <p>{{ user.name }}</p>
-    </div>
-
-    <div class="card">
-      <h3 class="re-h1-title">Your Points</h3>
-      <p>{{ user.points }}</p>
+<div class="home-container">
+  <div class="welcome-section">
+    <div class="daily-card welcome-card">
+      <div class="card-header">
+        <div class="aws-logo">
+          <div class="logo-icon">☁️</div>
+        </div>
+        <div class="welcome-text">
+          <h1 class="welcome-title">AWS Community Day Bolivia</h1>
+          <p class="user-name">{{ user.name }}</p>
+        </div>
+      </div>
+      <div class="points-badge justify-center">
+        <div class="points-icon">⭐</div>
+        <div class="points-info">
+          <span class="points-value">{{ user.points }}</span>
+          <span class="points-label">Points</span>
+        </div>
+        <div class="points-streak">
+          <div class="streak-indicator"></div>
+        </div>
+      </div>
     </div>
   </div>
-}
 
+  <div class="cards-grid">
+    <div class="daily-card schedule-card">
+      <div class="card-header">
+        <h3 class="card-title">Upcoming Events</h3>
+        <div class="card-badge live">Live</div>
+      </div>
+      <div class="card-content">
+        @if (upcomingEvents$() && upcomingEvents$()!.length > 0) {
+          @for (event of upcomingEvents$() | slice : 0:3; track event.eventId) {
+            <div class="schedule-item">
+              <div class="time-badge h-fit">{{ event.startDate | date:'shortTime' }}</div>
+              <div class="session-info">
+                <h4>{{ event.title }}</h4>
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="schedule-item">
+            <div class="session-info">
+              <p>No upcoming events available</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="daily-card actions-card">
+      <div class="card-header">
+        <h3 class="card-title">Quick Actions</h3>
+      </div>
+      <div class="card-content">
+        <div class="action-buttons">
+          <button class="action-btn scan" routerLink="/secure/qr">📱 Scan QR</button>
+          <button class="action-btn claim" routerLink="/secure/points">⭐ Claim Points</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="daily-card tips-card">
+      <div class="card-header">
+        <h3 class="card-title">AWS Tip of the Day</h3>
+        <div class="card-badge tip">💡</div>
+      </div>
+      <div class="card-content">
+        <div class="tip-content">
+          <h4>Cost Optimization</h4>
+          <p>Use AWS Cost Explorer to track and optimize your cloud spending. Set up billing alerts to stay within
+            budget.</p>
+          <div class="tip-tags">
+            <span class="tag">Cost</span>
+            <span class="tag">Optimization</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
