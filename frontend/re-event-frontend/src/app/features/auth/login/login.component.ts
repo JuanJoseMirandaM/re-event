@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {AuthService} from "../../../core/services/auth.service";
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, finalize, map, of, switchMap} from 'rxjs';
@@ -20,7 +20,6 @@ import {PwaInstallService} from '../../../core/services/pwa-install.service';
 export default class LoginComponent {
   #formBuilder = inject(FormBuilder);
   #authService = inject(AuthService);
-  #router = inject(Router);
   #loader = inject(LoaderService);
   #pwaService = inject(PwaInstallService);
   #loginTrigger = signal<{ email: string; password: string } | null>(null);

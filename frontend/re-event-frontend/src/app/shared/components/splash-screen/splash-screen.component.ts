@@ -22,19 +22,16 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
   private splashService = inject(SplashScreenService);
   private destroy$ = new Subject<void>();
 
-  // Computed properties from service
   showLogo = this.splashService.showLogo;
   showText = this.splashService.showText;
   showProgress = this.splashService.showProgress;
   progressValue = this.splashService.progressValue;
   isComplete = this.splashService.isComplete;
   isVisible = this.splashService.isVisible;
-  
-  // Debug properties
+
   isAuthReady = false;
 
   ngOnInit() {
-    // Configurar callback para cuando el progreso esté completo
     this.splashService.setProgressCompleteCallback(() => {
       this.handleProgressComplete();
     });
@@ -57,8 +54,7 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (authState) => {
           this.isAuthReady = true;
-          
-          // Si la animación ya terminó, completar el splash
+
           if (this.progressValue() >= 100) {
             this.handleProgressComplete();
           } else {
@@ -76,16 +72,12 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
   }
 
   private handleProgressComplete() {
-    
-    // Completar el splash
     this.splashService.complete();
-    
-    // Esperar un poco y luego navegar
+
     setTimeout(() => {
       this.splashService.hide();
       this.loaderService.hide();
-      
-      // Intentar navegar
+
       try {
         this.router.navigate(['/']).then(() => {
         }).catch((error) => {

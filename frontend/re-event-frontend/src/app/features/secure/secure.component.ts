@@ -13,6 +13,7 @@ import {FooterComponent} from '../footer/footer.component';
 import {SecureContainersService} from '../../core/services/secure-containers.service';
 import {ContainerNames} from '../../utils/container-names.enum';
 import {FloatingMenuComponent} from '../shared/floating-menu/floating-menu.component';
+import {SplashScreenComponent} from '../../shared/components/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-secure',
@@ -20,7 +21,8 @@ import {FloatingMenuComponent} from '../shared/floating-menu/floating-menu.compo
     HeaderComponent,
     RouterOutlet,
     FooterComponent,
-    FloatingMenuComponent
+    FloatingMenuComponent,
+    SplashScreenComponent
   ],
   templateUrl: './secure.component.html',
   styleUrl: './secure.component.scss',

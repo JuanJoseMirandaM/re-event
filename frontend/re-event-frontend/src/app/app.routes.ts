@@ -2,12 +2,10 @@ import {Routes} from '@angular/router';
 import {isAuthGuard} from './core/guards/is-auth.guard';
 import {redirectIfAuthGuard} from './core/guards/redirect-if-auth.guard';
 import {PointsService} from './core/services/points.service';
-import {EventsService} from './core/services/events.service';
 import {UserRole} from './core/services/user.service';
 import {roleGuardGuard} from './core/guards/role-guard.guard';
 
 export const routes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component'),
@@ -101,6 +99,11 @@ export const routes: Routes = [
     canMatch: [isAuthGuard],
     providers: [PointsService]
   },
+  {
+    path: 'install',
+    loadComponent: () => import('./features/pwa-install/pwa-install.component')
+  },
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {
     path: '**', redirectTo: '/login'
   },

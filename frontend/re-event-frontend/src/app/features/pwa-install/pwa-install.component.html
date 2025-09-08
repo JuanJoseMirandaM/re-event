@@ -1,0 +1,41 @@
+<div class="install-container">
+  <div class="install-content">
+    <div class="logo-container">
+      <img
+        src="/icons/icon-512x512.png"
+        alt="Re-Event Logo"
+        class="logo"
+      >
+    </div>
+
+    <h1 class="title">Kinua</h1>
+    <p class="subtitle">Instala la aplicación para una mejor experiencia</p>
+
+    <button
+      class="install-button"
+      [class.hidden]="!canInstall()"
+      (click)="installApp()"
+      [disabled]="isInstalling()"
+    >
+      <span class="material-symbols-outlined">download</span>
+      {{ isInstalling() ? 'Instalando...' : 'Instalar App' }}
+    </button>
+
+    <div class="ios-instructions" [class.show]="showIOSInstructions()">
+      <div class="instructions-header">
+        <span class="material-symbols-outlined">check</span>
+        <span>Para instalar en iOS:</span>
+      </div>
+      <ol class="instructions-list">
+        <li>Toca el botón "Compartir" <span class="share-icon">⎋</span></li>
+        <li>Selecciona "Añadir a pantalla de inicio"</li>
+        <li>Toca "Añadir"</li>
+      </ol>
+    </div>
+
+    <div class="already-installed" [class.show]="isAlreadyInstalled()">
+      <span class="material-symbols-outlined">check</span>
+      <span>¡La aplicación ya está instalada!</span>
+    </div>
+  </div>
+</div>
