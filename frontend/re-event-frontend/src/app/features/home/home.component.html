@@ -8,7 +8,7 @@
           <div class="logo-icon">☁️</div>
         </div>
         <div class="welcome-text">
-          <h1 class="welcome-title">AWS Community Day Bolivia</h1>
+          <h1 class="welcome-title">{{ 'home.welcomeTitle' | translate }}</h1>
           <p class="user-name">{{ user.name }}</p>
         </div>
       </div>
@@ -16,7 +16,7 @@
         <div class="points-icon">⭐</div>
         <div class="points-info">
           <span class="points-value">{{ user.points }}</span>
-          <span class="points-label">Points</span>
+          <span class="points-label">{{ 'home.points' | translate }}</span>
         </div>
         <div class="points-streak">
           <div class="streak-indicator"></div>
@@ -28,8 +28,8 @@
   <div class="cards-grid">
     <div class="daily-card schedule-card">
       <div class="card-header">
-        <h3 class="card-title">Upcoming Events</h3>
-        <div class="card-badge live">Live</div>
+        <h3 class="card-title">{{ 'home.upcomingEvents' | translate }}</h3>
+        <div class="card-badge live">{{ 'home.live' | translate }}</div>
       </div>
       <div class="card-content">
         @if (upcomingEvents$() && upcomingEvents$()!.length > 0) {
@@ -44,7 +44,7 @@
         } @else {
           <div class="schedule-item">
             <div class="session-info">
-              <p>No upcoming events available</p>
+              <p>{{ 'home.noEvents' | translate }}</p>
             </div>
           </div>
         }
@@ -53,29 +53,28 @@
 
     <div class="daily-card actions-card">
       <div class="card-header">
-        <h3 class="card-title">Quick Actions</h3>
+        <h3 class="card-title">{{ 'home.quickActions' | translate }}</h3>
       </div>
       <div class="card-content">
         <div class="action-buttons">
-          <button class="action-btn scan" routerLink="/secure/qr">📱 Scan QR</button>
-          <button class="action-btn claim" routerLink="/secure/points">⭐ Claim Points</button>
+          <button class="action-btn scan" routerLink="/secure/qr">{{ 'home.scanQR' | translate }}</button>
+          <button class="action-btn claim" routerLink="/secure/points">{{ 'home.claimPoints' | translate }}</button>
         </div>
       </div>
     </div>
 
     <div class="daily-card tips-card">
       <div class="card-header">
-        <h3 class="card-title">AWS Tip of the Day</h3>
+        <h3 class="card-title">{{ 'home.tipOfDay' | translate }}</h3>
         <div class="card-badge tip">💡</div>
       </div>
       <div class="card-content">
         <div class="tip-content">
-          <h4>Cost Optimization</h4>
-          <p>Use AWS Cost Explorer to track and optimize your cloud spending. Set up billing alerts to stay within
-            budget.</p>
+          <h4>{{ 'home.tipTitle' | translate }}</h4>
+          <p>{{ 'home.tipDescription' | translate }}</p>
           <div class="tip-tags">
-            <span class="tag">Cost</span>
-            <span class="tag">Optimization</span>
+            <span class="tag">{{ 'home.tagCost' | translate }}</span>
+            <span class="tag">{{ 'home.tagOptimization' | translate }}</span>
           </div>
         </div>
       </div>

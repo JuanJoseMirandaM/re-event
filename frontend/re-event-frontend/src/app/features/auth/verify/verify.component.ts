@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, effect, inject, OnInit, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 import {AuthService} from '../../../core/services/auth.service';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, map, of, switchMap} from 'rxjs';
@@ -8,8 +9,7 @@ import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-verify',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './verify.component.html',
   styleUrl: './verify.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

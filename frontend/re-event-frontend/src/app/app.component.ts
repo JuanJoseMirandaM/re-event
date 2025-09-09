@@ -18,7 +18,6 @@ import {EventsStoreFacade} from './core/store/facades/events-store.facade';
   selector: 'app-root',
   imports: [RouterOutlet, CommonModule, LoaderOverlayComponent, ToastContainerComponent, WalkthroughComponent],
   templateUrl: './app.component.html',
-  standalone: true,
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
@@ -63,6 +62,13 @@ export class AppComponent implements OnInit {
   }
 
   #detectLanguage(): void {
-    this.#translate.use(this.#translate.getBrowserLang() || 'en').subscribe(noop)
+    const storedLang = localStorage.getItem('preferred-language');
+
+    const languageToUse = storedLang || this.#translate.getBrowserLang() || 'en';
+
+    const supportedLanguages = ['es', 'en'];
+    const finalLanguage = supportedLanguages.includes(languageToUse) ? languageToUse : 'en';
+
+    this.#translate.use(finalLanguage).subscribe(noop);
   }
 }

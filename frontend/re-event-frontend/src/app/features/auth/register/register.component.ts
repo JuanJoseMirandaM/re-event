@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, effect, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {TranslatePipe} from '@ngx-translate/core';
 import {passwordMatcherValidator} from '../../../utils/passwordMatcher.validator';
 import {AuthService} from '../../../core/services/auth.service';
 import {Router, RouterLink} from '@angular/router';
@@ -9,7 +10,7 @@ import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

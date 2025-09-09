@@ -17,7 +17,6 @@ export interface CreateEventData {
 
 @Component({
   selector: 'app-create-event',
-  standalone: true,
   imports: [FormsModule, SlidePanelComponent],
   templateUrl: './create-event.component.html',
   styleUrl: './create-event.component.scss',

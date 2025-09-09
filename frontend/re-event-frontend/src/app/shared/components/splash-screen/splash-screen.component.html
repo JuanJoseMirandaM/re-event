@@ -1,18 +1,20 @@
-<div class="splash-screen" [class.complete]="isComplete()" *ngIf="isVisible()">
-  <div class="splash-content">
-    <div class="logo-container" [class.show]="showLogo()">
-      <div class="logo">
-        <img src="/images/splash_icon.png" alt="Kinua Logo" class="logo-image">
+@if (isVisible()) {
+  <div class="splash-screen" [class.complete]="isComplete()">
+    <div class="splash-content">
+      <div class="logo-container" [class.show]="showLogo()">
+        <div class="logo">
+          <img src="/images/splash_icon.png" alt="Kinua Logo" class="logo-image">
+        </div>
+      </div>
+
+      <div class="welcome-text" [class.show]="showText()">
+        <p class="text-3xl">{{ 'splash.title' | translate }}</p>
+        <p class="text-base">{{ 'splash.subtitle' | translate }}</p>
+      </div>
+
+      <div class="spinner-container" [class.show]="showProgress()">
+        <div class="spinner spinner--md"></div>
       </div>
     </div>
-
-    <div class="welcome-text" [class.show]="showText()">
-      <p class="text-3xl">Kinua</p>
-      <p class="text-base">AWS Community Day Bolivia</p>
-    </div>
-
-    <div class="spinner-container" [class.show]="showProgress()">
-      <div class="spinner spinner--md"></div>
-    </div>
   </div>
-</div>
+}

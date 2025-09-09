@@ -3,12 +3,14 @@ import {map} from 'rxjs';
 import {toSignal} from '@angular/core/rxjs-interop';
 import QRCode from 'qrcode';
 import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
+import {TranslatePipe} from '@ngx-translate/core';
 import {UserStoreFacade} from '../../core/store/facades/user-store.facade';
 
 @Component({
   selector: 'app-my-qr',
   imports: [
-    CdkCopyToClipboard
+    CdkCopyToClipboard,
+    TranslatePipe
   ],
   templateUrl: './my-qr.component.html',
   styleUrl: './my-qr.component.scss',

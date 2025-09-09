@@ -3,6 +3,7 @@ import {Html5Qrcode} from 'html5-qrcode';
 import {fromPromise} from 'rxjs/internal/observable/innerFrom';
 import {catchError, filter, from, take, timer} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {TranslatePipe} from '@ngx-translate/core';
 import {PointsService} from '../../../core/services/points.service';
 import {FooterService} from '../../../core/services/footer.service';
 import {Location} from '@angular/common';
@@ -18,7 +19,7 @@ interface CameraDevice {
 
 @Component({
   selector: 'app-qr-scanner',
-  imports: [ConfettiModalComponent],
+  imports: [ConfettiModalComponent, TranslatePipe],
   templateUrl: './qr-scanner.component.html',
   styleUrl: './qr-scanner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,7 +104,10 @@ export default class QrScannerComponent implements AfterViewInit, OnDestroy {
         (errorMessage) => this.#onError(errorMessage)
       )
     ).pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({error: (err) => console.error('Error init html5QRCode', err), complete: () => this.#loaderService.hide()});
+      .subscribe({
+        error: (err) => console.error('Error init html5QRCode', err),
+        complete: () => this.#loaderService.hide()
+      });
   }
 
   async switchCamera() {

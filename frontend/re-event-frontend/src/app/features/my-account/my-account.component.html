@@ -39,16 +39,16 @@
     }
 
     <div class="form-group">
-      <label for="name" class="form-label">Nombre</label>
+      <label for="name" class="form-label">{{ 'profile.nameLabel' | translate }}</label>
       @if (isEditing()) {
         <input type="text" id="name" class="form-input" formControlName="name">
         @if (formControls.name.invalid && formControls.name.touched) {
           <small class="re-error-message">
             @if (formControls.name.errors?.['required']) {
-              Name is required
+              {{ 'profile.nameRequired' | translate }}
             }
             @if (formControls.name.errors?.['minlength']) {
-              Name must be at least 2 characters
+              {{ 'profile.nameMinLength' | translate }}
             }
           </small>
         }
@@ -58,16 +58,16 @@
     </div>
 
     <div class="form-group">
-      <label for="email" class="form-label">Email</label>
+      <label for="email" class="form-label">{{ 'profile.emailLabel' | translate }}</label>
       @if (isEditing()) {
         <input type="email" id="email" class="form-input" formControlName="email">
         @if (formControls.email.invalid && formControls.email.touched) {
           <small class="re-error-message">
             @if (formControls.email.errors?.['required']) {
-              Email is required
+              {{ 'profile.emailRequired' | translate }}
             }
             @if (formControls.email.errors?.['email']) {
-              Please enter a valid email
+              {{ 'profile.emailInvalid' | translate }}
             }
           </small>
         }
@@ -77,22 +77,22 @@
     </div>
 
     <div class="form-group">
-      <label for="company" class="form-label">Empresa</label>
+      <label for="company" class="form-label">{{ 'profile.companyLabel' | translate }}</label>
       @if (isEditing()) {
         <input type="text" id="company" class="form-input" formControlName="company">
       } @else {
-        <input type="text" id="company" class="form-input" [value]="currentUser.company || 'Not specified'" readonly>
+        <input type="text" id="company" class="form-input" [value]="currentUser.company || ('profile.notSpecified' | translate)" readonly>
       }
     </div>
 
     <div class="form-group">
-      <label for="phoneNumber" class="form-label">Celular</label>
+      <label for="phoneNumber" class="form-label">{{ 'profile.phoneLabel' | translate }}</label>
       @if (isEditing()) {
         <input type="tel" id="phoneNumber" class="form-input" formControlName="phoneNumber">
         @if (formControls.phoneNumber.invalid && formControls.phoneNumber.touched) {
           <small class="re-error-message">
             @if (formControls.phoneNumber.errors?.['pattern']) {
-              Please enter a valid phone number (e.g., +59170112241)
+              {{ 'profile.phoneInvalid' | translate }}
             }
           </small>
         }
@@ -103,21 +103,21 @@
     </div>
 
     <div class="form-group">
-      <label for="role" class="form-label">Rol</label>
+      <label for="role" class="form-label">{{ 'profile.roleLabel' | translate }}</label>
       <input type="text" id="role" class="form-input" [value]="currentUser.role || ''" readonly>
     </div>
 
     <div class="form-group">
-      <label for="points" class="form-label">Puntos</label>
+      <label for="points" class="form-label">{{ 'profile.pointsLabel' | translate }}</label>
       <input type="text" id="points" class="form-input" [value]="currentUser.points.toString() || '0'" readonly>
     </div>
   </form>
 
   <div class="flex flex--col gap-2 p-6 rounded-md bg-primary">
-    <span class="text-lg font-medium py-2">Configuraciones</span>
-    <button class="btn btn--secondary" (click)="openVerificationPanel()">Acreditacion</button>
-    <button class="btn btn--secondary">Cambiar contraseña</button>
-    <button class="btn re-error-btn" (click)="logout()">Salir</button>
+    <span class="text-lg font-medium py-2">{{ 'profile.settings' | translate }}</span>
+    <button class="btn btn--secondary" (click)="openVerificationPanel()">{{ 'profile.accreditation' | translate }}</button>
+    <button class="btn btn--secondary">{{ 'profile.changePassword' | translate }}</button>
+    <button class="btn re-error-btn" (click)="logout()">{{ 'profile.logout' | translate }}</button>
   </div>
 
   <app-verification-panel
@@ -126,6 +126,6 @@
   </app-verification-panel>
 } @else {
   <div class="re-error flex justify-center p-2">
-    <span>Error loading user profile</span>
+    <span>{{ 'profile.loadError' | translate }}</span>
   </div>
 }

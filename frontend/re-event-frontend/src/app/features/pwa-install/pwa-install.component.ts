@@ -1,8 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageSelectorComponent} from '../../shared/components/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-pwa-install',
-  standalone: true,
+  imports: [TranslatePipe, LanguageSelectorComponent],
   templateUrl: "./pwa-install.component.html",
   styleUrls: ['./pwa-install.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

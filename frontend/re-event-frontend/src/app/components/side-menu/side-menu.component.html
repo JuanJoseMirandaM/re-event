@@ -6,11 +6,11 @@
        class="re-side-menu"
        [class.re-side-menu--open]="isMenuOpen()"
        role="region"
-       aria-label="Menú principal">
+       [attr.aria-label]="'menu.mainMenu' | translate">
   <div class="re-side-menu__header">
-    <span class="re-txt-bold">Menú</span>
+    <span class="re-txt-bold">{{ 'menu.title' | translate }}</span>
 
-    <button class="re-btn" (click)="closeMenu()" aria-label="Close Menu">
+    <button class="re-btn" (click)="closeMenu()" [attr.aria-label]="'menu.close' | translate">
       <span class="re-icon-close re-big-font"></span>
     </button>
   </div>

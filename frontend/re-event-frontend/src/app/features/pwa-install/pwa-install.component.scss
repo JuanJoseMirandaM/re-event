@@ -5,6 +5,14 @@
   justify-content: center;
   background: linear-gradient(135deg, var(--primary-lilac-light) 0%, var(--primary-lilac) 100%);
   padding: var(--space-4);
+  position: relative;
+}
+
+.language-selector-container {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: var(--z-dropdown);
 }
 
 .install-content {

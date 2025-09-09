@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject, input, output, signal} from '@angular/core';
 import {RouterLink} from "@angular/router";
+import {TranslatePipe} from '@ngx-translate/core';
 import {VersionService} from "../../core/services/version.service";
 import {NavItemVisibleByRoleDirective} from '../../shared/directives/nav-item-visible-by-role.directive';
 import {NavItems} from '../../interfaces/nav-items.interface';
@@ -9,7 +10,8 @@ import {UserRole} from '../../core/services/user.service';
   selector: 'app-side-menu',
   imports: [
     RouterLink,
-    NavItemVisibleByRoleDirective
+    NavItemVisibleByRoleDirective,
+    TranslatePipe
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',

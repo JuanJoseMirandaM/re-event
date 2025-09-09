@@ -2,11 +2,11 @@
 
 <div class="qr-overlay qr-header" role="banner">
   <button type="button" class="qr-close-btn" aria-label="Close scanner" (click)="onClose()">✕</button>
-  <h1 class="qr-title" aria-level="1">Scan QR</h1>
+  <h1 class="qr-title" aria-level="1">{{ 'qr.scanTitle' | translate }}</h1>
 </div>
 
 <div class="qr-overlay qr-footer" role="contentinfo">
-  <button type="button" class="qr-manual-btn" (click)="onEnterCode()">Enter Code Manually</button>
+  <button type="button" class="qr-manual-btn" (click)="onEnterCode()">{{ 'qr.enterManually' | translate }}</button>
 </div>
 
 @if (showConfetti()) {

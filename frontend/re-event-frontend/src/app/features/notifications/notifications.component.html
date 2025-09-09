@@ -1,10 +1,9 @@
 @if (isLoading()) {
   <div class="flex flex--col gap-2 items-center justify-center p-2">
     <div class="spinner spinner--md"></div>
-    <span>Cargando notificaciones...</span>
+    <span>{{ 'notifications.loading' | translate }}</span>
   </div>
 } @else {
-  <!-- Lista de notificaciones agrupadas por fecha -->
   <div class="flex flex--col gap-2 bg-primary p-4">
     @for (group of groupedNotifications(); track group.date) {
       <span class="text-base">{{ group.notifications[0].createdAt | relativeDate }}</span>
@@ -16,7 +15,7 @@
       }
     } @empty {
       <div class="no-notifications">
-        <p>No hay notificaciones</p>
+        <p>{{ 'notifications.noNotifications' | translate }}</p>
       </div>
     }
   </div>

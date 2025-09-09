@@ -1,53 +1,53 @@
 <div class="flex flex--col gap-2 my-8">
-  <p class="text-2xl font-semibold text-center">Crear cuenta</p>
-  <p class="text-lg text-center">Vive una experiencia unica</p>
+  <p class="text-2xl font-semibold text-center">{{ 'auth.register.title' | translate }}</p>
+  <p class="text-lg text-center">{{ 'auth.register.subtitle' | translate }}</p>
 </div>
 
 <form class="flex flex--col gap-4" [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
   <div>
     <div class="form-group">
-      <label for="name" class="form-label">Name</label>
-      <input id="name" class="form-input" placeholder="Enter Your Name" formControlName="name" />
+      <label for="name" class="form-label">{{ 'auth.register.nameLabel' | translate }}</label>
+      <input id="name" class="form-input" [placeholder]="'auth.register.namePlaceholder' | translate" formControlName="name" />
     </div>
 
     <div class="form-error">
-      @if (rf.name.touched && rf.name.invalid) {<small class="error-text">Name is required.</small>}
+      @if (rf.name.touched && rf.name.invalid) {<small class="error-text">{{ 'auth.register.nameRequired' | translate }}</small>}
     </div>
   </div>
 
   <div>
     <div class="form-group">
-      <label for="email" class="form-label">Email</label>
-      <input id="email" class="form-input" placeholder="Enter your email" formControlName="email" />
+      <label for="email" class="form-label">{{ 'auth.register.emailLabel' | translate }}</label>
+      <input id="email" class="form-input" [placeholder]="'auth.register.emailPlaceholder' | translate" formControlName="email" />
     </div>
 
     <div class="form-error">
-      @if (rf.email.touched && rf.email.errors?.['required']) {<small class="error-text">Email is required.</small>}
-      @if (rf.email.touched && rf.email.errors?.['email']) {<small class="error-text">Please enter a valid email.</small>}
+      @if (rf.email.touched && rf.email.errors?.['required']) {<small class="error-text">{{ 'auth.register.emailRequired' | translate }}</small>}
+      @if (rf.email.touched && rf.email.errors?.['email']) {<small class="error-text">{{ 'auth.register.emailInvalid' | translate }}</small>}
     </div>
   </div>
 
   <div>
     <div class="form-group">
-      <label for="password" class="form-label">Password</label>
-      <input id="password" type="password" class="form-input" placeholder="Enter your password" formControlName="password" />
+      <label for="password" class="form-label">{{ 'auth.register.passwordLabel' | translate }}</label>
+      <input id="password" type="password" class="form-input" [placeholder]="'auth.register.passwordPlaceholder' | translate" formControlName="password" />
     </div>
 
     <div class="form-error">
-      @if (rf.password.touched && rf.password.errors?.['required']) {<small class="error-text">Password is required.</small>}
-      @if (rf.password.touched && rf.password.errors?.['minlength']) {<small class="error-text">Password must be at least 6 characters.</small>}
+      @if (rf.password.touched && rf.password.errors?.['required']) {<small class="error-text">{{ 'auth.register.passwordRequired' | translate }}</small>}
+      @if (rf.password.touched && rf.password.errors?.['minlength']) {<small class="error-text">{{ 'auth.register.passwordMinLength' | translate }}</small>}
     </div>
   </div>
 
   <div>
     <div class="form-group">
-      <label for="conf-password" class="form-label">Confirm Password</label>
-      <input id="conf-password" type="password" class="form-input" placeholder="Confirm your password" formControlName="confirmPassword" />
+      <label for="conf-password" class="form-label">{{ 'auth.register.confirmPasswordLabel' | translate }}</label>
+      <input id="conf-password" type="password" class="form-input" [placeholder]="'auth.register.confirmPasswordPlaceholder' | translate" formControlName="confirmPassword" />
     </div>
 
     <div class="form-error">
-      @if (rf.confirmPassword.touched && rf.confirmPassword.errors?.['required']) {<small class="error-text">Please confirm your password.</small>}
-      @if (registerForm.touched && registerForm.errors?.['passwordMismatch']) {<small class="error-text">Passwords do not match.</small>}
+      @if (rf.confirmPassword.touched && rf.confirmPassword.errors?.['required']) {<small class="error-text">{{ 'auth.register.confirmPasswordRequired' | translate }}</small>}
+      @if (registerForm.touched && registerForm.errors?.['passwordMismatch']) {<small class="error-text">{{ 'auth.register.passwordMismatch' | translate }}</small>}
     </div>
   </div>
 
@@ -58,10 +58,10 @@
 }
 
   <button class="btn btn--primary" [disabled]="registerForm.invalid || signUpState().status === 'loading'">
-    {{ signUpState().status === 'loading' ? 'Creating Account...' : 'Create Account' }}
+    {{ signUpState().status === 'loading' ? ('auth.register.creatingAccount' | translate) : ('auth.register.createAccount' | translate) }}
   </button>
 
   <div class="re-txt-center re-mt-1-6">
-    <a routerLink="/login">Already have an account? Log in</a>
+    <a routerLink="/login">{{ 'auth.register.hasAccount' | translate }}</a>
   </div>
 </form>

@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
 import {AuthService} from "../../../core/services/auth.service";
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {catchError, finalize, map, of, switchMap} from 'rxjs';
@@ -12,6 +13,7 @@ import {PwaInstallService} from '../../../core/services/pwa-install.service';
   imports: [
     ReactiveFormsModule,
     RouterLink,
+    TranslatePipe,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

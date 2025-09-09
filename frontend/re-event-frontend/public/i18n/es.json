@@ -1,4 +1,89 @@
 {
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "welcome": "¡Bienvenido al AWS Community Day!",
+      "emailPlaceholder": "Email",
+      "emailRequired": "El email es requerido.",
+      "emailInvalid": "Email inválido",
+      "passwordPlaceholder": "Contraseña",
+      "passwordRequired": "La contraseña es requerida.",
+      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres.",
+      "signingIn": "Iniciando sesión...",
+      "signIn": "Iniciar Sesión",
+      "connectingGoogle": "Conectando con Google...",
+      "continueGoogle": "Continuar con Google",
+      "noAccount": "¿No tienes cuenta?",
+      "signUp": "Registrarse",
+      "installIOS": "Instalar App (iOS)",
+      "installApp": "Instalar App"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Vive una experiencia única",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Ingresa tu nombre",
+      "nameRequired": "El nombre es requerido.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Ingresa tu email",
+      "emailRequired": "El email es requerido.",
+      "emailInvalid": "Por favor ingresa un email válido.",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "passwordRequired": "La contraseña es requerida.",
+      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres.",
+      "confirmPasswordLabel": "Confirmar Contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu contraseña",
+      "confirmPasswordRequired": "Por favor confirma tu contraseña.",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "creatingAccount": "Creando cuenta...",
+      "createAccount": "Crear Cuenta",
+      "hasAccount": "¿Ya tienes cuenta? Inicia sesión"
+    },
+    "verify": {
+      "title": "Verificar tu correo",
+      "subtitle": "Enviamos un código de 6 dígitos a",
+      "codeLabel": "Código de verificación",
+      "codePlaceholder": "Ingresa el código de 6 dígitos",
+      "codeRequired": "El código es requerido.",
+      "codeLength": "El código debe tener 6 dígitos.",
+      "verifying": "Verificando...",
+      "continue": "Continuar",
+      "resendCode": "Reenviar código",
+      "backToLogin": "Volver al login"
+    }
+  },
+  "header": {
+    "title": "AWS Community Day",
+    "openMenu": "Abrir menú",
+    "notifications": "Ir a notificaciones"
+  },
+  "footer": {
+    "home": "Inicio",
+    "agenda": "Agenda",
+    "gallery": "Galería",
+    "account": "Cuenta"
+  },
+  "menu": {
+    "title": "Menú",
+    "close": "Cerrar menú",
+    "mainMenu": "Menú principal"
+  },
+  "home": {
+    "welcomeTitle": "AWS Community Day Bolivia",
+    "points": "Puntos",
+    "upcomingEvents": "Próximos Eventos",
+    "live": "En vivo",
+    "noEvents": "No hay eventos próximos disponibles",
+    "quickActions": "Acciones Rápidas",
+    "scanQR": "📱 Escanear QR",
+    "claimPoints": "⭐ Reclamar Puntos",
+    "tipOfDay": "Consejo AWS del Día",
+    "tipTitle": "Optimización de Costos",
+    "tipDescription": "Usa AWS Cost Explorer para rastrear y optimizar tu gasto en la nube. Configura alertas de facturación para mantenerte dentro del presupuesto.",
+    "tagCost": "Costo",
+    "tagOptimization": "Optimización"
+  },
   "agenda": {
     "icon": "Agenda",
     "proxEvents": "Próximos eventos",
@@ -16,11 +101,150 @@
     "4": "Buena",
     "5": "Excelente"
   },
+  "points": {
+    "totalPoints": "Total Puntos",
+    "loading": "Cargando puntos...",
+    "history": "Historial de puntos",
+    "noPoints": "No hay puntos",
+    "loadMore": "Cargar más",
+    "points": "puntos",
+    "claim": {
+      "title": "Ingresar Código",
+      "codePlaceholder": "Ingresa el código aquí...",
+      "scanQR": "Escanear código QR",
+      "redeem": "Canjear Puntos"
+    },
+    "redeem": {
+      "title": "Canjear Puntos de Usuario",
+      "userIdLabel": "UserID del Asistente",
+      "userIdPlaceholder": "Escribe o escanea el UserID",
+      "pointsLabel": "Puntos a canjear",
+      "pointsPlaceholder": "Escribe o selecciona una cantidad",
+      "descriptionLabel": "Descripción del canje",
+      "descriptionPlaceholder": "Ej: Canje por camiseta talla M",
+      "execute": "Realizar Canje"
+    }
+  },
+  "qr": {
+    "scanTitle": "Escanear QR",
+    "enterManually": "Ingresar Código Manualmente",
+    "enterUserIdManually": "Ingresar UserID Manualmente",
+    "placeholder": "Marcador de posición del escáner QR",
+    "myQr": {
+      "placeholder": "Tu código QR aparecerá aquí",
+      "userId": "Mi ID de usuario:"
+    }
+  },
   "profile": {
     "title": "Mi Perfil",
     "loadingProfile": "Cargando perfil",
     "edit": "Editar",
     "save": "Guardar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "nameLabel": "Nombre",
+    "nameRequired": "El nombre es requerido",
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "emailLabel": "Email",
+    "emailRequired": "El email es requerido",
+    "emailInvalid": "Por favor ingresa un email válido",
+    "companyLabel": "Empresa",
+    "notSpecified": "No especificado",
+    "phoneLabel": "Celular",
+    "phoneInvalid": "Por favor ingresa un número de teléfono válido (ej: +59170112241)",
+    "roleLabel": "Rol",
+    "pointsLabel": "Puntos",
+    "settings": "Configuraciones",
+    "accreditation": "Acreditación",
+    "changePassword": "Cambiar contraseña",
+    "logout": "Salir",
+    "loadError": "Error al cargar el perfil del usuario"
+  },
+  "verification": {
+    "title": "Acreditación",
+    "subtitle": "Verificar Código de Acreditación",
+    "description": "Ingresa el código de 6 caracteres que recibiste para acreditar tu usuario en el AWS Community Day Bolivia 2025.",
+    "codeLabel": "Código de Verificación *",
+    "codeHelp": "El código debe tener exactamente 6 caracteres",
+    "verifying": "Verificando...",
+    "verify": "Verificar Código",
+    "whereToFind": "¿Dónde encuentro mi código?",
+    "physicalTicket": "En tu entrada física del evento",
+    "contactOrganizers": "Contacta a los organizadores si no lo tienes"
+  },
+  "notifications": {
+    "loading": "Cargando notificaciones...",
+    "noNotifications": "No hay notificaciones"
+  },
+  "admin": {
+    "createEvent": {
+      "title": "Crear Nuevo Evento",
+      "titleLabel": "Título del Evento *",
+      "titlePlaceholder": "Ej: AWS Community Day Bolivia 2025",
+      "descriptionLabel": "Descripción *",
+      "descriptionPlaceholder": "Describe el evento, qué aprenderás, qué esperar...",
+      "startDateLabel": "Fecha de Inicio *",
+      "endDateLabel": "Fecha de Fin *",
+      "durationLabel": "Duración del Evento",
+      "durationHelp": "Se calcula automáticamente entre las fechas seleccionadas",
+      "locationLabel": "Ubicación *",
+      "locationPlaceholder": "Ej: Universidad Católica Boliviana, La Paz",
+      "locationLinkLabel": "Link de Ubicación (opcional)",
+      "speakersLabel": "Ponentes (opcional)",
+      "speakersPlaceholder": "Juan Pérez, María García, Carlos López",
+      "speakersHelp": "Separa múltiples ponentes con comas",
+      "tagsLabel": "Etiquetas (opcional)",
+      "tagsPlaceholder": "AWS, Cloud, Networking, Workshop",
+      "tagsHelp": "Separa múltiples etiquetas con comas",
+      "create": "Crear Evento"
+    },
+    "createNotification": {
+      "title": "Crear Notificación",
+      "templateLabel": "Template de Notificación",
+      "customTemplate": "Crear desde cero",
+      "templateHelp": "Selecciona un template para llenar automáticamente los campos",
+      "titleLabel": "Título *",
+      "titlePlaceholder": "Título de la notificación",
+      "messageLabel": "Mensaje *",
+      "messagePlaceholder": "Mensaje detallado de la notificación",
+      "typeLabel": "Tipo de Notificación",
+      "typeEvent": "Evento",
+      "typeAnnouncement": "Anuncio",
+      "typeReward": "Recompensa",
+      "audienceLabel": "Audiencia",
+      "audienceAll": "Todos los usuarios",
+      "imageLabel": "URL de Imagen (Opcional)",
+      "imageHelp": "URL de una imagen para la notificación",
+      "actionTypeLabel": "Tipo de Acción",
+      "actionScreen": "Pantalla de la app",
+      "actionLink": "Enlace externo",
+      "appRoute": "Ruta de la App",
+      "linkUrl": "URL del Enlace",
+      "creating": "Creando...",
+      "create": "Crear Notificación"
+    }
+  },
+  "walkthrough": {
+    "goToStep": "Ir al paso",
+    "skip": "Saltar",
+    "continue": "Continuar",
+    "start": "Comenzar"
+  },
+  "splash": {
+    "title": "Re-Event",
+    "subtitle": "AWS Community Day Bolivia"
+  },
+  "pwa": {
+    "title": "Re-Event",
+    "subtitle": "Instala la aplicación para una mejor experiencia",
+    "installing": "Instalando...",
+    "install": "Instalar App",
+    "iosTitle": "Para instalar en iOS:",
+    "iosStep1": "Toca el botón \"Compartir\" ⎋",
+    "iosStep2": "Selecciona \"Añadir a pantalla de inicio\"",
+    "iosStep3": "Toca \"Añadir\"",
+    "alreadyInstalled": "¡La aplicación ya está instalada!"
+  },
+  "common": {
+    "loading": "Cargando"
   }
 }

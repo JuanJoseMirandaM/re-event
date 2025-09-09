@@ -13,7 +13,6 @@ export interface RatingData {
 
 @Component({
   selector: 'app-rating-panel',
-  standalone: true,
   imports: [FormsModule, SlidePanelComponent, TranslatePipe],
   templateUrl: './rating-panel.component.html',
   styleUrl: './rating-panel.component.scss',

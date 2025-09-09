@@ -23,7 +23,6 @@ export interface NotificationTemplate {
 
 @Component({
   selector: 'app-create-notification',
-  standalone: true,
   imports: [FormsModule, SlidePanelComponent],
   templateUrl: './create-notification.component.html',
   styleUrl: './create-notification.component.scss',
@@ -149,7 +148,7 @@ export class CreateNotificationComponent {
   onTemplateSelect(event: Event) {
     const target = event.target as HTMLSelectElement;
     const templateId = target.value;
-    
+
     if (templateId === 'custom') {
       this.selectedTemplate.set(null);
       this.resetForm();
@@ -169,7 +168,7 @@ export class CreateNotificationComponent {
     if (this.title().trim() && this.body().trim()) {
       // Activar estado de loading
       this.isLoading.set(true);
-      
+
       const notificationData: NotificationRequest = {
         title: this.title().trim(),
         body: this.body().trim(),

@@ -2,8 +2,8 @@ import {ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, si
 import {NotificationCardComponent} from '../../components/notification-card/notification-card.component';
 import {NotificationResponse, NotificationsService} from '../../core/services/notifications.service';
 import {RelativeDatePipe} from "../../pipes";
+import {TranslatePipe} from '@ngx-translate/core';
 import {UserService} from "../../core/services/user.service";
-import {Event} from "../../core/services/events.service";
 
 interface GroupedNotifications {
   date: string;
@@ -14,7 +14,8 @@ interface GroupedNotifications {
   selector: 'app-notifications',
   imports: [
     NotificationCardComponent,
-    RelativeDatePipe
+    RelativeDatePipe,
+    TranslatePipe
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
@@ -72,7 +73,7 @@ export default class NotificationsComponent implements OnInit {
 
   async ngOnInit() {
     this.isLoading.set(true);
-    
+
     this.#notificationsService.getNotifications().subscribe({
       next: (response) => {
         this.notifications.set(response.items);

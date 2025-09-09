@@ -1,4 +1,89 @@
 {
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "welcome": "Welcome to AWS Community Day!",
+      "emailPlaceholder": "Email",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Invalid Email",
+      "passwordPlaceholder": "Password",
+      "passwordRequired": "Password is required.",
+      "passwordMinLength": "Password must be at least 6 characters.",
+      "signingIn": "Signing In...",
+      "signIn": "Sign In",
+      "connectingGoogle": "Connecting with Google...",
+      "continueGoogle": "Continue with Google",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "installIOS": "Install App (iOS)",
+      "installApp": "Install App"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Live a unique experience",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter Your Name",
+      "nameRequired": "Name is required.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Please enter a valid email.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "passwordRequired": "Password is required.",
+      "passwordMinLength": "Password must be at least 6 characters.",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "confirmPasswordRequired": "Please confirm your password.",
+      "passwordMismatch": "Passwords do not match.",
+      "creatingAccount": "Creating Account...",
+      "createAccount": "Create Account",
+      "hasAccount": "Already have an account? Log in"
+    },
+    "verify": {
+      "title": "Verify your email",
+      "subtitle": "We sent a 6-digit code to",
+      "codeLabel": "Verification code",
+      "codePlaceholder": "Enter 6-digit code",
+      "codeRequired": "Code is required.",
+      "codeLength": "Code must be 6 digits.",
+      "verifying": "Verifying...",
+      "continue": "Continue",
+      "resendCode": "Resend code",
+      "backToLogin": "Back to login"
+    }
+  },
+  "header": {
+    "title": "AWS Community Day",
+    "openMenu": "Open menu",
+    "notifications": "Go to notifications"
+  },
+  "footer": {
+    "home": "Home",
+    "agenda": "Agenda",
+    "gallery": "Gallery",
+    "account": "Account"
+  },
+  "menu": {
+    "title": "Menu",
+    "close": "Close Menu",
+    "mainMenu": "Main menu"
+  },
+  "home": {
+    "welcomeTitle": "AWS Community Day Bolivia",
+    "points": "Points",
+    "upcomingEvents": "Upcoming Events",
+    "live": "Live",
+    "noEvents": "No upcoming events available",
+    "quickActions": "Quick Actions",
+    "scanQR": "📱 Scan QR",
+    "claimPoints": "⭐ Claim Points",
+    "tipOfDay": "AWS Tip of the Day",
+    "tipTitle": "Cost Optimization",
+    "tipDescription": "Use AWS Cost Explorer to track and optimize your cloud spending. Set up billing alerts to stay within budget.",
+    "tagCost": "Cost",
+    "tagOptimization": "Optimization"
+  },
   "agenda": {
     "icon": "Agenda",
     "proxEvents": "Upcoming",
@@ -16,11 +101,150 @@
     "4": "Good",
     "5": "Excellent"
   },
+  "points": {
+    "totalPoints": "Total Points",
+    "loading": "Loading points...",
+    "history": "Points history",
+    "noPoints": "No points",
+    "loadMore": "Load more",
+    "points": "points",
+    "claim": {
+      "title": "Enter Code",
+      "codePlaceholder": "Enter the code here...",
+      "scanQR": "Scan QR code",
+      "redeem": "Redeem Points"
+    },
+    "redeem": {
+      "title": "Redeem User Points",
+      "userIdLabel": "Attendee UserID",
+      "userIdPlaceholder": "Type or scan the UserID",
+      "pointsLabel": "Points to redeem",
+      "pointsPlaceholder": "Type or select an amount",
+      "descriptionLabel": "Redemption description",
+      "descriptionPlaceholder": "Ex: Redemption for M-size t-shirt",
+      "execute": "Process Redemption"
+    }
+  },
+  "qr": {
+    "scanTitle": "Scan QR",
+    "enterManually": "Enter Code Manually",
+    "enterUserIdManually": "Enter UserId Manually",
+    "placeholder": "QR Scanner Placeholder",
+    "myQr": {
+      "placeholder": "Your QR code will appear here",
+      "userId": "My User Id:"
+    }
+  },
   "profile": {
-    "title": "Profile",
+    "title": "My Profile",
     "loadingProfile": "Loading Profile",
     "edit": "Edit",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "nameLabel": "Name",
+    "nameRequired": "Name is required",
+    "nameMinLength": "Name must be at least 2 characters",
+    "emailLabel": "Email",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email",
+    "companyLabel": "Company",
+    "notSpecified": "Not specified",
+    "phoneLabel": "Phone",
+    "phoneInvalid": "Please enter a valid phone number (e.g., +59170112241)",
+    "roleLabel": "Role",
+    "pointsLabel": "Points",
+    "settings": "Settings",
+    "accreditation": "Accreditation",
+    "changePassword": "Change password",
+    "logout": "Log out",
+    "loadError": "Error loading user profile"
+  },
+  "verification": {
+    "title": "Accreditation",
+    "subtitle": "Verify Accreditation Code",
+    "description": "Enter the 6-character code you received to accredit your user for AWS Community Day Bolivia 2025.",
+    "codeLabel": "Verification Code *",
+    "codeHelp": "The code must be exactly 6 characters",
+    "verifying": "Verifying...",
+    "verify": "Verify Code",
+    "whereToFind": "Where do I find my code?",
+    "physicalTicket": "On your physical event ticket",
+    "contactOrganizers": "Contact organizers if you don't have it"
+  },
+  "notifications": {
+    "loading": "Loading notifications...",
+    "noNotifications": "No notifications"
+  },
+  "admin": {
+    "createEvent": {
+      "title": "Create New Event",
+      "titleLabel": "Event Title *",
+      "titlePlaceholder": "Ex: AWS Community Day Bolivia 2025",
+      "descriptionLabel": "Description *",
+      "descriptionPlaceholder": "Describe the event, what you'll learn, what to expect...",
+      "startDateLabel": "Start Date *",
+      "endDateLabel": "End Date *",
+      "durationLabel": "Event Duration",
+      "durationHelp": "Automatically calculated between selected dates",
+      "locationLabel": "Location *",
+      "locationPlaceholder": "Ex: Universidad Católica Boliviana, La Paz",
+      "locationLinkLabel": "Location Link (optional)",
+      "speakersLabel": "Speakers (optional)",
+      "speakersPlaceholder": "Juan Pérez, María García, Carlos López",
+      "speakersHelp": "Separate multiple speakers with commas",
+      "tagsLabel": "Tags (optional)",
+      "tagsPlaceholder": "AWS, Cloud, Networking, Workshop",
+      "tagsHelp": "Separate multiple tags with commas",
+      "create": "Create Event"
+    },
+    "createNotification": {
+      "title": "Create Notification",
+      "templateLabel": "Notification Template",
+      "customTemplate": "Create from scratch",
+      "templateHelp": "Select a template to automatically fill the fields",
+      "titleLabel": "Title *",
+      "titlePlaceholder": "Notification title",
+      "messageLabel": "Message *",
+      "messagePlaceholder": "Detailed notification message",
+      "typeLabel": "Notification Type",
+      "typeEvent": "Event",
+      "typeAnnouncement": "Announcement",
+      "typeReward": "Reward",
+      "audienceLabel": "Audience",
+      "audienceAll": "All users",
+      "imageLabel": "Image URL (Optional)",
+      "imageHelp": "URL of an image for the notification",
+      "actionTypeLabel": "Action Type",
+      "actionScreen": "App screen",
+      "actionLink": "External link",
+      "appRoute": "App Route",
+      "linkUrl": "Link URL",
+      "creating": "Creating...",
+      "create": "Create Notification"
+    }
+  },
+  "walkthrough": {
+    "goToStep": "Go to step",
+    "skip": "Skip",
+    "continue": "Continue",
+    "start": "Start"
+  },
+  "splash": {
+    "title": "Re-Event",
+    "subtitle": "AWS Community Day Bolivia"
+  },
+  "pwa": {
+    "title": "Re-Event",
+    "subtitle": "Install the app for a better experience",
+    "installing": "Installing...",
+    "install": "Install App",
+    "iosTitle": "To install on iOS:",
+    "iosStep1": "Tap the \"Share\" button ⎋",
+    "iosStep2": "Select \"Add to Home Screen\"",
+    "iosStep3": "Tap \"Add\"",
+    "alreadyInstalled": "App is already installed!"
+  },
+  "common": {
+    "loading": "Loading"
   }
 }

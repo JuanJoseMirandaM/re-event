@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
+import {TranslatePipe} from '@ngx-translate/core';
 import {PointsService} from '../../core/services/points.service';
 import {ActivatedRoute} from "@angular/router";
 import {ToastService} from '../../core/services/toast.service';
@@ -9,7 +10,7 @@ const REDEEM_DATA_KEY = 're_event_redeem_data';
 
 @Component({
   selector: 'app-redeem-points',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './redeem-points.component.html',
   styleUrl: './redeem-points.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

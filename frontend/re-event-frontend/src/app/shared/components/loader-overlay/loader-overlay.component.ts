@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LoaderService } from '../../../core/services/loader.service';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LoaderService} from '../../../core/services/loader.service';
 
 @Component({
   selector: 'app-loader-overlay',
-  imports: [CommonModule],
+  imports: [TranslatePipe],
   templateUrl: './loader-overlay.component.html',
   styleUrl: './loader-overlay.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

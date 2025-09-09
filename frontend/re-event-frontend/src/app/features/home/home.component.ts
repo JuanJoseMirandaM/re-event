@@ -4,6 +4,7 @@ import {EventsStoreFacade} from '../../core/store/facades/events-store.facade';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {RouterLink} from '@angular/router';
 import {DatePipe, SlicePipe} from '@angular/common';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,8 @@ import {DatePipe, SlicePipe} from '@angular/common';
   imports: [
     RouterLink,
     DatePipe,
-    SlicePipe
+    SlicePipe,
+    TranslatePipe
   ]
 })
 export default class HomeComponent {

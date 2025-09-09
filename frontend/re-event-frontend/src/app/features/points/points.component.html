@@ -1,22 +1,22 @@
 <div class="flex flex--col items-center gap-1 bg-primary rounded-md w-full p-4">
   <span class="total-points">{{ points() }}</span>
-  <span class="text-base font-normal">Total Puntos</span>
+  <span class="text-base font-normal">{{ 'points.totalPoints' | translate }}</span>
 </div>
 
 @if (isLoading() && itemPoints().length === 0) {
   <div class="flex flex--col gap-2 items-center justify-center p-2">
     <div class="spinner spinner--md"></div>
-    <span>Cargando puntos...</span>
+    <span>{{ 'points.loading' | translate }}</span>
   </div>
 } @else {
   <div class="flex flex--col gap-4 bg-primary rounded w-full p-4">
-    <span class="text-base font-medium">Historial de puntos</span>
+    <span class="text-base font-medium">{{ 'points.history' | translate }}</span>
 
     <div class="flex flex--col gap-4">
       @for (item of itemPoints(); track item.code) {
         <app-points-card [pointsDetail]="item"></app-points-card>
       } @empty {
-        <p>No hay puntos</p>
+        <p>{{ 'points.noPoints' | translate }}</p>
       }
     </div>
 
@@ -25,7 +25,7 @@
         @if (isLoading()) {
           <div class="spinner spinner--sm"></div>
         } @else {
-          <span>Cargar más</span>
+          <span>{{ 'points.loadMore' | translate }}</span>
         }
       </button>
     }

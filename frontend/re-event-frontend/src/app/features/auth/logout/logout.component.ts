@@ -5,7 +5,6 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-logout',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="logout-container">
@@ -25,11 +24,11 @@ import { AuthService } from '../../../core/services/auth.service';
       min-height: 100vh;
       padding: 2rem;
     }
-    
+
     .loading-spinner {
       text-align: center;
     }
-    
+
     .subtitle {
       font-size: 0.9rem;
       color: #666;

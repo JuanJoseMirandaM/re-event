@@ -1,5 +1,5 @@
 @if (loader.isLoading()) {
   <div class="overlay">
-    <div class="spinner" aria-label="Cargando" role="status"></div>
+    <div class="spinner" [attr.aria-label]="'common.loading' | translate" role="status"></div>
   </div>
 }

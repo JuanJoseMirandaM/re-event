@@ -2,11 +2,11 @@
   @if (userId()) {
     <canvas #myQrContentRef></canvas>
   } @else {
-    <p class="qr-placeholder">Your QR code will appear here</p>
+    <p class="qr-placeholder">{{ 'qr.myQr.placeholder' | translate }}</p>
   }
 </div>
 
-<p class="font-bold text-center">My User Id:
+<p class="font-bold text-center">{{ 'qr.myQr.userId' | translate }}
   <span class="block font-medium" [cdkCopyToClipboard]="userId()">
     {{ userId() }} <span class="material-symbols-outlined align-middle text-base">content_copy</span>
   </span>

@@ -3,6 +3,7 @@ import {Html5Qrcode} from 'html5-qrcode';
 import {fromPromise} from 'rxjs/internal/observable/innerFrom';
 import {catchError, filter, from, take, timer} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {TranslatePipe} from '@ngx-translate/core';
 import {FooterService} from '../../../core/services/footer.service';
 import {Router} from '@angular/router';
 import {LoaderService} from '../../../core/services/loader.service';
@@ -14,6 +15,7 @@ interface CameraDevice {
 
 @Component({
   selector: 'app-qr-redeem',
+  imports: [TranslatePipe],
   templateUrl: './qr-redeem.component.html',
   styleUrl: './qr-redeem.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

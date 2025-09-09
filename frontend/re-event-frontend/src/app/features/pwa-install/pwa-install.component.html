@@ -1,4 +1,7 @@
 <div class="install-container">
+  <div class="language-selector-container">
+    <app-language-selector></app-language-selector>
+  </div>
   <div class="install-content">
     <div class="logo-container">
       <img
@@ -8,8 +11,8 @@
       >
     </div>
 
-    <h1 class="title">Kinua</h1>
-    <p class="subtitle">Instala la aplicación para una mejor experiencia</p>
+    <h1 class="title">{{ 'pwa.title' | translate }}</h1>
+    <p class="subtitle">{{ 'pwa.subtitle' | translate }}</p>
 
     <button
       class="install-button"
@@ -18,24 +21,24 @@
       [disabled]="isInstalling()"
     >
       <span class="material-symbols-outlined">download</span>
-      {{ isInstalling() ? 'Instalando...' : 'Instalar App' }}
+      {{ isInstalling() ? ('pwa.installing' | translate) : ('pwa.install' | translate) }}
     </button>
 
     <div class="ios-instructions" [class.show]="showIOSInstructions()">
       <div class="instructions-header">
-        <span class="material-symbols-outlined">check</span>
-        <span>Para instalar en iOS:</span>
+        <span class="material-symbols-outlined">check_circle</span>
+        <span>{{ 'pwa.iosTitle' | translate }}</span>
       </div>
       <ol class="instructions-list">
-        <li>Toca el botón "Compartir" <span class="share-icon">⎋</span></li>
-        <li>Selecciona "Añadir a pantalla de inicio"</li>
-        <li>Toca "Añadir"</li>
+        <li>{{ 'pwa.iosStep1' | translate }}</li>
+        <li>{{ 'pwa.iosStep2' | translate }}</li>
+        <li>{{ 'pwa.iosStep3' | translate }}</li>
       </ol>
     </div>
 
     <div class="already-installed" [class.show]="isAlreadyInstalled()">
       <span class="material-symbols-outlined">check</span>
-      <span>¡La aplicación ya está instalada!</span>
+      <span>{{ 'pwa.alreadyInstalled' | translate }}</span>
     </div>
   </div>
 </div>

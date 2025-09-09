@@ -1,24 +1,24 @@
 <div class="flex flex--col gap-2 p-2">
-  <p class="text-xl text-center">Ingresar Codigo</p>
+  <p class="text-xl text-center">{{ 'points.claim.title' | translate }}</p>
 
   <div class="form-group">
     <input type="text"
            class="form-input"
            id="code"
-           placeholder="Ingresa el código aquí..."
+           [placeholder]="'points.claim.codePlaceholder' | translate"
            (keydown.enter)="submit(code.value)"
            #code>
     <button class="btn"
             (click)="goToQRScanner()"
             type="button"
-            title="Escanear código QR">
+            [title]="'points.claim.scanQR' | translate">
       <span class="material-symbols-outlined">qr_code_scanner</span>
     </button>
   </div>
 
   <button class="btn btn--primary"
           (click)="submit(code.value)">
-    Canjear Puntos
+    {{ 'points.claim.redeem' | translate }}
   </button>
 </div>
 

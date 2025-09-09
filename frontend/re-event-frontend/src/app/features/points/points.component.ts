@@ -2,12 +2,14 @@ import {ChangeDetectionStrategy, Component, computed, inject, OnInit, signal} fr
 import {PointsCardComponent} from '../../components/points-card/points-card.component';
 import {PointsHistoryResponse, PointsService} from '../../core/services/points.service';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {TranslatePipe} from '@ngx-translate/core';
 import {first} from 'rxjs';
 
 @Component({
   selector: 'app-points',
   imports: [
-    PointsCardComponent
+    PointsCardComponent,
+    TranslatePipe
   ],
   templateUrl: './points.component.html',
   styleUrl: './points.component.scss',

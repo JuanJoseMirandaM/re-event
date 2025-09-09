@@ -13,7 +13,6 @@ export interface WalkthroughStep {
 
 @Component({
   selector: 'app-walkthrough',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './walkthrough.component.html',
   styleUrl: './walkthrough.component.scss',
@@ -24,7 +23,7 @@ export class WalkthroughComponent implements OnInit {
   private walkthroughService = inject(WalkthroughService);
 
   currentStep = signal<number>(0);
-  
+
   walkthroughSteps: WalkthroughStep[] = [
     {
       id: 1,
@@ -86,7 +85,7 @@ export class WalkthroughComponent implements OnInit {
   private completeWalkthrough(): void {
     // Marcar como completado en el servicio
     this.walkthroughService.markAsCompleted();
-    
+
     // Navegar a la página principal
     this.router.navigate(['/']);
   }

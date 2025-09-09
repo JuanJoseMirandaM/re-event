@@ -5,11 +5,11 @@ import {first} from 'rxjs';
 import {LoaderService} from '../../core/services/loader.service';
 import {Router} from '@angular/router';
 import {ConfettiModalComponent, ConfettiModalConfig} from '../../components/confetti-modal/confetti-modal.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-claim-points',
-  standalone: true,
-  imports: [ConfettiModalComponent],
+  imports: [ConfettiModalComponent, TranslatePipe],
   templateUrl: './claim-points.component.html',
   styleUrl: './claim-points.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +38,7 @@ export default class ClaimPointsComponent {
 
   submit(rawCode: string) {
     if (rawCode.trim() === '') return;
-    
+
     this.#loaderService.show();
     this.#pointsService.claimPoints(rawCode.trim().toUpperCase())
       .pipe(first())

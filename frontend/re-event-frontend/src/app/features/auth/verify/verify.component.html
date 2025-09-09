@@ -1,18 +1,18 @@
 <div class="flex flex--col gap-2 my-8">
-  <p class="text-2xl font-medium text-center">Verificar tu correo</p>
-  <p class="text-lg text-center">Enviamos un codigo de 6 digito a <span class="font-medium">{{ email() || 'your email' }}</span></p>
+  <p class="text-2xl font-medium text-center">{{ 'auth.verify.title' | translate }}</p>
+  <p class="text-lg text-center">{{ 'auth.verify.subtitle' | translate }} <span class="font-medium">{{ email() || 'your email' }}</span></p>
 </div>
 
 <form [formGroup]="codeForm" (ngSubmit)="onSubmit()" novalidate>
   <div class="form-group">
-    <label for="code" class="form-label">Codigo de verificacion</label>
+    <label for="code" class="form-label">{{ 'auth.verify.codeLabel' | translate }}</label>
 
-    <input id="code" class="form-input" placeholder="Enter 6-digit code" maxlength="6" formControlName="code"/>
+    <input id="code" class="form-input" [placeholder]="'auth.verify.codePlaceholder' | translate" maxlength="6" formControlName="code"/>
     @if (cf.code.touched && cf.code.errors?.['required']) {
-      <small class="re-error">Code is required.</small>
+      <small class="re-error">{{ 'auth.verify.codeRequired' | translate }}</small>
     }
     @if (cf.code.touched && (cf.code.errors?.['minlength'] || cf.code.errors?.['maxlength'])) {
-      <small class="re-error">Code must be 6 digits.</small>
+      <small class="re-error">{{ 'auth.verify.codeLength' | translate }}</small>
     }
   </div>
 
@@ -24,15 +24,15 @@
 
   <div class="re-flex re-flex-column re-gap-flex-1-2">
     <button class="re-primary-btn re-w-100" [disabled]="codeForm.invalid || confirmState().status === 'loading'">
-      {{ confirmState().status === 'loading' ? 'Verifying…' : 'Continue' }}
+      {{ confirmState().status === 'loading' ? ('auth.verify.verifying' | translate) : ('auth.verify.continue' | translate) }}
     </button>
     <!--  TODO: Implement Resend Code -->
     <div class="re-txt-center re-mt-1-6 ">
-      <button type="button" class="re-secondary-btn re-w-100">Resend code</button>
+      <button type="button" class="re-secondary-btn re-w-100">{{ 'auth.verify.resendCode' | translate }}</button>
     </div>
 
     <div class="re-txt-center re-mt-1-6">
-      <a routerLink="/login" class="re-secondary-btn re-block re-w-100">Back to login</a>
+      <a routerLink="/login" class="re-secondary-btn re-block re-w-100">{{ 'auth.verify.backToLogin' | translate }}</a>
     </div>
   </div>
 </form>

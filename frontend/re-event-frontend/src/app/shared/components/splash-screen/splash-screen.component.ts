@@ -1,16 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { LoaderService } from '../../../core/services/loader.service';
-import { SplashScreenService } from '../../../core/services/splash-screen.service';
-import { filter, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {TranslatePipe} from '@ngx-translate/core';
+import {AuthService} from '../../../core/services/auth.service';
+import {LoaderService} from '../../../core/services/loader.service';
+import {SplashScreenService} from '../../../core/services/splash-screen.service';
+import {filter, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-splash-screen',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [TranslatePipe],
   templateUrl: './splash-screen.component.html',
   styleUrl: './splash-screen.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -11,21 +11,20 @@ export interface ConfettiModalConfig {
 
 @Component({
   selector: 'app-confetti-modal',
-  standalone: true,
   template: `
     @if (isVisible()) {
       <div class="confetti-modal" [class.confetti-modal--visible]="isVisible()">
         <div class="confetti-modal__overlay" (click)="onClose()"></div>
-        
+
         <div class="confetti-modal__content">
-          
+
           <div class="modal-content">
             @if (config().icon) {
               <div class="modal-icon">
                 <span class="material-symbols-outlined">{{ config().icon }}</span>
               </div>
             }
-            
+
             @if (config().points) {
               <div class="points-badge">
                 <span class="points-number">+{{ config().points }}</span>
@@ -35,7 +34,7 @@ export interface ConfettiModalConfig {
 
             <h2 class="modal-title">{{ config().title }}</h2>
             <p class="modal-description">{{ config().description }}</p>
-            
+
             <button class="btn btn--primary" (click)="onClose()">
               {{ config().buttonText || '¡Genial!' }}
             </button>
@@ -50,7 +49,7 @@ export interface ConfettiModalConfig {
 export class ConfettiModalComponent implements OnDestroy {
   isVisible = input.required<boolean>();
   config = input.required<ConfettiModalConfig>();
-  
+
   closeModal = output<void>();
 
   private confettiIntervalId: number | null = null;

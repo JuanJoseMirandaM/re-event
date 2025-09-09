@@ -1,20 +1,22 @@
 <div class="header-container">
   <button class="re-btn text-2xl"
           (click)="toggleMenu()"
-          aria-label="Abrir menú"
+          [attr.aria-label]="'header.openMenu' | translate"
           aria-controls="app-side-menu">
     <span class="re-icon-menu re-inline-block"></span>
   </button>
 
-  <span class="text-lg font-medium">AWS Community Day</span>
+  <span class="text-lg font-medium">{{ 'header.title' | translate }}</span>
 
-  <button class="re-btn text-2xl"
-          routerLink="./notifications"
-          aria-label="Ir a notificaciones">
-    <span class="re-icon-notification"></span>
-<!--    @if (unreadCount() > 0) {-->
-<!--      <span class="re-icon-header__number"></span>-->
-<!--    }-->
-  </button>
+  <div class="header-actions">
+    <button class="re-btn text-2xl"
+            routerLink="./notifications"
+            [attr.aria-label]="'header.notifications' | translate">
+      <span class="re-icon-notification"></span>
+<!--      @if (unreadCount() > 0) {-->
+<!--        <span class="re-icon-header__number"></span>-->
+<!--      }-->
+    </button>
+  </div>
 </div>
 <app-side-menu [isMenuOpen]="menuOpen()" (menuClosed)="toggleMenu()"/>
