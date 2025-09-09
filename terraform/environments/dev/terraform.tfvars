@@ -18,3 +18,13 @@ admin_email = "admin@awscommunity.com"
 # firebase_project_id   = "your-firebase-project-id"
 # firebase_client_email = "your-firebase-client-email@your-project.iam.gserviceaccount.com"
 # firebase_private_key  = "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+# =============================================================================
+# FACEFINDER CONFIGURATION - Integración del proyecto FaceFinder
+# =============================================================================
+
+# Event name for FaceFinder resources
+event_name = "amazon-community-bolivia-2025"
+
+# AWS profile for FaceFinder (should match your AWS CLI profile)
+aws_profile = "terraform"

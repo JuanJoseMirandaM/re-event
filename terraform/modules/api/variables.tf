@@ -124,3 +124,13 @@ variable "firebase_private_key" {
   default     = ""
   sensitive   = true
 }
+
+# =============================================================================
+# FACEFINDER VARIABLES - Integración del proyecto FaceFinder
+# =============================================================================
+
+variable "facefinder_lambda_functions" {
+  description = "FaceFinder Lambda functions map"
+  type        = any
+  default     = {}
+}

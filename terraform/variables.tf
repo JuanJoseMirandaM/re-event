@@ -76,3 +76,19 @@ variable "firebase_private_key" {
   default     = ""
   sensitive   = true
 }
+
+# =============================================================================
+# FACEFINDER VARIABLES - Integración del proyecto FaceFinder
+# =============================================================================
+
+variable "event_name" {
+  description = "Event name for FaceFinder resources"
+  type        = string
+  default     = "amazon-community-bolivia-2025"
+}
+
+variable "aws_profile" {
+  description = "AWS profile to use for FaceFinder resources"
+  type        = string
+  default     = "terraform"
+}

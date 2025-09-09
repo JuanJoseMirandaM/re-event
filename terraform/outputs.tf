@@ -57,3 +57,38 @@ output "evaluations_table_arn" {
   description = "ARN of the Evaluations DynamoDB table"
   value       = module.database.evaluations_table_arn
 }
+
+# =============================================================================
+# FACEFINDER OUTPUTS - Integración del proyecto FaceFinder
+# =============================================================================
+
+output "facefinder_s3_bucket_name" {
+  description = "Name of the FaceFinder S3 bucket"
+  value       = module.storage.bucket_name
+}
+
+output "facefinder_s3_bucket_arn" {
+  description = "ARN of the FaceFinder S3 bucket"
+  value       = module.storage.bucket_arn
+}
+
+output "rekognition_collection_id" {
+  description = "Rekognition Collection ID for face recognition"
+  value       = module.ai.collection_id
+}
+
+output "sqs_queue_url" {
+  description = "SQS Queue URL for batch processing"
+  value       = module.messaging.queue_url
+}
+
+output "cloudfront_domain_name" {
+  description = "CloudFront distribution domain name"
+  value       = module.cdn.cloudfront_domain_name
+}
+
+output "facefinder_lambda_functions" {
+  description = "FaceFinder Lambda function details"
+  value       = module.compute.lambda_functions
+  sensitive   = true
+}

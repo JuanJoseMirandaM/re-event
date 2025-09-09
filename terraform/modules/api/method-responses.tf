@@ -143,3 +143,63 @@ resource "aws_api_gateway_method_response" "get_notifications_200" {
     "method.response.header.Access-Control-Allow-Methods" = true
   }
 }
+
+# =============================================================================
+# FACEFINDER ENDPOINTS - Method Responses
+# =============================================================================
+
+# POST /faces/upload
+resource "aws_api_gateway_method_response" "upload_faces_200" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_upload.id
+  http_method = aws_api_gateway_method.upload_faces.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_method_response" "upload_faces_400" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_upload.id
+  http_method = aws_api_gateway_method.upload_faces.http_method
+  status_code = "400"
+}
+
+# POST /faces/search
+resource "aws_api_gateway_method_response" "search_faces_200" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search.id
+  http_method = aws_api_gateway_method.search_faces.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_method_response" "search_faces_400" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search.id
+  http_method = aws_api_gateway_method.search_faces.http_method
+  status_code = "400"
+}
+
+# GET /faces/{page}/{size}
+resource "aws_api_gateway_method_response" "get_faces_paginated_200" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_page_size.id
+  http_method = aws_api_gateway_method.get_faces_paginated.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
