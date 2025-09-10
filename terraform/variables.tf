@@ -84,7 +84,7 @@ variable "firebase_private_key" {
 variable "event_name" {
   description = "Event name for FaceFinder resources"
   type        = string
-  default     = "amazon-community-bolivia-2025"
+  default     = "aws-community-day-bolivia-2025"
 }
 
 variable "aws_profile" {

@@ -24,7 +24,7 @@ admin_email = "admin@awscommunity.com"
 # =============================================================================
 
 # Event name for FaceFinder resources
-event_name = "amazon-community-bolivia-2025"
+# event_name = "amazon-community-bolivia-2025"
 
 # AWS profile for FaceFinder (should match your AWS CLI profile)
-aws_profile = "terraform"
+# aws_profile = "terraform"
