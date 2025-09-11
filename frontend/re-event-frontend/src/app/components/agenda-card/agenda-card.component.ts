@@ -71,24 +71,6 @@ export class AgendaCardComponent implements OnInit {
     }
   }
 
-  // private checkEvaluationStatus(): void {
-  //   // Only check if we don't have userData or if it's not evaluated
-  //   const userData = this.event().userData;
-  //   if (!userData || !userData.isEvaluated) {
-  //     this.#evaluationService.getEvaluation(this.event().eventId).subscribe({
-  //       next: (response) => {
-  //         this.evaluation.set(response);
-  //         this.isEvaluated.set(true);
-  //       },
-  //       error: (error) => {
-  //         console.log('No evaluation found for session:', this.event().eventId, error);
-  //         this.evaluation.set(null);
-  //         this.isEvaluated.set(false);
-  //       }
-  //     });
-  //   }
-  // }
-
   openRatingPanel(): void {
     this.showRatingPanel.set(true);
   }

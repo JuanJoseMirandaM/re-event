@@ -62,9 +62,10 @@
   background-color: transparent;
   border: none;
   box-shadow: none;
-  padding: var(--space-2);
-  width: 50px;
-  height: 60px;
+  color: var(--text-black);
+  padding: var(--space-4);
+  width: 60px;
+  height: 100%;
 
   &.favorite-active {
     color: var(--primary-lilac);
