@@ -74,8 +74,9 @@ exports.handler = async (event) => {
 
         // If user is authenticated and wants user-specific data, enrich events
         if (userId && includeUserData && enrichedEvents.length > 0) {
-            console.log('Enriching events with user data for userId:', userId);
-            console.log('Number of events to enrich:', enrichedEvents.length);
+        console.log('Enriching events with user data for userId:', userId);
+        console.log('Number of events to enrich:', enrichedEvents.length);
+        console.log('Updated permissions check - should have access to favorites table');
             enrichedEvents = await enrichEventsWithUserData(enrichedEvents, userId);
             console.log('Events enriched successfully');
         } else {
@@ -171,15 +172,25 @@ async function getEvaluationsForEvents(eventIds, userId) {
         // and filter by sessionIds (assuming sessionId corresponds to eventId)
         const command = new ScanCommand({
             TableName: process.env.EVALUATIONS_TABLE,
-            FilterExpression: 'userId = :userId AND sessionId IN (:eventIds)',
+            FilterExpression: 'userId = :userId',
             ExpressionAttributeValues: {
-                ':userId': userId,
-                ':eventIds': eventIds
+                ':userId': userId
             }
         });
 
         const result = await dynamodb.send(command);
-        return result.Items || [];
+        const allEvaluations = result.Items || [];
+        
+        // Filter evaluations that match any of the eventIds (sessionId)
+        const matchingEvaluations = allEvaluations.filter(eval => 
+            eventIds.includes(eval.sessionId)
+        );
+        
+        console.log('All evaluations for user:', allEvaluations.length);
+        console.log('Matching evaluations:', matchingEvaluations.length);
+        console.log('Event IDs being checked:', eventIds);
+        
+        return matchingEvaluations;
     } catch (error) {
         console.error('Error getting evaluations:', error);
         return [];
@@ -191,15 +202,25 @@ async function getFavoritesForEvents(eventIds, userId) {
     try {
         const command = new ScanCommand({
             TableName: process.env.FAVORITES_TABLE,
-            FilterExpression: 'userId = :userId AND eventId IN (:eventIds)',
+            FilterExpression: 'userId = :userId',
             ExpressionAttributeValues: {
-                ':userId': userId,
-                ':eventIds': eventIds
+                ':userId': userId
             }
         });
 
         const result = await dynamodb.send(command);
-        return result.Items || [];
+        const allFavorites = result.Items || [];
+        
+        // Filter favorites that match any of the eventIds
+        const matchingFavorites = allFavorites.filter(fav => 
+            eventIds.includes(fav.eventId)
+        );
+        
+        console.log('All favorites for user:', allFavorites.length);
+        console.log('Matching favorites:', matchingFavorites.length);
+        console.log('Event IDs being checked:', eventIds);
+        
+        return matchingFavorites;
     } catch (error) {
         console.error('Error getting favorites:', error);
         return [];

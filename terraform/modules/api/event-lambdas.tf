@@ -63,6 +63,7 @@ resource "aws_lambda_function" "get_events" {
   handler         = "get-events.handler"
   runtime         = "nodejs18.x"
   timeout         = 30
+  source_code_hash = data.archive_file.get_events_zip.output_base64sha256
 
   environment {
     variables = {
