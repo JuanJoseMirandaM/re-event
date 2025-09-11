@@ -129,3 +129,25 @@ data "archive_file" "get_total_points_zip" {
   output_path = "${path.module}/../../../backend/lambdas/points/get-total-points.zip"
   excludes    = ["claim-points.js", "deduct-points.js", "generate-code.js", "get-points-history.js", "*.zip"]
 }
+
+# Favorites Lambda ZIPs
+data "archive_file" "add_favorite_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/favorites"
+  output_path = "${path.module}/../../../backend/lambdas/favorites/add-favorite.zip"
+  excludes    = ["remove-favorite.js", "get-favorites.js", "*.zip"]
+}
+
+data "archive_file" "remove_favorite_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/favorites"
+  output_path = "${path.module}/../../../backend/lambdas/favorites/remove-favorite.zip"
+  excludes    = ["add-favorite.js", "get-favorites.js", "*.zip"]
+}
+
+data "archive_file" "get_favorites_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../backend/lambdas/favorites"
+  output_path = "${path.module}/../../../backend/lambdas/favorites/get-favorites.zip"
+  excludes    = ["add-favorite.js", "remove-favorite.js", "*.zip"]
+}

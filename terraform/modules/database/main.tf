@@ -271,3 +271,36 @@ resource "aws_dynamodb_table" "notifications" {
 
   tags = var.common_tags
 }
+
+# DynamoDB Table for User Favorites
+resource "aws_dynamodb_table" "favorites" {
+  name         = "${var.project_name}-favorites-${var.environment}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "userId"
+  range_key    = "eventId"
+
+  attribute {
+    name = "userId"
+    type = "S"
+  }
+
+  attribute {
+    name = "eventId"
+    type = "S"
+  }
+
+  attribute {
+    name = "createdAt"
+    type = "S"
+  }
+
+  # GSI para consultar favoritos por evento (útil para estadísticas)
+  global_secondary_index {
+    name            = "EventIndex"
+    hash_key        = "eventId"
+    range_key       = "createdAt"
+    projection_type = "ALL"
+  }
+
+  tags = var.common_tags
+}

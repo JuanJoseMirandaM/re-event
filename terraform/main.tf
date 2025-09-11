@@ -53,6 +53,9 @@ module "api" {
   notifications_table_name = module.database.notifications_table_name
   notifications_table_arn  = module.database.notifications_table_arn
   
+  favorites_table_name = module.database.favorites_table_name
+  favorites_table_arn  = module.database.favorites_table_arn
+  
   # Required variables that need to be defined
   s3_bucket_name        = var.s3_bucket_name
   cognito_user_pool_arn = module.auth.user_pool_arn

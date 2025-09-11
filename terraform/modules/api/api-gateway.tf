@@ -1304,6 +1304,11 @@ resource "aws_api_gateway_deployment" "main" {
     aws_api_gateway_integration.fcm_tokens_options,
     aws_api_gateway_integration.create_notification,
     aws_api_gateway_integration.get_notifications,
+    aws_api_gateway_integration.add_favorite,
+    aws_api_gateway_integration.get_favorites,
+    aws_api_gateway_integration.remove_favorite,
+    aws_api_gateway_integration.favorites_options,
+    aws_api_gateway_integration.favorite_event_id_options,
     aws_api_gateway_integration.upload_faces,
     aws_api_gateway_integration.search_faces,
     aws_api_gateway_integration.get_faces_paginated,
@@ -1311,6 +1316,174 @@ resource "aws_api_gateway_deployment" "main" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id
+}
+
+# =============================================================================
+# FAVORITES ENDPOINTS - Sistema de favoritos
+# =============================================================================
+
+# Favorites resource
+resource "aws_api_gateway_resource" "favorites" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "favorites"
+}
+
+# POST /favorites - Add favorite
+resource "aws_api_gateway_method" "add_favorite" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.favorites.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "add_favorite" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorites.id
+  http_method = aws_api_gateway_method.add_favorite.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.add_favorite.invoke_arn
+}
+
+# GET /favorites - Get user favorites
+resource "aws_api_gateway_method" "get_favorites" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.favorites.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "get_favorites" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorites.id
+  http_method = aws_api_gateway_method.get_favorites.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.get_favorites.invoke_arn
+}
+
+# DELETE /favorites/{eventId} - Remove favorite
+resource "aws_api_gateway_resource" "favorite_event_id" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.favorites.id
+  path_part   = "{eventId}"
+}
+
+resource "aws_api_gateway_method" "remove_favorite" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.favorite_event_id.id
+  http_method   = "DELETE"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "remove_favorite" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorite_event_id.id
+  http_method = aws_api_gateway_method.remove_favorite.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = aws_lambda_function.remove_favorite.invoke_arn
+}
+
+# CORS for Favorites - /favorites
+resource "aws_api_gateway_method" "favorites_options" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.favorites.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "favorites_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorites.id
+  http_method = aws_api_gateway_method.favorites_options.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = jsonencode({
+      statusCode = 200
+    })
+  }
+}
+
+resource "aws_api_gateway_method_response" "favorites_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorites.id
+  http_method = aws_api_gateway_method.favorites_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "favorites_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorites.id
+  http_method = aws_api_gateway_method.favorites_options.http_method
+  status_code = aws_api_gateway_method_response.favorites_options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,OPTIONS'"
+  }
+}
+
+# CORS for Favorites - /favorites/{eventId}
+resource "aws_api_gateway_method" "favorite_event_id_options" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.favorite_event_id.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "favorite_event_id_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorite_event_id.id
+  http_method = aws_api_gateway_method.favorite_event_id_options.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = jsonencode({
+      statusCode = 200
+    })
+  }
+}
+
+resource "aws_api_gateway_method_response" "favorite_event_id_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorite_event_id.id
+  http_method = aws_api_gateway_method.favorite_event_id_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "favorite_event_id_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.favorite_event_id.id
+  http_method = aws_api_gateway_method.favorite_event_id_options.http_method
+  status_code = aws_api_gateway_method_response.favorite_event_id_options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'DELETE,OPTIONS'"
+  }
 }
 
 # =============================================================================

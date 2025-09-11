@@ -67,6 +67,8 @@ resource "aws_lambda_function" "get_events" {
   environment {
     variables = {
       EVENTS_TABLE = var.events_table_name
+      EVALUATIONS_TABLE = var.evaluations_table_name
+      FAVORITES_TABLE = var.favorites_table_name
     }
   }
 

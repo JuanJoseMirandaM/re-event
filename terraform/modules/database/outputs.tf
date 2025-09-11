@@ -78,3 +78,13 @@ output "notifications_table_arn" {
   description = "ARN of the notifications DynamoDB table"
   value       = aws_dynamodb_table.notifications.arn
 }
+
+output "favorites_table_name" {
+  description = "Name of the favorites DynamoDB table"
+  value       = aws_dynamodb_table.favorites.name
+}
+
+output "favorites_table_arn" {
+  description = "ARN of the favorites DynamoDB table"
+  value       = aws_dynamodb_table.favorites.arn
+}

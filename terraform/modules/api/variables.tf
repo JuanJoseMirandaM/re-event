@@ -105,6 +105,16 @@ variable "notifications_table_arn" {
   type        = string
 }
 
+variable "favorites_table_name" {
+  description = "DynamoDB favorites table name"
+  type        = string
+}
+
+variable "favorites_table_arn" {
+  description = "DynamoDB favorites table ARN"
+  type        = string
+}
+
 # Firebase Configuration Variables
 variable "firebase_project_id" {
   description = "Firebase Project ID for FCM"

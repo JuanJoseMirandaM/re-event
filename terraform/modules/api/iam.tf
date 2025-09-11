@@ -59,7 +59,9 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
           var.fcm_tokens_table_arn,
           "${var.fcm_tokens_table_arn}/index/*",
           "${var.notifications_table_arn}",
-          "${var.notifications_table_arn}/index/*"
+          "${var.notifications_table_arn}/index/*",
+          var.favorites_table_arn,
+          "${var.favorites_table_arn}/index/*"
         ]
       }
     ]
