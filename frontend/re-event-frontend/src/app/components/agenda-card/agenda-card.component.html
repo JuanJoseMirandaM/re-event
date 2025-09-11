@@ -1,18 +1,22 @@
-<span class="text-lg font-medium py-2">{{ event().title }}</span>
-
+<div class="flex gap-1">
+  <span class="re-flex-1 text-lg font-medium py-2">{{ event().title }}</span>
+  <button 
+    class="btn favorite-btn"
+    [class.favorite-active]="isFavorite()"
+    (click)="toggleFavorite()">
+    <span class="text-3xl material-symbols-outlined">
+      {{ isFavorite() ? 'favorite' : 'favorite_border' }}
+    </span>
+  </button>
+</div>
 <div class="flex gap-2">
   <span class="text-lg material-symbols-outlined">group</span>
   <span class="text-base font-light">{{ event().speakers.join(', ') || 'AWS UG' }}</span>
 </div>
 
 <div class="flex gap-2">
-  <span class="text-lg material-symbols-outlined">schedule</span>
-  <span class="text-base font-light">{{ getStartTime() }} - {{ getEndTime() }}</span>
-</div>
-
-<div class="flex gap-2">
-  <span class="text-lg material-symbols-outlined">hourglass_top</span>
-  <span class="text-base font-light">{{ event().time | duration }}</span>
+  <span class="text-lg material-symbols-outlined">event</span>
+  <span class="text-base font-light">{{ getStartTime() }} - {{ event().time | duration }}</span>
 </div>
 
 <div class="flex gap-2">
@@ -33,7 +37,6 @@
 
 @if (event().tags && event().tags.length > 0) {
   <div class="flex gap-2">
-    <span class="text-lg material-symbols-outlined">label</span>
     <div class="flex flex-wrap gap-1 items-center">
       @for (tag of event().tags; track tag) {
         <span class="tag">{{ tag }}</span>
@@ -43,7 +46,7 @@
 }
 
 @if (isPastEvent()) {
-  @if (evaluation()?.sessionId) {
+  @if (isEvaluated() && evaluation()?.sessionId) {
     <button class="btn btn--secondary btn--sm" disabled>
       {{ "agenda.rated" | translate }}
       @for (start of [1, 2, 3, 4, 5]; track start) {

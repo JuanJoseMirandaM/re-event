@@ -9,7 +9,7 @@ const loadUpcomingEvents$ = createEffect(
     return actions$.pipe(
       ofType(eventsActions.loadUpcomingEvents),
       exhaustMap(({ params }) =>
-        eventsService.getUpcomingEvents(params?.limit, params?.lastKey).pipe(
+        eventsService.getUpcomingEventsWithUserData(params?.limit, params?.lastKey).pipe(
           take(1),
           map((response) => eventsActions.loadUpcomingEventsSuccess({ response })),
           catchError((error) => of(eventsActions.loadUpcomingEventsFailure({ error })))
@@ -25,7 +25,7 @@ const loadPastEvents$ = createEffect(
     return actions$.pipe(
       ofType(eventsActions.loadPastEvents),
       exhaustMap(({ params }) =>
-        eventsService.getPastEvents(params?.limit, params?.lastKey).pipe(
+        eventsService.getPastEventsWithUserData(params?.limit, params?.lastKey).pipe(
           take(1),
           map((response) => eventsActions.loadPastEventsSuccess({ response })),
           catchError((error) => of(eventsActions.loadPastEventsFailure({ error })))
@@ -41,7 +41,7 @@ const loadMoreUpcomingEvents$ = createEffect(
     return actions$.pipe(
       ofType(eventsActions.loadMoreUpcomingEvents),
       switchMap(({ params }) =>
-        eventsService.getUpcomingEvents(params?.limit, params?.lastKey).pipe(
+        eventsService.getUpcomingEventsWithUserData(params?.limit, params?.lastKey).pipe(
           take(1),
           map((response) => eventsActions.loadUpcomingEventsSuccess({ response })),
           catchError((error) => of(eventsActions.loadUpcomingEventsFailure({ error })))
@@ -57,7 +57,7 @@ const loadMorePastEvents$ = createEffect(
     return actions$.pipe(
       ofType(eventsActions.loadMorePastEvents),
       switchMap(({ params }) =>
-        eventsService.getPastEvents(params?.limit, params?.lastKey).pipe(
+        eventsService.getPastEventsWithUserData(params?.limit, params?.lastKey).pipe(
           take(1),
           map((response) => eventsActions.loadPastEventsSuccess({ response })),
           catchError((error) => of(eventsActions.loadPastEventsFailure({ error })))

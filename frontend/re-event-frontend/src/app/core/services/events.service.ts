@@ -15,6 +15,11 @@ export interface Event {
   locationLink: string;
   speakers: any[];
   tags: string[];
+  userData?: {
+    isEvaluated: boolean;
+    isFavorite: boolean;
+    evaluation?: any;
+  };
 }
 
 export interface CreateEventInput {
@@ -45,6 +50,26 @@ export interface EventsParams {
   lastKey?: string;
   upcoming?: boolean;
   past?: boolean;
+  includeUserData?: boolean;
+}
+
+export interface Favorite {
+  userId: string;
+  eventId: string;
+  createdAt: string;
+}
+
+export interface FavoriteResponse {
+  success: boolean;
+  data: Favorite;
+}
+
+export interface FavoritesResponse {
+  success: boolean;
+  data: {
+    items: Favorite[];
+    count: number;
+  };
 }
 
 @Injectable({providedIn: 'root'})
@@ -68,6 +93,7 @@ export class EventsService {
         if (params?.lastKey) queryParams.set('lastKey', params.lastKey);
         if (params?.upcoming) queryParams.set('upcoming', 'true');
         if (params?.past) queryParams.set('past', 'true');
+        if (params?.includeUserData) queryParams.set('includeUserData', 'true');
 
         const url = `${this.baseUrl}/events${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
         return this.http.get<ApiResponse>(url, {headers}).pipe(
@@ -99,5 +125,65 @@ export class EventsService {
         );
       })
     );
+  }
+
+  // Favorites methods
+  addFavorite(eventId: string): Observable<Favorite> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/favorites`;
+        return this.http.post<FavoriteResponse>(url, { eventId }, {headers}).pipe(
+          map(response => response.data)
+        );
+      })
+    );
+  }
+
+  removeFavorite(eventId: string): Observable<{ success: boolean }> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/favorites/${eventId}`;
+        return this.http.delete<{ success: boolean }>(url, {headers});
+      })
+    );
+  }
+
+  getFavorites(): Observable<Favorite[]> {
+    return this.authService.getAuthToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: token,
+          'Content-Type': 'application/json'
+        });
+
+        const url = `${this.baseUrl}/favorites`;
+        return this.http.get<FavoritesResponse>(url, {headers}).pipe(
+          map(response => response.data.items)
+        );
+      })
+    );
+  }
+
+  // Convenience methods for events with user data
+  getEventsWithUserData(params?: Omit<EventsParams, 'includeUserData'>): Observable<EventsResponse> {
+    return this.getEvents({ ...params, includeUserData: true });
+  }
+
+  getUpcomingEventsWithUserData(limit?: number, lastKey?: string): Observable<EventsResponse> {
+    return this.getEvents({ upcoming: true, limit, lastKey, includeUserData: true });
+  }
+
+  getPastEventsWithUserData(limit?: number, lastKey?: string): Observable<EventsResponse> {
+    return this.getEvents({ past: true, limit, lastKey, includeUserData: true });
   }
 }

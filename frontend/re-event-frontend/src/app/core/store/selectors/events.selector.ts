@@ -51,7 +51,22 @@ export const selectUpcomingEventsByDate = createSelector(
     const grouped = new Map<string, Event[]>();
     
     events.forEach(event => {
-      const date = new Date(event.startDate).toISOString().split('T')[0];
+      let eventDate: Date;
+      
+      // Si el startDate es solo fecha (YYYY-MM-DD), tratarlo como fecha local
+      if (typeof event.startDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(event.startDate)) {
+        const [year, month, day] = (event.startDate as string).split('-').map(Number);
+        eventDate = new Date(year, month - 1, day); // month es 0-indexado
+      } else {
+        eventDate = new Date(event.startDate);
+      }
+      
+      // Use local timezone to get the correct date
+      const year = eventDate.getFullYear();
+      const month = String(eventDate.getMonth() + 1).padStart(2, '0');
+      const day = String(eventDate.getDate()).padStart(2, '0');
+      const date = `${year}-${month}-${day}`;
+      
       if (!grouped.has(date)) {
         grouped.set(date, []);
       }
@@ -73,7 +88,22 @@ export const selectPastEventsByDate = createSelector(
     const grouped = new Map<string, Event[]>();
     
     events.forEach(event => {
-      const date = new Date(event.startDate).toISOString().split('T')[0];
+      let eventDate: Date;
+      
+      // Si el startDate es solo fecha (YYYY-MM-DD), tratarlo como fecha local
+      if (typeof event.startDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(event.startDate)) {
+        const [year, month, day] = (event.startDate as string).split('-').map(Number);
+        eventDate = new Date(year, month - 1, day); // month es 0-indexado
+      } else {
+        eventDate = new Date(event.startDate);
+      }
+      
+      // Use local timezone to get the correct date
+      const year = eventDate.getFullYear();
+      const month = String(eventDate.getMonth() + 1).padStart(2, '0');
+      const day = String(eventDate.getDate()).padStart(2, '0');
+      const date = `${year}-${month}-${day}`;
+      
       if (!grouped.has(date)) {
         grouped.set(date, []);
       }
