@@ -1,7 +1,7 @@
 {
-  "name": "agenda-lambdas",
+  "name": "favorites-lambdas",
   "version": "1.0.0",
-  "description": "Lambda functions for agenda/events management",
+  "description": "Lambda functions for favorites management",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.0.0",
     "@aws-sdk/lib-dynamodb": "^3.0.0"
