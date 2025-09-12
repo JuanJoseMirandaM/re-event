@@ -1,22 +1,22 @@
 export const environment = {
-  production: true,
-  apiUrl: 'https://hbao3p4igi.execute-api.us-east-1.amazonaws.com/prod',
+  production: false,
+  apiUrl: 'https://fp2p1odzcd.execute-api.us-east-1.amazonaws.com/dev',
   cognitoConfig: {
     region: 'us-east-1',
-    userPoolId: 'us-east-1_mWrHDzEG4',
-    userPoolClientId: '7pv095cq6naalh7ehmiuc5158l',
-    domain: 'https://kinua-v2-auth-prod.auth.us-east-1.amazoncognito.com',
-    redirectSignIn: 'http://localhost:4200/auth/callback',  // Reemplazar con tu IP real
-    redirectSignOut: 'http://localhost:4200/auth/logout'    // Reemplazar con tu IP real
+    userPoolId: 'us-east-1_c3QKPmyRW',
+    userPoolClientId: '1q7h0dh9324va0j7q6g03bvm31',
+    domain: 'https://kinua-auth-dev.auth.us-east-1.amazoncognito.com',
+    redirectSignIn: 'https://re-event-rho.vercel.app/auth/callback',  // Reemplazar con tu IP real
+    redirectSignOut: 'https://re-event-rho.vercel.app/auth/logout'    // Reemplazar con tu IP real
   },
   firebaseConfig: {
-    apiKey: "AIzaSyA5e4Qf0nUW-ALm40oAUrNImuyrZkBXMVY",
-    authDomain: "kinua-fcm.firebaseapp.com",
-    projectId: "kinua-fcm",
-    storageBucket: "kinua-fcm.firebasestorage.app",
-    messagingSenderId: "62396424616",
-    appId: "1:62396424616:web:145f9df7cf9270105ebd9d",
-    measurementId: "G-YFNCEBPK0H"
+    apiKey: "AIzaSyAPgmfnx8zGQuShmjmA-QO_ulwueVZR42k",
+    authDomain: "reevent-fcm.firebaseapp.com",
+    projectId: "reevent-fcm",
+    storageBucket: "reevent-fcm.firebasestorage.app",
+    messagingSenderId: "145026622801",
+    appId: "1:145026622801:web:c82d01ccbdc175619e9f70",
+    measurementId: "G-DN6DXETYRM"
   },
   vapidKey: "BPQV-lieDnlXX6eTj85i0XbNwhsjRXYcXUcTPAEL4sGyGDXGmRkVMWEzi1ob3OQYyLZcfUHngU15kvoCN9JB9nM"
 };
