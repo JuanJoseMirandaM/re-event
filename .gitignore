@@ -40,3 +40,14 @@ cdk.context.json
 
 # Angular
 .angular/
+
+# Terraform
+# Exclude environment-specific configurations
+terraform/environments/
+terraform/state-backups/
+
+# Terraform state files (should be managed separately)
+terraform/terraform.tfstate*
+terraform/*.tfplan
+terraform/.terraform/
+terraform/.terraform.lock.hcl
