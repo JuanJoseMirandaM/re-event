@@ -58,6 +58,12 @@ export class AppComponent implements OnInit {
                 return;
               }
               
+              // Don't redirect if we're on public routes that should remain accessible
+              const publicRoutes = ['/qr-generator', '/install'];
+              if (publicRoutes.some(route => currentUrl.startsWith(route))) {
+                return;
+              }
+              
               // Only navigate to /secure if we're not already on a secure route
               this.#router.navigate(['/secure']);
             }
