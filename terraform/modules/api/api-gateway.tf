@@ -1814,7 +1814,7 @@ resource "aws_api_gateway_integration_response" "faces_get_faces_options" {
 resource "aws_lambda_permission" "generate_presigned_batch" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.facefinder_lambda_functions.generate_presigned_batch.function_name
+  function_name = var.facefinder_lambda_functions.generate_presigned_batch.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
 }
@@ -1822,7 +1822,7 @@ resource "aws_lambda_permission" "generate_presigned_batch" {
 resource "aws_lambda_permission" "generate_presigned_search" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.facefinder_lambda_functions.generate_presigned_search.function_name
+  function_name = var.facefinder_lambda_functions.generate_presigned_search.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
 }
@@ -1830,7 +1830,7 @@ resource "aws_lambda_permission" "generate_presigned_search" {
 resource "aws_lambda_permission" "search_by_face" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.facefinder_lambda_functions.search_by_face.function_name
+  function_name = var.facefinder_lambda_functions.search_by_face.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
 }
@@ -1838,7 +1838,7 @@ resource "aws_lambda_permission" "search_by_face" {
 resource "aws_lambda_permission" "get_paginated_items" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = var.facefinder_lambda_functions.get_paginated_items.function_name
+  function_name = var.facefinder_lambda_functions.get_paginated_items.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
 }
