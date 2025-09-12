@@ -52,9 +52,9 @@ variable "cognito_logout_urls" {
 }
 
 variable "s3_bucket_name" {
-  description = "S3 bucket name for storing verification codes PDF"
+  description = "S3 bucket name for storing verification codes PDF (deprecated - now auto-generated)"
   type        = string
-  default     = "reevent-verification-codes-dev"
+  default     = ""
 }
 
 # Firebase Configuration Variables

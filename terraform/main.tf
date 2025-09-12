@@ -57,7 +57,7 @@ module "api" {
   favorites_table_arn  = module.database.favorites_table_arn
   
   # Required variables that need to be defined
-  s3_bucket_name        = var.s3_bucket_name
+  s3_bucket_name        = module.storage.verification_codes_bucket_name
   cognito_user_pool_arn = module.auth.user_pool_arn
   
   # Firebase Configuration

@@ -79,6 +79,11 @@ build_lambda "points" "generate-code"
 build_lambda "notifications" "create-notification"
 build_lambda "notifications" "get-notifications"
 
+# Favorites Lambdas (con dependencias)
+build_lambda "favorites" "add-favorite"
+build_lambda "favorites" "get-favorites"
+build_lambda "favorites" "remove-favorite"
+
 # FCM Lambdas (con dependencias)
 build_lambda "fcm" "register-fcm-token"
 

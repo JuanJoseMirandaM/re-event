@@ -58,6 +58,16 @@ output "evaluations_table_arn" {
   value       = module.database.evaluations_table_arn
 }
 
+output "verification_codes_s3_bucket_name" {
+  description = "Name of the verification codes S3 bucket"
+  value       = module.storage.verification_codes_bucket_name
+}
+
+output "verification_codes_s3_bucket_arn" {
+  description = "ARN of the verification codes S3 bucket"
+  value       = module.storage.verification_codes_bucket_arn
+}
+
 # =============================================================================
 # FACEFINDER OUTPUTS - Integración del proyecto FaceFinder
 # =============================================================================

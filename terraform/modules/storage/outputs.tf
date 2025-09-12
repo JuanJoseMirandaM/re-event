@@ -16,3 +16,17 @@ output "bucket_regional_domain_name" {
   description = "Regional domain name of the S3 bucket"
   value       = aws_s3_bucket.facefinder_bucket.bucket_regional_domain_name
 }
+
+# =============================================================================
+# VERIFICATION CODES BUCKET OUTPUTS
+# =============================================================================
+
+output "verification_codes_bucket_name" {
+  description = "Name of the verification codes S3 bucket"
+  value       = aws_s3_bucket.verification_codes_bucket.bucket
+}
+
+output "verification_codes_bucket_arn" {
+  description = "ARN of the verification codes S3 bucket"
+  value       = aws_s3_bucket.verification_codes_bucket.arn
+}
