@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 const crypto = require('crypto');
 
 const client = new DynamoDBClient({});
@@ -33,6 +33,37 @@ function getUserIdFromToken(event) {
     } catch (error) {
         throw new Error(`Failed to extract user ID from token: ${error.message}`);
     }
+}
+
+// Function to award points for completing an evaluation
+async function awardPointsForEvaluation(userId, evaluationId, timestamp) {
+    const pointsToAward = 10;
+    
+    // Registrar el claim de puntos
+    const claimItem = {
+        userId,
+        timestamp,
+        code: `EVAL-${evaluationId.substring(0, 8)}`, // Código único basado en evaluationId
+        points: pointsToAward,
+        sourceType: 'evaluation',
+        description: 'Puntos por completar evaluación'
+    };
+
+    await dynamodb.send(new PutCommand({
+        TableName: process.env.POINTS_CLAIMS_TABLE,
+        Item: claimItem
+    }));
+
+    // Agregar puntos al usuario
+    await dynamodb.send(new UpdateCommand({
+        TableName: process.env.USERS_TABLE,
+        Key: { userId },
+        UpdateExpression: 'SET points = points + :pointsToAdd, updatedAt = :updatedAt',
+        ExpressionAttributeValues: {
+            ':pointsToAdd': pointsToAward,
+            ':updatedAt': timestamp
+        }
+    }));
 }
 
 exports.handler = async (evaluation) => {
@@ -104,6 +135,14 @@ exports.handler = async (evaluation) => {
         });
 
         const result = await dynamodb.send(command);
+
+        // Otorgar 10 puntos por completar la evaluación
+        try {
+            await awardPointsForEvaluation(userId, evaluationId, now);
+        } catch (pointsError) {
+            console.error('Error awarding points for evaluation:', pointsError);
+            // No fallar la evaluación si hay error con los puntos
+        }
 
         return {
             statusCode: 201,

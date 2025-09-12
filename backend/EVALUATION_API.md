@@ -302,9 +302,10 @@ GET /evaluations/user
 ## 🔄 Integration Points
 
 ### Points System
-- Las evaluaciones pueden otorgar puntos automáticamente
-- Puntos por completar evaluación: 10-15 puntos
-- Puntos adicionales por comentarios detallados: 5 puntos
+- Las evaluaciones otorgan puntos automáticamente
+- Puntos por completar evaluación: 10 puntos
+- Los puntos se otorgan inmediatamente al crear la evaluación
+- Se registra en el historial de puntos del usuario con sourceType: 'evaluation'
 
 ### Notifications
 - Notificación al speaker cuando recibe nueva evaluación
