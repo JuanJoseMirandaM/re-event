@@ -10,6 +10,8 @@ resource "aws_lambda_function" "create_evaluation" {
   environment {
     variables = {
       EVALUATIONS_TABLE = var.evaluations_table_name
+      POINTS_CLAIMS_TABLE = var.points_claims_table_name
+      USERS_TABLE = var.users_table_name
     }
   }
 

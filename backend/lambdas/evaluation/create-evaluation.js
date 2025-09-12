@@ -39,10 +39,13 @@ function getUserIdFromToken(event) {
 async function awardPointsForEvaluation(userId, evaluationId, timestamp) {
     const pointsToAward = 10;
     
+    // Asegurar que timestamp no sea null y tenga el formato correcto
+    const claimTimestamp = timestamp || new Date().toISOString();
+    
     // Registrar el claim de puntos
     const claimItem = {
-        userId,
-        timestamp,
+        userId: userId,
+        timestamp: claimTimestamp,
         code: `EVAL-${evaluationId.substring(0, 8)}`, // Código único basado en evaluationId
         points: pointsToAward,
         sourceType: 'evaluation',
@@ -57,11 +60,11 @@ async function awardPointsForEvaluation(userId, evaluationId, timestamp) {
     // Agregar puntos al usuario
     await dynamodb.send(new UpdateCommand({
         TableName: process.env.USERS_TABLE,
-        Key: { userId },
+        Key: { userId: userId },
         UpdateExpression: 'SET points = points + :pointsToAdd, updatedAt = :updatedAt',
         ExpressionAttributeValues: {
             ':pointsToAdd': pointsToAward,
-            ':updatedAt': timestamp
+            ':updatedAt': claimTimestamp
         }
     }));
 }
