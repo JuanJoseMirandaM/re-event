@@ -19,12 +19,5 @@ export function configureAmplify() {
         }
       }
     },
-    API: {
-      GraphQL: {
-        endpoint: environment.graphqlUrl,
-        region: environment.cognitoConfig.region,
-        defaultAuthMode: 'userPool'
-      }
-    }
   });
 }

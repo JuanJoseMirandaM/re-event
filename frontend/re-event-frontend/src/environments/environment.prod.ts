@@ -1,14 +1,13 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://67e15rhdb7.execute-api.us-east-1.amazonaws.com/dev',
-  graphqlUrl: 'https://b65pumrqendyhkpg2o2k6tto4a.appsync-api.us-east-1.amazonaws.com/graphql',
+  apiUrl: 'https://hbao3p4igi.execute-api.us-east-1.amazonaws.com/prod',
   cognitoConfig: {
     region: 'us-east-1',
-    userPoolId: 'us-east-1_koSnqucA2',
-    userPoolClientId: '162d0f9irj230mhiuhhh2t3o8m',
-    domain: 'reevent-auth-dev.auth.us-east-1.amazoncognito.com',
-    redirectSignIn: 'https://main.durqidc9rs9op.amplifyapp.com/auth/callback',  // Reemplazar con tu IP real
-    redirectSignOut: 'https://main.durqidc9rs9op.amplifyapp.com/auth/logout'    // Reemplazar con tu IP real
+    userPoolId: 'us-east-1_mWrHDzEG4',
+    userPoolClientId: '7pv095cq6naalh7ehmiuc5158l',
+    domain: 'https://kinua-v2-auth-prod.auth.us-east-1.amazoncognito.com',
+    redirectSignIn: 'https://main.d8cmoxb2lfk1k.amplifyapp.com/auth/callback',  // Reemplazar con tu IP real
+    redirectSignOut: 'https://main.d8cmoxb2lfk1k.amplifyapp.com//auth/logout'    // Reemplazar con tu IP real
   },
   firebaseConfig: {
     apiKey: "AIzaSyA5e4Qf0nUW-ALm40oAUrNImuyrZkBXMVY",
