@@ -103,6 +103,10 @@ export const routes: Routes = [
     path: 'install',
     loadComponent: () => import('./features/pwa-install/pwa-install.component')
   },
+  {
+    path: 'qr-generator',
+    loadComponent: () => import('./features/qr-generator/qr-generator.component')
+  },
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {
     path: '**', redirectTo: '/login'

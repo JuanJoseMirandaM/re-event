@@ -1,0 +1,54 @@
+<div class="qr-generator container container--sm flex flex--col items-center justify-center min-h-screen text-center">
+  <h1 class="text-3xl font-semibold text-white mb-8">Gana Puntos Con Kinua</h1>
+
+  @if (!qrGenerated()) {
+    <div class="w-full flex flex--col gap-6 items-center">
+      <div class="form-group w-full">
+        <input
+          type="text"
+          class="form-input text-center"
+          placeholder="Ingrese el código o texto para generar QR"
+          [(ngModel)]="inputText"
+          (keyup.enter)="generateQr()">
+      </div>
+
+      <button
+        class="btn btn--primary w-full"
+        style="max-width: 200px;"
+        (click)="generateQr()"
+        [disabled]="!inputText().trim()">
+        Generar QR
+      </button>
+    </div>
+  } @else {
+    <div class="w-full flex flex--col gap-6 items-center">
+      <div class="qr-container card p-4 flex items-center justify-center">
+        <canvas #qrCanvasRef class="rounded-md"></canvas>
+      </div>
+
+      <div class="w-full">
+        <div class="code-input relative w-full">
+          <input
+            [type]="showCode() ? 'text' : 'password'"
+            class="form-input text-center font-bold"
+            style="padding-right: calc(var(--space-12) + var(--space-2));"
+            [value]="inputText()"
+            readonly>
+          <button
+            type="button"
+            class="toggle-btn absolute"
+            style="right: var(--space-3); top: 50%; transform: translateY(-50%);"
+            (click)="toggleCodeVisibility()"
+            [attr.aria-label]="showCode() ? 'Ocultar código' : 'Mostrar código'">
+
+            @if (showCode()) {
+              <span class="material-symbols-outlined">visibility_off</span>
+            } @else {
+              <span class="material-symbols-outlined">visibility</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
