@@ -13,7 +13,8 @@ export const redirectIfAuthGuard: CanMatchFn = (route, segments) => {
     map(state => {
       if (state.isAuthenticated) {
         const lastVisitedUrl = localStorage.getItem('lastVisitedUrl');
-        return router.createUrlTree([lastVisitedUrl || '/secure/home']);
+        const targetUrl = lastVisitedUrl || '/secure/home';
+        return router.createUrlTree([targetUrl]);
       } else {
         return true;
       }

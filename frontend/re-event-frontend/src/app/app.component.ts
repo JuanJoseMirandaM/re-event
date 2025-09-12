@@ -49,6 +49,16 @@ export class AppComponent implements OnInit {
               this.#eventsStoreFacade.loadPastEvents();
               await this.#fcmService.installFCMServiceWorker();
               this.#notificationService.initForegroundListener();
+              
+              // Check if we're already on a secure route with query params
+              const currentUrl = window.location.pathname + window.location.search;
+              
+              if (currentUrl.startsWith('/secure')) {
+                // Don't navigate if we're already on a secure route
+                return;
+              }
+              
+              // Only navigate to /secure if we're not already on a secure route
               this.#router.navigate(['/secure']);
             }
           } catch (error) {

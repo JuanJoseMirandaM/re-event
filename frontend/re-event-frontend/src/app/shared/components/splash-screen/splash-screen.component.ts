@@ -78,13 +78,36 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
       this.loaderService.hide();
 
       try {
-        this.router.navigate(['/']).then(() => {
-        }).catch((error) => {
-          console.error('SplashScreen: Navigation failed:', error);
-        });
+        // Preserve the current URL with query parameters
+        const currentUrl = window.location.pathname + window.location.search;
+        
+        // Store the current URL in localStorage for other guards to use
+        localStorage.setItem('lastVisitedUrl', currentUrl);
+        
+        // Check if we're already on the correct path
+        if (currentUrl !== '/' && currentUrl !== '/login' && currentUrl.startsWith('/secure')) {
+          // Don't navigate if we're already on the correct path
+          return;
+        }
+        
+        // Only navigate if we're not already on the correct path
+        if (currentUrl !== '/' && currentUrl !== '/login') {
+          this.router.navigateByUrl(currentUrl).then((success) => {
+            // Navigation successful
+          }).catch((error) => {
+            console.error('SplashScreen: Navigation failed:', error);
+            // Fallback to home if navigation fails
+            this.router.navigate(['/secure/home']);
+          });
+        } else {
+          // Default navigation for root path
+          this.router.navigate(['/secure/home']);
+        }
       } catch (error) {
         console.error('SplashScreen: Navigation error:', error);
+        // Fallback to home if there's an error
+        this.router.navigate(['/secure/home']);
       }
-    }, 800);
+    }, 1000); // Increased timeout to give more time for guards to execute
   }
 }
