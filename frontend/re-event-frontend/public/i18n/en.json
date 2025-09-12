@@ -101,6 +101,18 @@
     "4": "Good",
     "5": "Excellent"
   },
+  "sessions": {
+    "allSessions": "All Sessions",
+    "currentSessions": "Current Session",
+    "upcomingSessions": "Upcoming Session",
+    "pastSessions": "Past Session",
+    "favorites": "Favorites",
+    "filterByTags": "Filter by tags",
+    "noTag": "None",
+    "loading": "Loading sessions...",
+    "retry": "Retry",
+    "noSessionsFound": "No sessions found"
+  },
   "points": {
     "totalPoints": "Total Points",
     "loading": "Loading points...",

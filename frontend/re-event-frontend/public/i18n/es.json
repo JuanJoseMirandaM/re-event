@@ -61,6 +61,7 @@
   "footer": {
     "home": "Inicio",
     "agenda": "Agenda",
+    "sessions": "Sesiones",
     "gallery": "Galería",
     "account": "Cuenta"
   },
@@ -100,6 +101,19 @@
     "3": "Regular",
     "4": "Buena",
     "5": "Excelente"
+  },
+  "sessions": {
+    "allSessions": "Todas las charlas",
+    "currentSessions": "Charla en curso",
+    "upcomingSessions": "Próximas charlas",
+    "pastSessions": "Charlas pasadas",
+    "favorites": "Favoritas",
+    "filterByTags": "Filtrar por etiquetas",
+    "noTag": "Sin etiqueta",
+    "loading": "Cargando charlas...",
+    "retry": "Reintentar",
+    "noSessionsFound": "No se encontraron charlas",
+    "alreadyRated": "Ya calificaste esta charla"
   },
   "points": {
     "totalPoints": "Total Puntos",

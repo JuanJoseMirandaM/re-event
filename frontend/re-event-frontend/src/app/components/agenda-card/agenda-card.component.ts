@@ -3,8 +3,9 @@ import {Event, EventsService} from '../../core/services/events.service';
 import {DurationPipe} from '../../pipes';
 import {RatingData, RatingPanelComponent} from '../rating-panel/rating-panel.component';
 import {Evaluation, EvaluationService, SingleEvaluationResponse} from '../../core/services/evaluation.service';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ToastService} from '../../core/services/toast.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-agenda-card',
@@ -15,6 +16,7 @@ import {ToastService} from '../../core/services/toast.service';
 })
 export class AgendaCardComponent implements OnInit {
   event = input.required<Event>();
+  targetSessionId = input<string | null>(null);
 
   showRatingPanel = signal<boolean>(false);
   isFavorite = signal<boolean>(false);
@@ -27,14 +29,31 @@ export class AgendaCardComponent implements OnInit {
   #evaluationService = inject(EvaluationService);
   #eventsService = inject(EventsService);
   #toast = inject(ToastService);
+  #router = inject(Router);
+  #translate = inject(TranslateService);
 
   ngOnInit() {
     // Initialize user data from event
     this.initializeUserData();
     
-    // if (this.isPastEvent()) {
-    //   // this.checkEvaluationStatus();
-    // }
+    // Check if this is the target session for rating
+    if (this.targetSessionId() && this.targetSessionId() === this.event().eventId) {
+      // Small delay to ensure the component is fully rendered
+      setTimeout(() => {
+        if (this.isPastEvent()) {
+          if (!this.isEvaluated()) {
+            // Open rating panel if not evaluated
+            this.openRatingPanel();
+          } else {
+            // Show toast if already evaluated and remove sessionId from URL
+            this.#translate.get('sessions.alreadyRated').subscribe(message => {
+              this.#toast.info(message);
+            });
+            this.removeSessionIdFromUrl();
+          }
+        }
+      }, 100);
+    }
   }
 
   isPastEvent(): boolean {
@@ -81,6 +100,14 @@ export class AgendaCardComponent implements OnInit {
     this.showRatingPanel.set(false);
   }
 
+  private removeSessionIdFromUrl(): void {
+    const currentUrl = new URL(window.location.href);
+    if (currentUrl.searchParams.has('sessionId')) {
+      currentUrl.searchParams.delete('sessionId');
+      this.#router.navigateByUrl(currentUrl.pathname + currentUrl.search, { replaceUrl: true });
+    }
+  }
+
   onRatingSubmitted(ratingData: RatingData): void {
     const request = {
       sessionId: ratingData.eventId,
@@ -94,6 +121,9 @@ export class AgendaCardComponent implements OnInit {
         this.isEvaluated.set(true);
         this.ratingSubmitted.emit(response);
         this.closeRatingPanel();
+        
+        // Remove sessionId parameter from URL after successful rating
+        this.removeSessionIdFromUrl();
       }
     });
   }

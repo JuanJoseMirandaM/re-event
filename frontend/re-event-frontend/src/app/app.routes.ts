@@ -51,6 +51,10 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'sessions',
+        loadComponent: () => import('./features/sessions/sessions.component')
+      },
+      {
         path: 'points',
         loadComponent: () => import('./features/points/points.component')
       },
