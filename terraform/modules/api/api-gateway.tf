@@ -1309,13 +1309,29 @@ resource "aws_api_gateway_deployment" "main" {
     aws_api_gateway_integration.remove_favorite,
     aws_api_gateway_integration.favorites_options,
     aws_api_gateway_integration.favorite_event_id_options,
-    aws_api_gateway_integration.upload_faces,
-    aws_api_gateway_integration.search_faces,
+    aws_api_gateway_integration.generate_presigned_batch,
+    aws_api_gateway_integration.generate_presigned_search,
+    aws_api_gateway_integration.search_by_face,
     aws_api_gateway_integration.get_faces_paginated,
-    aws_api_gateway_integration.faces_upload_options
+    aws_api_gateway_integration.faces_generate_presigned_batch_options,
+    aws_api_gateway_integration.faces_generate_presigned_search_options,
+    aws_api_gateway_integration.faces_search_by_face_options,
+    aws_api_gateway_integration.faces_get_faces_options
   ]
 
   rest_api_id = aws_api_gateway_rest_api.main.id
+  
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_integration.faces_generate_presigned_search_options.id,
+      aws_api_gateway_integration.faces_search_by_face_options.id,
+      aws_api_gateway_integration.faces_get_faces_options.id
+    ]))
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # =============================================================================
@@ -1497,72 +1513,103 @@ resource "aws_api_gateway_resource" "faces" {
   path_part   = "faces"
 }
 
-# POST /faces/upload - Subir imágenes para procesamiento
-resource "aws_api_gateway_resource" "faces_upload" {
+# POST /faces/generate-presigned-batch
+resource "aws_api_gateway_resource" "faces_generate_presigned_batch" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_resource.faces.id
-  path_part   = "upload"
+  path_part   = "generate-presigned-batch"
 }
 
-resource "aws_api_gateway_method" "upload_faces" {
+resource "aws_api_gateway_method" "generate_presigned_batch" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.faces_upload.id
+  resource_id   = aws_api_gateway_resource.faces_generate_presigned_batch.id
   http_method   = "POST"
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = aws_api_gateway_authorizer.cognito.id
 }
 
-# POST /faces/search - Buscar rostros similares
-resource "aws_api_gateway_resource" "faces_search" {
+# POST /faces/generate-presigned-search
+resource "aws_api_gateway_resource" "faces_generate_presigned_search" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_resource.faces.id
-  path_part   = "search"
+  path_part   = "generate-presigned-search"
 }
 
-resource "aws_api_gateway_method" "search_faces" {
+resource "aws_api_gateway_method" "generate_presigned_search" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.faces_search.id
+  resource_id   = aws_api_gateway_resource.faces_generate_presigned_search.id
   http_method   = "POST"
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = aws_api_gateway_authorizer.cognito.id
 }
 
-# GET /faces/{page}/{size} - Obtener rostros paginados
-resource "aws_api_gateway_resource" "faces_page" {
+# POST /faces/search-by-face
+resource "aws_api_gateway_resource" "faces_search_by_face" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_resource.faces.id
+  path_part   = "search-by-face"
+}
+
+resource "aws_api_gateway_method" "search_by_face" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.faces_search_by_face.id
+  http_method   = "POST"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+# GET /faces/get-faces/{page}/{size}
+resource "aws_api_gateway_resource" "faces_get_faces" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.faces.id
+  path_part   = "get-faces"
+}
+
+resource "aws_api_gateway_resource" "faces_get_faces_page" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_resource.faces_get_faces.id
   path_part   = "{page}"
 }
 
-resource "aws_api_gateway_resource" "faces_page_size" {
+resource "aws_api_gateway_resource" "faces_get_faces_page_size" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_resource.faces_page.id
+  parent_id   = aws_api_gateway_resource.faces_get_faces_page.id
   path_part   = "{size}"
 }
 
 resource "aws_api_gateway_method" "get_faces_paginated" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.faces_page_size.id
+  resource_id   = aws_api_gateway_resource.faces_get_faces_page_size.id
   http_method   = "GET"
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = aws_api_gateway_authorizer.cognito.id
 }
 
 # Integraciones Lambda para endpoints de FaceFinder
-resource "aws_api_gateway_integration" "upload_faces" {
+resource "aws_api_gateway_integration" "generate_presigned_batch" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_upload.id
-  http_method = aws_api_gateway_method.upload_faces.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_batch.id
+  http_method = aws_api_gateway_method.generate_presigned_batch.http_method
 
   integration_http_method = "POST"
   type                   = "AWS_PROXY"
   uri                    = var.facefinder_lambda_functions.generate_presigned_batch.invoke_arn
 }
 
-resource "aws_api_gateway_integration" "search_faces" {
+resource "aws_api_gateway_integration" "generate_presigned_search" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_search.id
-  http_method = aws_api_gateway_method.search_faces.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method = aws_api_gateway_method.generate_presigned_search.http_method
+
+  integration_http_method = "POST"
+  type                   = "AWS_PROXY"
+  uri                    = var.facefinder_lambda_functions.generate_presigned_search.invoke_arn
+}
+
+resource "aws_api_gateway_integration" "search_by_face" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search_by_face.id
+  http_method = aws_api_gateway_method.search_by_face.http_method
 
   integration_http_method = "POST"
   type                   = "AWS_PROXY"
@@ -1571,7 +1618,7 @@ resource "aws_api_gateway_integration" "search_faces" {
 
 resource "aws_api_gateway_integration" "get_faces_paginated" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_page_size.id
+  resource_id = aws_api_gateway_resource.faces_get_faces_page_size.id
   http_method = aws_api_gateway_method.get_faces_paginated.http_method
 
   integration_http_method = "POST"
@@ -1580,17 +1627,17 @@ resource "aws_api_gateway_integration" "get_faces_paginated" {
 }
 
 # CORS para endpoints de FaceFinder
-resource "aws_api_gateway_method" "faces_upload_options" {
+resource "aws_api_gateway_method" "faces_generate_presigned_batch_options" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.faces_upload.id
+  resource_id   = aws_api_gateway_resource.faces_generate_presigned_batch.id
   http_method   = "OPTIONS"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "faces_upload_options" {
+resource "aws_api_gateway_integration" "faces_generate_presigned_batch_options" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_upload.id
-  http_method = aws_api_gateway_method.faces_upload_options.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_batch.id
+  http_method = aws_api_gateway_method.faces_generate_presigned_batch_options.http_method
   type        = "MOCK"
 
   request_templates = {
@@ -1598,10 +1645,10 @@ resource "aws_api_gateway_integration" "faces_upload_options" {
   }
 }
 
-resource "aws_api_gateway_method_response" "faces_upload_options" {
+resource "aws_api_gateway_method_response" "faces_generate_presigned_batch_options" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_upload.id
-  http_method = aws_api_gateway_method.faces_upload_options.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_batch.id
+  http_method = aws_api_gateway_method.faces_generate_presigned_batch_options.http_method
   status_code = "200"
 
   response_parameters = {
@@ -1611,16 +1658,151 @@ resource "aws_api_gateway_method_response" "faces_upload_options" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "faces_upload_options" {
+resource "aws_api_gateway_integration_response" "faces_generate_presigned_batch_options" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_upload.id
-  http_method = aws_api_gateway_method.faces_upload_options.http_method
-  status_code = aws_api_gateway_method_response.faces_upload_options.status_code
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_batch.id
+  http_method = aws_api_gateway_method.faces_generate_presigned_batch_options.http_method
+  status_code = aws_api_gateway_method_response.faces_generate_presigned_batch_options.status_code
 
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
     "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+  }
+}
+
+# OPTIONS para generate-presigned-search
+resource "aws_api_gateway_method" "faces_generate_presigned_search_options" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "faces_generate_presigned_search_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method = aws_api_gateway_method.faces_generate_presigned_search_options.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "faces_generate_presigned_search_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method = aws_api_gateway_method.faces_generate_presigned_search_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "faces_generate_presigned_search_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method = aws_api_gateway_method.faces_generate_presigned_search_options.http_method
+  status_code = aws_api_gateway_method_response.faces_generate_presigned_search_options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+  }
+}
+
+# OPTIONS para search-by-face
+resource "aws_api_gateway_method" "faces_search_by_face_options" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.faces_search_by_face.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "faces_search_by_face_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search_by_face.id
+  http_method = aws_api_gateway_method.faces_search_by_face_options.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "faces_search_by_face_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search_by_face.id
+  http_method = aws_api_gateway_method.faces_search_by_face_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "faces_search_by_face_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search_by_face.id
+  http_method = aws_api_gateway_method.faces_search_by_face_options.http_method
+  status_code = aws_api_gateway_method_response.faces_search_by_face_options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+  }
+}
+
+# OPTIONS para get-faces
+resource "aws_api_gateway_method" "faces_get_faces_options" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.faces_get_faces_page_size.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "faces_get_faces_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_get_faces_page_size.id
+  http_method = aws_api_gateway_method.faces_get_faces_options.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "faces_get_faces_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_get_faces_page_size.id
+  http_method = aws_api_gateway_method.faces_get_faces_options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "faces_get_faces_options" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_get_faces_page_size.id
+  http_method = aws_api_gateway_method.faces_get_faces_options.http_method
+  status_code = aws_api_gateway_method_response.faces_get_faces_options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
   }
 }
 

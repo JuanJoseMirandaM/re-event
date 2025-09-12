@@ -148,11 +148,11 @@ resource "aws_api_gateway_method_response" "get_notifications_200" {
 # FACEFINDER ENDPOINTS - Method Responses
 # =============================================================================
 
-# POST /faces/upload
-resource "aws_api_gateway_method_response" "upload_faces_200" {
+# POST /faces/generate-presigned-batch
+resource "aws_api_gateway_method_response" "generate_presigned_batch_200" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_upload.id
-  http_method = aws_api_gateway_method.upload_faces.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_batch.id
+  http_method = aws_api_gateway_method.generate_presigned_batch.http_method
   status_code = "200"
 
   response_parameters = {
@@ -162,18 +162,18 @@ resource "aws_api_gateway_method_response" "upload_faces_200" {
   }
 }
 
-resource "aws_api_gateway_method_response" "upload_faces_400" {
+resource "aws_api_gateway_method_response" "generate_presigned_batch_400" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_upload.id
-  http_method = aws_api_gateway_method.upload_faces.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_batch.id
+  http_method = aws_api_gateway_method.generate_presigned_batch.http_method
   status_code = "400"
 }
 
-# POST /faces/search
-resource "aws_api_gateway_method_response" "search_faces_200" {
+# POST /faces/generate-presigned-search
+resource "aws_api_gateway_method_response" "generate_presigned_search_200" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_search.id
-  http_method = aws_api_gateway_method.search_faces.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method = aws_api_gateway_method.generate_presigned_search.http_method
   status_code = "200"
 
   response_parameters = {
@@ -183,17 +183,38 @@ resource "aws_api_gateway_method_response" "search_faces_200" {
   }
 }
 
-resource "aws_api_gateway_method_response" "search_faces_400" {
+resource "aws_api_gateway_method_response" "generate_presigned_search_400" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_search.id
-  http_method = aws_api_gateway_method.search_faces.http_method
+  resource_id = aws_api_gateway_resource.faces_generate_presigned_search.id
+  http_method = aws_api_gateway_method.generate_presigned_search.http_method
   status_code = "400"
 }
 
-# GET /faces/{page}/{size}
+# POST /faces/search-by-face
+resource "aws_api_gateway_method_response" "search_by_face_200" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search_by_face.id
+  http_method = aws_api_gateway_method.search_by_face.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_method_response" "search_by_face_400" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.faces_search_by_face.id
+  http_method = aws_api_gateway_method.search_by_face.http_method
+  status_code = "400"
+}
+
+# GET /faces/get-faces/{page}/{size}
 resource "aws_api_gateway_method_response" "get_faces_paginated_200" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.faces_page_size.id
+  resource_id = aws_api_gateway_resource.faces_get_faces_page_size.id
   http_method = aws_api_gateway_method.get_faces_paginated.http_method
   status_code = "200"
 
