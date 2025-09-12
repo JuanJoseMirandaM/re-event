@@ -4,6 +4,7 @@ import {DurationPipe} from '../../pipes';
 import {RatingData, RatingPanelComponent} from '../rating-panel/rating-panel.component';
 import {Evaluation, EvaluationService, SingleEvaluationResponse} from '../../core/services/evaluation.service';
 import {TranslatePipe} from '@ngx-translate/core';
+import {ToastService} from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-agenda-card',
@@ -25,6 +26,7 @@ export class AgendaCardComponent implements OnInit {
 
   #evaluationService = inject(EvaluationService);
   #eventsService = inject(EventsService);
+  #toast = inject(ToastService);
 
   ngOnInit() {
     // Initialize user data from event
@@ -99,27 +101,40 @@ export class AgendaCardComponent implements OnInit {
   toggleFavorite(): void {
     const eventId = this.event().eventId;
     const currentFavoriteStatus = this.isFavorite();
+    const newFavoriteStatus = !currentFavoriteStatus;
+
+    // Optimistic UI update - change color immediately
+    this.isFavorite.set(newFavoriteStatus);
+    this.favoriteToggled.emit({ eventId, isFavorite: newFavoriteStatus });
 
     if (currentFavoriteStatus) {
       // Remove from favorites
       this.#eventsService.removeFavorite(eventId).subscribe({
         next: () => {
-          this.isFavorite.set(false);
-          this.favoriteToggled.emit({ eventId, isFavorite: false });
+          // Success notification
+          this.#toast.success('Evento eliminado de favoritos');
         },
         error: (error) => {
           console.error('Error removing favorite:', error);
+          // Rollback on error
+          this.isFavorite.set(currentFavoriteStatus);
+          this.favoriteToggled.emit({ eventId, isFavorite: currentFavoriteStatus });
+          this.#toast.error('Error al eliminar de favoritos');
         }
       });
     } else {
       // Add to favorites
       this.#eventsService.addFavorite(eventId).subscribe({
         next: () => {
-          this.isFavorite.set(true);
-          this.favoriteToggled.emit({ eventId, isFavorite: true });
+          // Success notification
+          this.#toast.success('Evento añadido a favoritos');
         },
         error: (error) => {
           console.error('Error adding favorite:', error);
+          // Rollback on error
+          this.isFavorite.set(currentFavoriteStatus);
+          this.favoriteToggled.emit({ eventId, isFavorite: currentFavoriteStatus });
+          this.#toast.error('Error al añadir a favoritos');
         }
       });
     }
