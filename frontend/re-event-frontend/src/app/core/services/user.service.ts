@@ -106,8 +106,9 @@ export class UserService {
     return this.getCurrentUser().pipe(
       map(user => {
         const adminUserIds = [
-          '75624637-0cbc-4af0-9b18-a363569ffaf8', // jhonrocker2012@gmail.com
-          '524a0c87-6bcb-4d5e-902f-d1c92744427d'  // jjsmm97@gmail.com
+          '75624637-0cbc-4af0-9b18-a363569ffaf8',
+          '524a0c87-6bcb-4d5e-902f-d1c92744427d',
+          '5fe995c6-81dc-4ea8-adac-ba03a6887d1a'
         ];
         return adminUserIds.includes(user.userId);
       })

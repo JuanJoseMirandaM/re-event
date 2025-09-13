@@ -168,6 +168,8 @@
     "roleLabel": "Rol",
     "pointsLabel": "Puntos",
     "settings": "Configuraciones",
+    "language": "Idioma",
+    "languageDescription": "Selecciona tu idioma preferido",
     "accreditation": "Acreditación",
     "changePassword": "Cambiar contraseña",
     "logout": "Salir",

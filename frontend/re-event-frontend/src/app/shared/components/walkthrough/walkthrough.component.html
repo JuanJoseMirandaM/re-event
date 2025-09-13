@@ -1,4 +1,6 @@
-<div class="walkthrough-container">
+<div class="walkthrough-container"
+     (touchstart)="onTouchStart($event)"
+     (touchend)="onTouchEnd($event)">
   <div class="walkthrough-image-section">
     <div class="image-container">
       <img
@@ -27,6 +29,14 @@
                 [attr.aria-label]="'Ir al paso ' + (i + 1)">
         </button>
       }
+    </div>
+
+    <div class="swipe-indicator">
+      <span class="swipe-text">Desliza para navegar</span>
+      <div class="swipe-arrows">
+        <span class="arrow-left">←</span>
+        <span class="arrow-right">→</span>
+      </div>
     </div>
 
     <div class="flex gap-2 justify-center">

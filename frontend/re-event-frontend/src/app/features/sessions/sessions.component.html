@@ -1,61 +1,60 @@
 <div class="px-4 py-2 flex flex--col gap-4">
-  <!-- Filter Tabs -->
   <div class="filter-tabs">
-    <button 
-      class="btn filter-tab"
-      [class.filter-tab--active]="activeFilter() === 'all'"
-      (click)="onFilterChange('all')">
-      {{ 'sessions.allSessions' | translate }}
-    </button>
-    
-    <button 
-      class="btn filter-tab"
-      [class.filter-tab--active]="activeFilter() === 'current'"
-      (click)="onFilterChange('current')">
-      {{ 'sessions.currentSessions' | translate }}
-    </button>
-    
-    <button 
-      class="btn filter-tab"
-      [class.filter-tab--active]="activeFilter() === 'upcoming'"
-      (click)="onFilterChange('upcoming')">
-      {{ 'sessions.upcomingSessions' | translate }}
-    </button>
-    
-    <button 
-      class="btn filter-tab"
-      [class.filter-tab--active]="activeFilter() === 'past'"
-      (click)="onFilterChange('past')">
-      {{ 'sessions.pastSessions' | translate }}
-    </button>
-    
-    <button 
-      class="btn filter-tab"
-      [class.filter-tab--active]="activeFilter() === 'favorites'"
-      (click)="onFilterChange('favorites')">
-      {{ 'sessions.favorites' | translate }}
-    </button>
+    <div class="filter-tabs__container">
+      <button
+        class="filter-chip"
+        [class.filter-chip--active]="activeFilter() === 'all'"
+        (click)="onFilterChange('all')">
+        {{ 'sessions.allSessions' | translate }}
+      </button>
+
+      <button
+        class="filter-chip"
+        [class.filter-chip--active]="activeFilter() === 'current'"
+        (click)="onFilterChange('current')">
+        {{ 'sessions.currentSessions' | translate }}
+      </button>
+
+      <button
+        class="filter-chip"
+        [class.filter-chip--active]="activeFilter() === 'upcoming'"
+        (click)="onFilterChange('upcoming')">
+        {{ 'sessions.upcomingSessions' | translate }}
+      </button>
+
+      <button
+        class="filter-chip"
+        [class.filter-chip--active]="activeFilter() === 'past'"
+        (click)="onFilterChange('past')">
+        {{ 'sessions.pastSessions' | translate }}
+      </button>
+
+      <button
+        class="filter-chip"
+        [class.filter-chip--active]="activeFilter() === 'favorites'"
+        (click)="onFilterChange('favorites')">
+        {{ 'sessions.favorites' | translate }}
+      </button>
+    </div>
   </div>
 
-  <!-- Tag Filters -->
-  @if (availableTags().length > 0) {
-    <div class="flex flex--col gap-2">
-      <h3 class="text-base font-medium text-secondary">{{ 'sessions.filterByTags' | translate }}</h3>
-      <div class="flex flex--wrap gap-2">
-        <select 
-          class="tag-select"
-          [value]="selectedTag()"
-          (change)="onTagChange($event)">
-          <option value="">{{ 'sessions.noTag' | translate }}</option>
-          @for (tag of availableTags(); track tag) {
-            <option [value]="tag">{{ tag }}</option>
-          }
-        </select>
-      </div>
-    </div>
-  }
+<!--  @if (availableTags().length > 0) {-->
+<!--    <div class="flex flex&#45;&#45;col gap-2">-->
+<!--      <h3 class="text-base font-medium text-secondary">{{ 'sessions.filterByTags' | translate }}</h3>-->
+<!--      <div class="flex flex&#45;&#45;wrap gap-2">-->
+<!--        <select-->
+<!--          class="tag-select"-->
+<!--          [value]="selectedTag()"-->
+<!--          (change)="onTagChange($event)">-->
+<!--          <option value="">{{ 'sessions.noTag' | translate }}</option>-->
+<!--          @for (tag of availableTags(); track tag) {-->
+<!--            <option [value]="tag">{{ tag }}</option>-->
+<!--          }-->
+<!--        </select>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  }-->
 
-  <!-- Sessions List -->
   <app-sessions-list
     [activeFilter]="activeFilter()"
     [selectedTags]="selectedTags()"

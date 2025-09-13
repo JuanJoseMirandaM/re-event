@@ -115,6 +115,15 @@
 
   <div class="flex flex--col gap-2 p-6 rounded-md bg-primary">
     <span class="text-lg font-medium py-2">{{ 'profile.settings' | translate }}</span>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <span class="setting-label">{{ 'profile.language' | translate }}</span>
+        <span class="setting-description">{{ 'profile.languageDescription' | translate }}</span>
+      </div>
+      <app-language-selector></app-language-selector>
+    </div>
+
     <button class="btn btn--secondary" (click)="openVerificationPanel()">{{ 'profile.accreditation' | translate }}</button>
     <button class="btn btn--secondary">{{ 'profile.changePassword' | translate }}</button>
     <button class="btn re-error-btn" (click)="logout()">{{ 'profile.logout' | translate }}</button>

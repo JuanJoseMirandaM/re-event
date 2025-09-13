@@ -5,9 +5,10 @@
   background: linear-gradient(135deg, var(--primary-lilac-dark) 0%, var(--primary-lilac-light) 100%);
   overflow: hidden;
   animation: fadeIn 0.5s ease-out;
+  user-select: none;
+  touch-action: pan-y;
 }
 
-/* Top Section - Image Display */
 .walkthrough-image-section {
   flex: 1;
   display: flex;
@@ -55,12 +56,12 @@
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 0;
-  
+
   &:hover {
     border-color: var(--primary-lilac);
     transform: scale(1.1);
   }
-  
+
   &.active {
     background: var(--primary-lilac);
     border-color: var(--primary-lilac);
@@ -68,6 +69,52 @@
   }
 }
 
+.swipe-indicator {
+  text-align: center;
+  margin-bottom: var(--space-4);
+  opacity: 0.7;
+  animation: pulseGently 2s ease-in-out infinite;
+
+  .swipe-text {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-bottom: var(--space-1);
+    font-weight: 400;
+  }
+
+  .swipe-arrows {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+
+    .arrow-left,
+    .arrow-right {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      font-weight: bold;
+      animation: slideHint 1.5s ease-in-out infinite;
+    }
+
+    .arrow-left {
+      animation-delay: 0s;
+    }
+
+    .arrow-right {
+      animation-delay: 0.75s;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: var(--space-3);
+
+    .swipe-text {
+      font-size: var(--text-xs);
+    }
+  }
+}
+
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -76,5 +123,25 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes pulseGently {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideHint {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(0.3rem);
+    opacity: 1;
   }
 }

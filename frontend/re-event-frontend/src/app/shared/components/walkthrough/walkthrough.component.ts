@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, signal, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { WalkthroughService } from '../../../core/services/walkthrough.service';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router} from '@angular/router';
+import {WalkthroughService} from '../../../core/services/walkthrough.service';
 
 export interface WalkthroughStep {
   id: number;
@@ -23,6 +23,10 @@ export class WalkthroughComponent implements OnInit {
   private walkthroughService = inject(WalkthroughService);
 
   currentStep = signal<number>(0);
+
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private minSwipeDistance = 50;
 
   walkthroughSteps: WalkthroughStep[] = [
     {
@@ -49,7 +53,6 @@ export class WalkthroughComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    // Sincronizar el total de pasos con el servicio
     this.walkthroughService.updateTotalSteps(this.walkthroughSteps.length);
   }
 
@@ -82,11 +85,13 @@ export class WalkthroughComponent implements OnInit {
     this.walkthroughService.setCurrentStep(this.currentStep());
   }
 
-  private completeWalkthrough(): void {
-    // Marcar como completado en el servicio
-    this.walkthroughService.markAsCompleted();
+  private previousStep(): void {
+    this.currentStep.update(current => Math.max(current - 1, 0));
+    this.walkthroughService.setCurrentStep(this.currentStep());
+  }
 
-    // Navegar a la página principal
+  private completeWalkthrough(): void {
+    this.walkthroughService.markAsCompleted();
     this.router.navigate(['/']);
   }
 
@@ -98,5 +103,39 @@ export class WalkthroughComponent implements OnInit {
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTUwQzIyMCAxMzAgMjQwIDEzMCAyNjAgMTUwQzI4MCAxNzAgMzAwIDE5MCAzMDAgMjEwQzMwMCAyMzAgMjgwIDI1MCAyNjAgMjcwQzI0MCAyOTAgMjIwIDI5MCAyMDAgMjcwQzE4MCAyNTAgMTYwIDIzMCAxNjAgMjEwQzE2MCAxOTAgMTgwIDE3MCAyMDAgMTUwWiIgZmlsbD0iI0QxRDRGQSIvPgo8dGV4dCB4PSIyMDAiIHk9IjE4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjNjc3NDhCIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZW4gZGVsIFBhc28gPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjc3NDhCIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QYXNvIDwvLXRleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMjIwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2Nzc0OEIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjEgPC90ZXh0Pgo8L3N2Zz4K';
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (!this.touchStartX || !this.touchStartY) {
+      return;
+    }
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+
+    const deltaX = this.touchStartX - touchEndX;
+    const deltaY = this.touchStartY - touchEndY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (Math.abs(deltaX) > this.minSwipeDistance) {
+        if (deltaX > 0) {
+          if (!this.isLastStep) {
+            this.nextStep();
+          }
+        } else {
+          if (this.currentStep() > 0) {
+            this.previousStep();
+          }
+        }
+      }
+    }
+
+    this.touchStartX = 0;
+    this.touchStartY = 0;
   }
 }

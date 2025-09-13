@@ -35,7 +35,10 @@ interface EventsByDate {
   ],
   templateUrl: './sessions-list.component.html',
   styleUrl: './sessions-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host:{
+    class: 'flex flex--col gap-4'
+  }
 })
 export default class SessionsListComponent implements OnInit {
   #eventsService = inject(EventsService);

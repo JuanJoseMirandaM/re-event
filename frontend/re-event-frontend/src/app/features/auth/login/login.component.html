@@ -1,6 +1,11 @@
-<div class="flex flex--col gap-2 my-8">
-  <p class="text-3xl font-semibold text-center">{{ 'auth.login.title' | translate }}</p>
-  <p class="text-xl text-center">{{ 'auth.login.welcome' | translate }}</p>
+<div class="logo-section">
+  <div class="logo-container">
+    <img src="/icons/icon-384x384.png" alt="Kinua Logo" class="app-logo">
+  </div>
+  <h1 class="app-name">Kinua</h1>
+  <div class="welcome-text">
+    <p class="text-lg text-center text-secondary">{{ 'auth.login.welcome' | translate }}</p>
+  </div>
 </div>
 
 @if (errorMessage()) {
