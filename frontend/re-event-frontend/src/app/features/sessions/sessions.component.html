@@ -33,13 +33,13 @@
 
   <div class="filter-tabs">
     <div class="filter-tabs__container">
-      <select 
+      <select
         class="filter-select"
         [value]="selectedLocation()"
         (change)="onLocationChange($event)">
         <option value="">{{ 'sessions.allLocations' | translate }}</option>
-        <option 
-          *ngFor="let location of availableLocations()" 
+        <option
+          *ngFor="let location of availableLocations()"
           [value]="location">
           {{ location }}
         </option>
