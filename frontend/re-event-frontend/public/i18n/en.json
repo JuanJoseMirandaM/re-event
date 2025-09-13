@@ -166,6 +166,8 @@
     "roleLabel": "Role",
     "pointsLabel": "Points",
     "settings": "Settings",
+    "language": "Language",
+    "languageDescription": "Select your preferred language",
     "accreditation": "Accreditation",
     "changePassword": "Change password",
     "logout": "Log out",

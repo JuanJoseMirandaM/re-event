@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslatePipe} from '@ngx-translate/core';
 import {CommonModule} from '@angular/common';
@@ -15,24 +15,11 @@ import SessionsListComponent from './sessions-list/sessions-list.component';
   styleUrl: './sessions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export default class SessionsComponent implements OnInit {
-  #route = inject(ActivatedRoute);
-  #router = inject(Router);
-
-  activeFilter = signal<string>('upcoming');
+export default class SessionsComponent {
+  activeFilter = signal<string>('all');
   availableTags = signal<string[]>([]);
-  selectedTag = signal<string>(''); // Single tag selection
-  selectedTags = signal<string[]>([]); // Keep for compatibility with sessions-list
-
-  ngOnInit() {
-    // Handle query params for sessionId
-    this.#route.queryParams.subscribe(params => {
-      if (params['sessionId']) {
-        // This will be handled by the sessions-list component
-        // to open the rating panel for the specific session
-      }
-    });
-  }
+  selectedTag = signal<string>('');
+  selectedTags = signal<string[]>([]);
 
   onFilterChange(filter: string) {
     this.activeFilter.set(filter);
@@ -42,8 +29,7 @@ export default class SessionsComponent implements OnInit {
     const target = event.target as HTMLSelectElement;
     const selectedTag = target.value;
     this.selectedTag.set(selectedTag);
-    
-    // Update selectedTags array for compatibility with sessions-list
+
     if (selectedTag) {
       this.selectedTags.set([selectedTag]);
     } else {

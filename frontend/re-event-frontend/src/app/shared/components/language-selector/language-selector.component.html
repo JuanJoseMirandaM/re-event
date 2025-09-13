@@ -1,0 +1,9 @@
+<select
+  class="language-dropdown"
+  [value]="currentLanguageCode()"
+  (change)="onLanguageChange($event)"
+  [attr.aria-label]="'Seleccionar idioma / Select language'"
+>
+  <option value="es">🇪🇸 Español</option>
+  <option value="en">🇺🇸 English</option>
+</select>

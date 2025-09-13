@@ -4,10 +4,11 @@ import {AuthService} from '../../core/services/auth.service';
 import {User, UserService} from '../../core/services/user.service';
 import {VerificationPanelComponent} from '../../components/verification-panel/verification-panel.component';
 import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageSelectorComponent} from '../../shared/components/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-my-account',
-  imports: [ReactiveFormsModule, VerificationPanelComponent, TranslatePipe],
+  imports: [ReactiveFormsModule, VerificationPanelComponent, TranslatePipe, LanguageSelectorComponent],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
