@@ -23,6 +23,78 @@ resource "aws_dynamodb_table" "users" {
   tags = var.common_tags
 }
 
+# DynamoDB Table para metadatos de FaceFinder
+resource "aws_dynamodb_table" "facefinder_data" {
+  name         = "${var.project_name}-faceFinder-${var.environment}"
+  billing_mode = var.environment == "prod" ? "PROVISIONED" : "PAY_PER_REQUEST"
+  
+  read_capacity  = var.environment == "prod" ? 5 : null
+  write_capacity = var.environment == "prod" ? 5 : null
+  hash_key       = "faceId"
+
+  attribute {
+    name = "faceId"
+    type = "S"
+  }
+
+  attribute {
+    name = "imageId"
+    type = "S"
+  }
+
+  attribute {
+    name = "imageName"
+    type = "S"
+  }
+
+  attribute {
+    name = "collectionId"
+    type = "S"
+  }
+
+  # GSI para búsquedas por faceId
+  global_secondary_index {
+    name               = "by-face-id"
+    hash_key           = "faceId"
+    projection_type    = "ALL"
+    read_capacity      = var.environment == "prod" ? 5 : null
+    write_capacity     = var.environment == "prod" ? 5 : null
+  }
+
+  # GSI para búsquedas por imageId
+  global_secondary_index {
+    name               = "by-image-id"
+    hash_key           = "imageId"
+    projection_type    = "ALL"
+    read_capacity      = var.environment == "prod" ? 5 : null
+    write_capacity     = var.environment == "prod" ? 5 : null
+  }
+
+  # GSI para búsquedas por imageName
+  global_secondary_index {
+    name               = "by-image-name"
+    hash_key           = "imageName"
+    projection_type    = "ALL"
+    read_capacity      = var.environment == "prod" ? 5 : null
+    write_capacity     = var.environment == "prod" ? 5 : null
+  }
+
+  # GSI para búsquedas por collectionId
+  global_secondary_index {
+    name               = "by-collection-id"
+    hash_key           = "collectionId"
+    projection_type    = "ALL"
+    read_capacity      = var.environment == "prod" ? 5 : null
+    write_capacity     = var.environment == "prod" ? 5 : null
+  }
+
+  point_in_time_recovery {
+    enabled = var.environment == "prod" ? true : false
+  }
+
+  tags = var.common_tags
+}
+
 # DynamoDB Table for Events
 resource "aws_dynamodb_table" "events" {
   name         = "${var.project_name}-events-${var.environment}"

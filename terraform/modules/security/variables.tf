@@ -32,6 +32,11 @@ variable "dynamodb_table_arn" {
   type        = string
 }
 
+variable "facefinder_table_arn" {
+  description = "FaceFinder DynamoDB table ARN for IAM policies"
+  type        = string
+}
+
 variable "rekognition_collection_id" {
   description = "Rekognition collection ID"
   type        = string

@@ -122,6 +122,7 @@ module "security" {
   common_tags                = local.facefinder_tags
   s3_bucket_arn              = module.storage.bucket_arn
   dynamodb_table_arn         = module.database.users_table_arn  # Reutilizamos la tabla unificada
+  facefinder_table_arn       = module.database.facefinder_table_arn
   rekognition_collection_id  = module.ai.collection_id
 }
 
@@ -137,6 +138,7 @@ module "compute" {
   s3_bucket_name             = module.storage.bucket_name
   s3_bucket_arn              = module.storage.bucket_arn
   dynamodb_table_name        = module.database.users_table_name  # Reutilizamos la tabla unificada
+  facefinder_table_name      = module.database.facefinder_table_name
   rekognition_collection_id  = module.ai.collection_id
   sqs_queue_arn              = module.messaging.queue_arn
   sqs_queue_url              = module.messaging.queue_url
