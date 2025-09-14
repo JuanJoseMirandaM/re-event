@@ -88,3 +88,13 @@ output "favorites_table_arn" {
   description = "ARN of the favorites DynamoDB table"
   value       = aws_dynamodb_table.favorites.arn
 }
+
+output "facefinder_table_name" {
+  description = "Name of the FaceFinder DynamoDB table"
+  value       = aws_dynamodb_table.facefinder_data.name
+}
+
+output "facefinder_table_arn" {
+  description = "ARN of the FaceFinder DynamoDB table"
+  value       = aws_dynamodb_table.facefinder_data.arn
+}

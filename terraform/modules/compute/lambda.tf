@@ -64,7 +64,7 @@ resource "aws_lambda_function" "search_by_face" {
 
   environment {
     variables = {
-      DYNAMODB_TABLE = var.dynamodb_table_name
+      DYNAMODB_TABLE = var.facefinder_table_name
       REKOGNITION_COLLECTION = var.rekognition_collection_id
       EVENT_NAME = var.event_name
     }
@@ -84,7 +84,7 @@ resource "aws_lambda_function" "get_paginated_items" {
 
   environment {
     variables = {
-      DYNAMODB_TABLE = var.dynamodb_table_name
+      DYNAMODB_TABLE = var.facefinder_table_name
     }
   }
 
@@ -103,7 +103,7 @@ resource "aws_lambda_function" "save_analyze" {
 
   environment {
     variables = {
-      DYNAMODB_TABLE = var.dynamodb_table_name
+      DYNAMODB_TABLE = var.facefinder_table_name
       REKOGNITION_COLLECTION = var.rekognition_collection_id
       DESTINATION_LAMBDA = "${var.project_name}-brand-publish-${var.environment}"
       EVENT_NAME = var.event_name
@@ -154,7 +154,7 @@ resource "aws_lambda_function" "brand_publish" {
   environment {
     variables = {
       BUCKET_NAME = var.s3_bucket_name
-      DYNAMODB_TABLE = var.dynamodb_table_name
+      DYNAMODB_TABLE = var.facefinder_table_name
       EVENT_NAME = var.event_name
       BRAND_LOGO_KEY = "watermarks/brand.png"
       PARTNER_LOGO_KEY = "watermarks/partner.png"
