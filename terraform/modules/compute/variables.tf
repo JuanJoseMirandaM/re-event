@@ -42,6 +42,11 @@ variable "dynamodb_table_name" {
   type        = string
 }
 
+variable "facefinder_table_name" {
+  description = "Name of the FaceFinder DynamoDB table"
+  type        = string
+}
+
 variable "rekognition_collection_id" {
   description = "Rekognition collection ID"
   type        = string

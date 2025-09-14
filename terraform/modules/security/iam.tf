@@ -64,13 +64,14 @@ resource "aws_iam_role_policy" "dynamodb_access" {
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
-          "dynamodb:DeleteItem",
           "dynamodb:Query",
           "dynamodb:Scan"
         ]
         Resource = [
           var.dynamodb_table_arn,
-          "${var.dynamodb_table_arn}/index/*"
+          "${var.dynamodb_table_arn}/index/*",
+          var.facefinder_table_arn,
+          "${var.facefinder_table_arn}/index/*"
         ]
       }
     ]
@@ -116,6 +117,25 @@ resource "aws_iam_role_policy" "sqs_access" {
           "sqs:GetQueueAttributes"
         ]
         Resource = "*"
+      }
+    ]
+  })
+}
+
+# Política para invocar otras funciones Lambda
+resource "aws_iam_role_policy" "lambda_invoke" {
+  name = "LambdaInvoke-${var.environment}"
+  role = aws_iam_role.lambda_execution_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = "arn:aws:lambda:${var.aws_region}:*:function:${var.project_name}-*-${var.environment}"
       }
     ]
   })
