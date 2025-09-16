@@ -5,7 +5,7 @@ export const environment = {
     region: 'us-east-1',
     userPoolId: 'us-east-1_c3QKPmyRW',
     userPoolClientId: '1q7h0dh9324va0j7q6g03bvm31',
-    domain: 'https://kinua-auth-dev.auth.us-east-1.amazoncognito.com',
+    domain: 'kinua-auth-dev.auth.us-east-1.amazoncognito.com',
     redirectSignIn: 'https://re-event-rho.vercel.app/auth/callback',  // Reemplazar con tu IP real
     redirectSignOut: 'https://re-event-rho.vercel.app/auth/logout'    // Reemplazar con tu IP real
   },
