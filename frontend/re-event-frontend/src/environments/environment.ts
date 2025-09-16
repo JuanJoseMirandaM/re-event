@@ -5,7 +5,7 @@ export const environment = {
     region: 'us-east-1',
     userPoolId: 'us-east-1_mWrHDzEG4',
     userPoolClientId: '7pv095cq6naalh7ehmiuc5158l',
-    domain: 'https://kinua-v2-auth-prod.auth.us-east-1.amazoncognito.com',
+    domain: 'kinua-v2-auth-prod.auth.us-east-1.amazoncognito.com',
     redirectSignIn: 'http://localhost:4200/auth/callback',  // Reemplazar con tu IP real
     redirectSignOut: 'http://localhost:4200/auth/logout'    // Reemplazar con tu IP real
   },
