@@ -107,7 +107,7 @@ export class UserService {
       map(user => {
         const adminUserIds = [
           '75624637-0cbc-4af0-9b18-a363569ffaf8', // jhonrocker2012@gmail.com
-          '11519c48-7d7f-464c-8459-507f3e544a5e'  // jjsmm97@gmail.com
+          '3450acd9-8acb-47be-a64c-00af0f2dfce3'  // jjsmm97@gmail.com.pr
         ];
         return adminUserIds.includes(user.userId);
       })
