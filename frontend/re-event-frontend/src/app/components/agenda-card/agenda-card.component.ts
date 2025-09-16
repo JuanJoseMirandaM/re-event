@@ -40,7 +40,7 @@ export class AgendaCardComponent implements OnInit {
     if (this.targetSessionId() && this.targetSessionId() === this.event().eventId) {
       // Small delay to ensure the component is fully rendered
       setTimeout(() => {
-        if (this.isPastEvent()) {
+        if (this.isRatingAvailable()) {
           if (!this.isEvaluated()) {
             // Open rating panel if not evaluated
             this.openRatingPanel();
@@ -51,6 +51,12 @@ export class AgendaCardComponent implements OnInit {
             });
             this.removeSessionIdFromUrl();
           }
+        } else {
+          // Show toast if rating is not available and remove sessionId from URL
+          this.#translate.get('sessions.ratingNotAvailable').subscribe(message => {
+            this.#toast.info(message);
+          });
+          this.removeSessionIdFromUrl();
         }
       }, 100);
     }
@@ -59,6 +65,23 @@ export class AgendaCardComponent implements OnInit {
   isPastEvent(): boolean {
     const eventDate = new Date(this.event().startDate);
     return eventDate < new Date();
+  }
+
+  isRatingAvailable(): boolean {
+    const now = new Date();
+    const startDate = new Date(this.event().startDate);
+    const endDate = new Date(this.event().endDate);
+    
+    // Si no hay endDate, calcular basado en startDate + time (duración en minutos)
+    if (!endDate || isNaN(endDate.getTime())) {
+      const durationMs = this.event().time * 60 * 1000; // Convertir minutos a milisegundos
+      endDate.setTime(startDate.getTime() + durationMs);
+    }
+    
+    // La calificación está disponible desde que empieza el evento hasta 15 minutos después de que termine
+    const ratingEndTime = new Date(endDate.getTime() + 15 * 60 * 1000); // 15 minutos después del final
+    
+    return now >= startDate && now <= ratingEndTime;
   }
 
   onLocationClick(): void {
