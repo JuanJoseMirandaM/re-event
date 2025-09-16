@@ -45,12 +45,17 @@
   </div>
 }
 
-@if (isPastEvent() && isEvaluated() && evaluation()?.sessionId) {
+@if (isEvaluated() && evaluation()?.sessionId) {
   <button class="btn btn--secondary btn--sm" disabled>
     {{ "agenda.rated" | translate }}
     @for (start of [1, 2, 3, 4, 5]; track start) {
       <span [style.color]="start > evaluation()!.rating ? 'var(--gray-400)' : 'var(--primary-lilac)'">&starf;</span>
     }
+  </button>
+} @else if (isRatingAvailable()) {
+  <button class="btn btn--secondary btn--sm"
+          (click)="openRatingPanel()">
+    {{ "agenda.rate" | translate }}
   </button>
 }
 
