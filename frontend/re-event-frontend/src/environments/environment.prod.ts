@@ -6,8 +6,8 @@ export const environment = {
     userPoolId: 'us-east-1_mWrHDzEG4',
     userPoolClientId: '7pv095cq6naalh7ehmiuc5158l',
     domain: 'kinua-v2-auth-prod.auth.us-east-1.amazoncognito.com',
-    redirectSignIn: 'https://main.d8cmoxb2lfk1k.amplifyapp.com/auth/callback',  // Reemplazar con tu IP real
-    redirectSignOut: 'https://main.d8cmoxb2lfk1k.amplifyapp.com/auth/logout'    // Reemplazar con tu IP real
+    redirectSignIn: 'https://app.awscommunity.org.bo/auth/callback',  // Reemplazar con tu IP real
+    redirectSignOut: 'https://app.awscommunity.org.bo/auth/logout'    // Reemplazar con tu IP real
   },
   firebaseConfig: {
     apiKey: "AIzaSyA5e4Qf0nUW-ALm40oAUrNImuyrZkBXMVY",

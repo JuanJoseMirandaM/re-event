@@ -4,13 +4,13 @@ importScripts('https://www.gstatic.com/firebasejs/11.4.0/firebase-messaging-comp
 
 // Inicializa Firebase
 firebase.initializeApp({
-    apiKey: "AIzaSyAPgmfnx8zGQuShmjmA-QO_ulwueVZR42k",
-    authDomain: "reevent-fcm.firebaseapp.com",
-    projectId: "reevent-fcm",
-    storageBucket: "reevent-fcm.firebasestorage.app",
-    messagingSenderId: "145026622801",
-    appId: "1:145026622801:web:c82d01ccbdc175619e9f70",
-    measurementId: "G-DN6DXETYRM"
+    apiKey: "AIzaSyA5e4Qf0nUW-ALm40oAUrNImuyrZkBXMVY",
+    authDomain: "kinua-fcm.firebaseapp.com",
+    projectId: "kinua-fcm",
+    storageBucket: "kinua-fcm.firebasestorage.app",
+    messagingSenderId: "62396424616",
+    appId: "1:62396424616:web:145f9df7cf9270105ebd9d",
+    measurementId: "G-YFNCEBPK0H"
 });
 
 // Instancia de Messaging
