@@ -1,4 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 export interface WalkthroughState {
   isCompleted: boolean;
@@ -11,7 +13,12 @@ export interface WalkthroughState {
 })
 export class WalkthroughService {
   private readonly STORAGE_KEY = 'kinua-walkthrough-completed';
+  private readonly router = inject(Router);
   
+  // Rutas donde no se debe mostrar el walkthrough
+  private readonly excludedRoutes = ['/install', '/qr-generator'];
+  
+  private currentUrl = signal<string>('/');
   private state = signal<WalkthroughState>({
     isCompleted: this.checkIfCompleted(),
     currentStep: 0,
@@ -22,10 +29,22 @@ export class WalkthroughService {
   isCompleted = computed(() => this.state().isCompleted);
   currentStep = computed(() => this.state().currentStep);
   totalSteps = computed(() => this.state().totalSteps);
-  shouldShowWalkthrough = computed(() => !this.state().isCompleted);
+  shouldShowWalkthrough = computed(() => {
+    // No mostrar walkthrough si ya está completado
+    if (this.state().isCompleted) {
+      return false;
+    }
+    
+    // No mostrar walkthrough en rutas excluidas
+    const url = this.currentUrl();
+    const isExcludedRoute = this.excludedRoutes.some(route => url.startsWith(route));
+    
+    return !isExcludedRoute;
+  });
 
   constructor() {
     this.initializeWalkthrough();
+    this.setupRouteListener();
   }
 
   private checkIfCompleted(): boolean {
@@ -44,6 +63,15 @@ export class WalkthroughService {
     if (!hasVisited) {
       localStorage.setItem('kinua-first-visit', 'true');
     }
+  }
+
+  private setupRouteListener(): void {
+    // Escuchar cambios de ruta y actualizar la URL actual
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentUrl.set(event.url);
+      });
   }
 
   // Método para actualizar el total de pasos dinámicamente
