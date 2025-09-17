@@ -105,7 +105,10 @@ export default class SessionsListComponent implements OnInit {
     });
 
     return Array.from(grouped.entries())
-      .map(([date, events]) => ({date, events}))
+      .map(([date, events]) => ({
+        date, 
+        events: events.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+      }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   });
 

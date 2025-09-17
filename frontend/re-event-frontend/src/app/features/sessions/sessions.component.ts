@@ -16,7 +16,7 @@ import SessionsListComponent from './sessions-list/sessions-list.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class SessionsComponent {
-  activeFilter = signal<string>('all');
+  activeFilter = signal<string>('upcoming');
   availableTags = signal<string[]>([]);
   selectedTag = signal<string>('');
   selectedTags = signal<string[]>([]);

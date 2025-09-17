@@ -1,25 +1,25 @@
 <div class="px-4 py-2 flex flex--col gap-4">
   <div class="filter-tabs">
     <div class="filter-tabs__container">
-      <button
-        class="filter-chip"
-        [class.filter-chip--active]="activeFilter() === 'all'"
-        (click)="onFilterChange('all')">
-        {{ 'sessions.allSessions' | translate }}
-      </button>
-
-      <button
+      <!-- <button
         class="filter-chip"
         [class.filter-chip--active]="activeFilter() === 'current'"
         (click)="onFilterChange('current')">
         {{ 'sessions.currentSessions' | translate }}
-      </button>
+      </button> -->
 
       <button
         class="filter-chip"
         [class.filter-chip--active]="activeFilter() === 'upcoming'"
         (click)="onFilterChange('upcoming')">
         {{ 'sessions.upcomingSessions' | translate }}
+      </button>
+
+      <button
+        class="filter-chip"
+        [class.filter-chip--active]="activeFilter() === 'favorites'"
+        (click)="onFilterChange('favorites')">
+        {{ 'sessions.favorites' | translate }}
       </button>
 
       <button
@@ -31,9 +31,9 @@
 
       <button
         class="filter-chip"
-        [class.filter-chip--active]="activeFilter() === 'favorites'"
-        (click)="onFilterChange('favorites')">
-        {{ 'sessions.favorites' | translate }}
+        [class.filter-chip--active]="activeFilter() === 'all'"
+        (click)="onFilterChange('all')">
+        {{ 'sessions.allSessions' | translate }}
       </button>
     </div>
   </div>
