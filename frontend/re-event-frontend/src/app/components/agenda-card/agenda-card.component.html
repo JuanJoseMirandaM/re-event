@@ -1,5 +1,12 @@
 <div class="flex gap-1">
-  <span class="re-flex-1 text-lg font-medium py-2">{{ event().title }}</span>
+  <div class="re-flex-1 flex flex--col gap-1">
+    <span class="text-lg font-medium py-2">{{ event().title }}</span>
+    @if (getEventStatus()) {
+      <span class="status-chip" [class.status-chip--now]="getEventStatus() === 'NOW'" [class.status-chip--past]="getEventStatus() === 'PAST'">
+        {{ getEventStatus() === 'NOW' ? ('agenda.now' | translate) : ('agenda.past' | translate) }}
+      </span>
+    }
+  </div>
   <button 
     class="btn favorite-btn"
     [class.favorite-active]="isFavorite()"

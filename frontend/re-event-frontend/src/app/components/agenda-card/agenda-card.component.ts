@@ -84,6 +84,31 @@ export class AgendaCardComponent implements OnInit {
     return now >= startDate && now <= ratingEndTime;
   }
 
+  getEventStatus(): 'NOW' | 'PAST' | 'UPCOMING' | null {
+    const now = new Date();
+    const startDate = new Date(this.event().startDate);
+    const endDate = new Date(this.event().endDate);
+    
+    // Si no hay endDate, calcular basado en startDate + time (duración en minutos)
+    if (!endDate || isNaN(endDate.getTime())) {
+      const durationMs = this.event().time * 60 * 1000; // Convertir minutos a milisegundos
+      endDate.setTime(startDate.getTime() + durationMs);
+    }
+    
+    // Si el evento está en curso (ahora está entre startDate y endDate)
+    if (now >= startDate && now <= endDate) {
+      return 'NOW';
+    }
+    
+    // Si el evento ya terminó
+    if (now > endDate) {
+      return 'PAST';
+    }
+    
+    // Si el evento es futuro, no mostramos chip
+    return null;
+  }
+
   onLocationClick(): void {
     if (this.event().locationLink) {
       console.log('Redirigiendo a ubicación:', this.event().locationLink);

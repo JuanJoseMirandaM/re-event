@@ -172,7 +172,7 @@ export default class SessionsListComponent implements OnInit {
     const endDate = new Date(event.endDate);
 
     const isCurrent = startDate <= now && endDate >= now;
-    const isUpcoming = startDate > now;
+    const isUpcoming = endDate > now;
     const isPast = endDate < now;
 
     return {

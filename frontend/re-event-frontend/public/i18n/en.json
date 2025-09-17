@@ -99,7 +99,9 @@
     "2": "Bad",
     "3": "Okay",
     "4": "Good",
-    "5": "Excellent"
+    "5": "Excellent",
+    "now": "Now",
+    "past": "Past"
   },
   "sessions": {
     "allSessions": "All Sessions",

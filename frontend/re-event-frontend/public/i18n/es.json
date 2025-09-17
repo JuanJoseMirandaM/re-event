@@ -100,7 +100,9 @@
     "2": "Mala",
     "3": "Regular",
     "4": "Buena",
-    "5": "Excelente"
+    "5": "Excelente",
+    "now": "Ahora",
+    "past": "Pasado"
   },
   "sessions": {
     "allSessions": "Todas las charlas",

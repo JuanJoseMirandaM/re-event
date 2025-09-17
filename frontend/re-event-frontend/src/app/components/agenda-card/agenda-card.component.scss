@@ -71,3 +71,26 @@
     color: var(--primary-lilac);
   }
 }
+
+.status-chip {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+
+  &.status-chip--now {
+    background-color: var(--success);
+    color: var(--primary-white);
+    border: 1px solid var(--success);
+  }
+
+  &.status-chip--past {
+    background-color: var(--warning);
+    color: var(--warning-700);
+    border: 1px solid var(--warning);
+  }
+}
