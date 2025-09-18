@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {Photo} from '../../core/store/store/gallery.state';
 import {GalleryService, GroupedFacesResponse, ImageWithFaces} from '../../core/services/gallery.service';
-import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {debounceTime, delay, distinctUntilChanged, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-gallery',
@@ -21,9 +21,9 @@ import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
   }
 })
 export default class GalleryComponent implements OnInit {
-  private galleryService = inject(GalleryService);
+  #galleryService = inject(GalleryService);
+  #searchSubject = new Subject<string>();
 
-  // Gallery state
   photos = signal<Photo[]>([]);
   images = signal<ImageWithFaces[]>([]);
   loading = signal(false);
@@ -31,25 +31,20 @@ export default class GalleryComponent implements OnInit {
   error = signal<any>(null);
   selectedPhoto = signal<Photo | null>(null);
 
-  // Pagination
   currentPage = signal(0);
   pageSize = signal(24);
   totalPhotos = signal(0);
   totalPages = signal(0);
 
-  // Search
   searchTerm = signal('');
-  private searchSubject = new Subject<string>();
 
-  // Modals
   showPhotoModal = signal(false);
   showUploadModal = signal(false);
 
   ngOnInit() {
     this.loadPhotos();
 
-    // Setup search debouncing
-    this.searchSubject.pipe(
+    this.#searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged()
     ).subscribe(term => {
@@ -63,22 +58,19 @@ export default class GalleryComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.galleryService.getFacesFromAPI(this.currentPage(), this.pageSize()).subscribe({
+    this.#galleryService.getFacesFromAPI(this.currentPage(), this.pageSize()).subscribe({
       next: (response: GroupedFacesResponse) => {
         let filteredImages = response.items;
 
-        // Apply search filter if needed
         if (this.searchTerm()) {
           filteredImages = response.items.filter(image =>
             image.imageName.toLowerCase().includes(this.searchTerm().toLowerCase())
           );
         }
 
-        // Store the original images data
         this.images.set(filteredImages);
 
-        // Convert to Photo format for display
-        const convertedPhotos = this.galleryService.convertImageWithFacesToPhotos(filteredImages);
+        const convertedPhotos = this.#galleryService.convertImageWithFacesToPhotos(filteredImages);
         this.photos.set(convertedPhotos);
 
         this.totalPhotos.set(response.pagination.totalItems);
@@ -95,22 +87,6 @@ export default class GalleryComponent implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage.set(page);
-    this.loadPhotos();
-  }
-
-  onPageSizeChange(size: number) {
-    this.pageSize.set(size);
-    this.currentPage.set(0);
-    this.loadPhotos();
-  }
-
-  onSearchChange(term: string) {
-    this.searchSubject.next(term);
-  }
-
-  clearSearch() {
-    this.searchTerm.set('');
-    this.currentPage.set(0);
     this.loadPhotos();
   }
 
@@ -137,12 +113,10 @@ export default class GalleryComponent implements OnInit {
       type: 'to-rekognize' as const
     };
 
-    this.galleryService.generatePresignedBatch(request).subscribe({
+    this.#galleryService.generatePresignedBatch(request).subscribe({
       next: (response) => {
-        console.log(response);
-        this.galleryService.uploadFileToS3(response, file).subscribe({
+        this.#galleryService.uploadFileToS3(response, file).pipe(delay(5000)).subscribe({
           next: () => {
-            console.log(`✅ File uploaded successfully: ${file.name}`);
             this.uploading.set(false);
             this.refreshGallery();
           },
