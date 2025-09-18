@@ -244,11 +244,11 @@
     "start": "Start"
   },
   "splash": {
-    "title": "Re-Event",
+    "title": "Kinua",
     "subtitle": "AWS Community Day Bolivia"
   },
   "pwa": {
-    "title": "Re-Event",
+    "title": "Kinua",
     "subtitle": "Install the app for a better experience",
     "installing": "Installing...",
     "install": "Install App",
@@ -260,5 +260,15 @@
   },
   "common": {
     "loading": "Loading"
+  },
+  "gallery": {
+    "title": "Photo Gallery",
+    "upload": "Upload Photo",
+    "uploading": "Uploading photo...",
+    "error": "Error loading gallery",
+    "empty": {
+      "title": "No photos yet",
+      "description": "Start building your event gallery by uploading your first photo"
+    }
   }
 }

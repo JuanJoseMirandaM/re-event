@@ -18,5 +18,6 @@ export const environment = {
     appId: "1:145026622801:web:c82d01ccbdc175619e9f70",
     measurementId: "G-DN6DXETYRM"
   },
-  vapidKey: "BPQV-lieDnlXX6eTj85i0XbNwhsjRXYcXUcTPAEL4sGyGDXGmRkVMWEzi1ob3OQYyLZcfUHngU15kvoCN9JB9nM"
+  vapidKey: "BPQV-lieDnlXX6eTj85i0XbNwhsjRXYcXUcTPAEL4sGyGDXGmRkVMWEzi1ob3OQYyLZcfUHngU15kvoCN9JB9nM",
+  cloudfrontUrl: "https://d3jqv6vhm0wiae.cloudfront.net"
 };
