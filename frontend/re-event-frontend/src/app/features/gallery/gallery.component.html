@@ -1,7 +1,6 @@
-<!-- Header with Search and Upload -->
 <div class="card mb-4">
   <div class="card-header">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between flex--col">
       <div class="flex items-center gap-3">
         <span class="material-symbols-outlined text-primary">collections</span>
         <h1 class="re-h1-title text-2xl font-bold text-primary">
@@ -52,8 +51,9 @@
           <img
             [src]="photo.thumbnailUrl || photo.url"
             [alt]="photo.title || 'Photo'"
-            class="w-full h-full object-cover">
-          <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+            class="w-full h-full object-cover ">
+          <div
+            class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
             <span class="material-symbols-outlined text-white text-4xl">fullscreen</span>
           </div>
           @if (photo.description && photo.description.includes('face')) {
@@ -63,23 +63,13 @@
             </div>
           }
         </div>
-        @if (photo.title) {
-          <div class="mt-2">
-            <p class="text-sm font-medium truncate">{{ photo.title }}</p>
-            @if (photo.uploadedAt) {
-              <p class="text-xs text-muted">{{ photo.uploadedAt | date:'shortDate' }}</p>
-            }
-          </div>
-        }
       </div>
     }
   </div>
 
-  <!-- Pagination -->
   @if (totalPages() > 1) {
     <div class="card p-4">
       <div class="flex justify-center items-center gap-2">
-        <!-- First Page -->
         <button
           class="btn btn--secondary btn--sm"
           [disabled]="currentPage() === 0"
@@ -87,7 +77,6 @@
           <span class="material-symbols-outlined">first_page</span>
         </button>
 
-        <!-- Previous Page -->
         <button
           class="btn btn--secondary btn--sm"
           [disabled]="currentPage() === 0"
@@ -95,7 +84,6 @@
           <span class="material-symbols-outlined">chevron_left</span>
         </button>
 
-        <!-- Page Numbers -->
         @for (page of getPageNumbers(); track page) {
           <button
             class="btn btn--sm"
@@ -106,7 +94,6 @@
           </button>
         }
 
-        <!-- Next Page -->
         <button
           class="btn btn--secondary btn--sm"
           [disabled]="currentPage() >= totalPages() - 1"
@@ -114,7 +101,6 @@
           <span class="material-symbols-outlined">chevron_right</span>
         </button>
 
-        <!-- Last Page -->
         <button
           class="btn btn--secondary btn--sm"
           [disabled]="currentPage() >= totalPages() - 1"
@@ -148,24 +134,16 @@
   </div>
 }
 
-<!-- Photo Modal -->
 @if (showPhotoModal() && selectedPhoto()) {
   <div class="modal-overlay" (click)="closePhotoModal()">
     <div class="modal max-w-4xl p-0" (click)="$event.stopPropagation()">
-      <!-- Modal Header -->
       <div class="flex items-center justify-between p-6 border-b">
         <div>
-          <h3 class="text-xl font-bold">{{ selectedPhoto()!.title || 'Photo' }}</h3>
           @if (selectedPhoto()!.uploadedAt) {
             <p class="text-sm text-muted">{{ selectedPhoto()!.uploadedAt | date:'medium' }}</p>
           }
         </div>
         <div class="flex items-center gap-2">
-          <button
-            class="btn btn--ghost btn--sm"
-            (click)="deletePhoto(selectedPhoto()!)">
-            <span class="material-symbols-outlined">delete</span>
-          </button>
           <button
             class="btn btn--ghost btn--sm"
             (click)="closePhotoModal()">
@@ -174,28 +152,13 @@
         </div>
       </div>
 
-      <!-- Modal Content -->
       <div class="p-6">
         <div class="mb-4">
           <img
             [src]="selectedPhoto()!.url"
             [alt]="selectedPhoto()!.title || 'Photo'"
-            class="w-full max-h-96 object-contain rounded-lg">
+            class="w-full max-h-96 rounded-lg">
         </div>
-
-        @if (selectedPhoto()!.description) {
-          <div class="mb-4">
-            <p class="text-sm">{{ selectedPhoto()!.description }}</p>
-          </div>
-        }
-
-        @if (selectedPhoto()!.tags && selectedPhoto()!.tags!.length > 0) {
-          <div class="flex flex-wrap gap-2">
-            @for (tag of selectedPhoto()!.tags; track tag) {
-              <span class="badge badge--secondary">#{{ tag }}</span>
-            }
-          </div>
-        }
       </div>
     </div>
   </div>
