@@ -7,16 +7,24 @@
           {{ 'gallery.title' | translate }}
         </h1>
       </div>
-      <label for="file-input" class="btn btn--primary cursor-pointer">
-        <span class="material-symbols-outlined">add_a_photo</span>
-        <span>{{ 'gallery.upload' | translate }}</span>
-      </label>
-      <input
-        id="file-input"
-        type="file"
-        accept="image/*"
-        (change)="onFileSelected($event)"
-        class="hidden">
+
+      <div class="flex gap-2">
+        <label for="file-input" class="btn btn--primary cursor-pointer">
+          <span class="material-symbols-outlined">add_a_photo</span>
+          <span>{{ 'gallery.upload' | translate }}</span>
+        </label>
+
+        <input
+          id="file-input"
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="hidden">
+
+        <button class="btn btn--primary w-20">
+          <span class="material-symbols-outlined">familiar_face_and_zone</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
