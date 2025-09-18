@@ -109,6 +109,7 @@
     "upcomingSessions": "Upcoming Session",
     "pastSessions": "Past Session",
     "favorites": "Favorites",
+    "allLocations": "All Rooms",
     "filterByTags": "Filter by tags",
     "noTag": "None",
     "loading": "Loading sessions...",

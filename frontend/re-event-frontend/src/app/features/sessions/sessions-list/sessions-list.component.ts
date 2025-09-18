@@ -46,8 +46,10 @@ export default class SessionsListComponent implements OnInit {
 
   activeFilter = input.required<string>();
   selectedTags = input.required<string[]>();
+  selectedLocation = input.required<string>();
 
   tagsLoaded = output<string[]>();
+  locationsLoaded = output<string[]>();
 
   allEvents = signal<FilteredEvent[]>([]);
   loading = signal<boolean>(false);
@@ -59,6 +61,7 @@ export default class SessionsListComponent implements OnInit {
     const events = this.allEvents();
     const filter = this.activeFilter();
     const tags = this.selectedTags();
+    const location = this.selectedLocation();
 
     let filtered = events;
 
@@ -87,6 +90,11 @@ export default class SessionsListComponent implements OnInit {
       filtered = filtered.filter(event =>
         event.tags.some(tag => tags.includes(tag))
       );
+    }
+
+    // Apply location filter
+    if (location) {
+      filtered = filtered.filter(event => event.location === location);
     }
 
     return filtered;
@@ -146,6 +154,15 @@ export default class SessionsListComponent implements OnInit {
           event.tags.forEach(tag => allTags.add(tag));
         });
         this.tagsLoaded.emit(Array.from(allTags));
+
+        // Extract unique locations
+        const allLocations = new Set<string>();
+        events.forEach(event => {
+          if (event.location) {
+            allLocations.add(event.location);
+          }
+        });
+        this.locationsLoaded.emit(Array.from(allLocations));
 
         this.loading.set(false);
 

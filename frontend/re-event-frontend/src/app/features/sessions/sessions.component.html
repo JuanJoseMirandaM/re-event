@@ -1,13 +1,6 @@
 <div class="px-4 py-2 flex flex--col gap-4">
   <div class="filter-tabs">
     <div class="filter-tabs__container">
-      <!-- <button
-        class="filter-chip"
-        [class.filter-chip--active]="activeFilter() === 'current'"
-        (click)="onFilterChange('current')">
-        {{ 'sessions.currentSessions' | translate }}
-      </button> -->
-
       <button
         class="filter-chip"
         [class.filter-chip--active]="activeFilter() === 'upcoming'"
@@ -38,26 +31,27 @@
     </div>
   </div>
 
-<!--  @if (availableTags().length > 0) {-->
-<!--    <div class="flex flex&#45;&#45;col gap-2">-->
-<!--      <h3 class="text-base font-medium text-secondary">{{ 'sessions.filterByTags' | translate }}</h3>-->
-<!--      <div class="flex flex&#45;&#45;wrap gap-2">-->
-<!--        <select-->
-<!--          class="tag-select"-->
-<!--          [value]="selectedTag()"-->
-<!--          (change)="onTagChange($event)">-->
-<!--          <option value="">{{ 'sessions.noTag' | translate }}</option>-->
-<!--          @for (tag of availableTags(); track tag) {-->
-<!--            <option [value]="tag">{{ tag }}</option>-->
-<!--          }-->
-<!--        </select>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  }-->
+  <div class="filter-tabs">
+    <div class="filter-tabs__container">
+      <select 
+        class="filter-select"
+        [value]="selectedLocation()"
+        (change)="onLocationChange($event)">
+        <option value="">{{ 'sessions.allLocations' | translate }}</option>
+        <option 
+          *ngFor="let location of availableLocations()" 
+          [value]="location">
+          {{ location }}
+        </option>
+      </select>
+    </div>
+  </div>
 
   <app-sessions-list
     [activeFilter]="activeFilter()"
     [selectedTags]="selectedTags()"
-    (tagsLoaded)="onTagsLoaded($event)">
+    [selectedLocation]="selectedLocation()"
+    (tagsLoaded)="onTagsLoaded($event)"
+    (locationsLoaded)="onLocationsLoaded($event)">
   </app-sessions-list>
 </div>

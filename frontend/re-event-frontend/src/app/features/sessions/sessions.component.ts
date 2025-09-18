@@ -20,6 +20,8 @@ export default class SessionsComponent {
   availableTags = signal<string[]>([]);
   selectedTag = signal<string>('');
   selectedTags = signal<string[]>([]);
+  availableLocations = signal<string[]>([]);
+  selectedLocation = signal<string>('');
 
   onFilterChange(filter: string) {
     this.activeFilter.set(filter);
@@ -37,7 +39,17 @@ export default class SessionsComponent {
     }
   }
 
+  onLocationChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const selectedLocation = target.value;
+    this.selectedLocation.set(selectedLocation);
+  }
+
   onTagsLoaded(tags: string[]) {
     this.availableTags.set(tags);
+  }
+
+  onLocationsLoaded(locations: string[]) {
+    this.availableLocations.set(locations);
   }
 }
