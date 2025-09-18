@@ -34,7 +34,8 @@ function shouldAddToken(url: string): boolean {
     '/auth/',
     '/login',
     '/register',
-    '/auth/callback'
+    '/auth/callback',
+    's3.amazonaws.com'
   ];
   
   return !authUrls.some(authUrl => url.includes(authUrl));
