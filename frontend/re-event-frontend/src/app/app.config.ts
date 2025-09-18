@@ -15,9 +15,11 @@ import {provideState, provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 import {userReducer} from './core/store/reducers/user.reducer';
 import {eventsReducer} from './core/store/reducers/events.reducer';
+import {galleryReducer} from './core/store/reducers/gallery.reducer';
 import {provideStoreDevtools} from '@ngrx/store-devtools';
 import {UserEffects} from './core/store/effects/user.effect';
 import {EventsEffects} from './core/store/effects/events.effect';
+import {GalleryEffects} from './core/store/effects/gallery.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -43,9 +45,10 @@ export const appConfig: ApplicationConfig = {
       lang: 'en'
     }),
     provideStore(),
-    provideEffects(UserEffects, EventsEffects),
+    provideEffects(UserEffects, EventsEffects, GalleryEffects),
     provideState({name: 'user', reducer: userReducer}),
     provideState({name: 'events', reducer: eventsReducer}),
+    provideState({name: 'gallery', reducer: galleryReducer}),
     provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()})
   ]
 };
