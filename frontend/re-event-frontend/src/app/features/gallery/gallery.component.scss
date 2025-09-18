@@ -3,8 +3,13 @@
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: var(--space-4);
 
-  @media (max-width: 640px) {
+  @media (max-width: 640px) and (min-width: 481px) {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-3);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
     gap: var(--space-3);
   }
 }
@@ -44,10 +49,6 @@
 }
 
 @media (max-width: 480px) {
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .modal {
     margin: var(--space-4);
     max-height: 90vh;

@@ -379,6 +379,8 @@
 .border-warning { border-color: var(--warning); }
 .border-error { border-color: var(--error); }
 
+.object-cover{object-fit: cover;}
+
 /* ===== RESPONSIVE DISPLAY ===== */
 @media (max-width: 767px) {
   .sm\:hidden { display: none; }
