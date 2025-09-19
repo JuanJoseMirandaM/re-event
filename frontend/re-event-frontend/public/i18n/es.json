@@ -70,6 +70,12 @@
     "close": "Cerrar menú",
     "mainMenu": "Menú principal"
   },
+  "sideMenu": {
+    "account": "Cuenta",
+    "qr": "Ganar Puntos",
+    "myQr": "Mi QR",
+    "redeemPoints": "Canjear Puntos de Usuario"
+  },
   "home": {
     "welcomeTitle": "AWS Community Day Bolivia",
     "points": "Puntos",
@@ -246,11 +252,11 @@
     "start": "Comenzar"
   },
   "splash": {
-    "title": "Re-Event",
+    "title": "Kinua",
     "subtitle": "AWS Community Day Bolivia"
   },
   "pwa": {
-    "title": "Re-Event",
+    "title": "Kinua",
     "subtitle": "Instala la aplicación para una mejor experiencia",
     "installing": "Instalando...",
     "install": "Instalar App",
@@ -262,5 +268,33 @@
   },
   "common": {
     "loading": "Cargando"
+  },
+  "gallery": {
+    "title": "Galería de Fotos",
+    "upload": "Subir Foto",
+    "uploading": "Subiendo foto...",
+    "error": "Error al cargar la galería",
+    "empty": {
+      "title": "Aún no hay fotos",
+      "description": "Comienza a construir tu galería del evento subiendo tu primera foto"
+    }
+  },
+  "faceSearch": {
+    "title": "Búsqueda Facial",
+    "takePhoto": "Tomar una Selfie",
+    "uploadPhoto": "Subir Foto",
+    "instructions": "Toma una selfie para encontrar fotos donde apareces",
+    "uploadInstructions": "Selecciona una foto con tu rostro para buscar imágenes similares",
+    "startCamera": "Iniciar Cámara",
+    "switchCamera": "Cambiar Cámara",
+    "capture": "Capturar",
+    "retake": "Volver a tomar",
+    "search": "Buscar",
+    "selectFromGallery": "Seleccionar de Galería",
+    "results": "Resultados de Búsqueda",
+    "confidence": "Confianza"
+  },
+  "common": {
+    "cancel": "Cancelar"
   }
 }

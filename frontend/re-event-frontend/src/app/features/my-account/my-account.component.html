@@ -1,8 +1,8 @@
-<div class="flex flex--col gap-4 p-6 rounded-md bg-primary">
-  <div class="my-account-profile">
-    <img src="/images/pic-default.webp" alt="default pic">
-  </div>
-</div>
+<!--<div class="flex flex&#45;&#45;col gap-4 p-6 rounded-md bg-primary">-->
+<!--  <div class="my-account-profile">-->
+<!--    <img src="/images/pic-default.webp" alt="default pic">-->
+<!--  </div>-->
+<!--</div>-->
 
 @if (isLoading()) {
   <div class="flex flex--col gap-2 items-center justify-center p-2">
@@ -125,7 +125,7 @@
     </div>
 
     <button class="btn btn--secondary" (click)="openVerificationPanel()">{{ 'profile.accreditation' | translate }}</button>
-    <button class="btn btn--secondary">{{ 'profile.changePassword' | translate }}</button>
+<!--    <button class="btn btn&#45;&#45;secondary">{{ 'profile.changePassword' | translate }}</button>-->
     <button class="btn re-error-btn" (click)="logout()">{{ 'profile.logout' | translate }}</button>
   </div>
 

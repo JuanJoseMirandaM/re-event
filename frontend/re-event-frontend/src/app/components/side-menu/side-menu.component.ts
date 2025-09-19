@@ -26,10 +26,10 @@ export class SideMenuComponent {
   versionInfo = signal(this.#versionService.getVersionInfo());
 
   navItems: NavItems[] = [
-    {label: 'Account', link: './account', icon: 're-icon-user', roleAllowed: []},
-    {label: 'QR', link: './qr', icon: 're-icon-qr', roleAllowed: []},
-    {label: 'My Qr', link: './my-qr', icon: 're-icon-qr', roleAllowed: []},
-    {label: 'Redeem user points', link: './qr-redeem', icon: 're-icon-qr', roleAllowed: [UserRole.ORGANIZER]},
+    {label: 'sideMenu.account', link: './account', icon: 're-icon-user', roleAllowed: []},
+    {label: 'sideMenu.qr', link: './qr', icon: 're-icon-qr', roleAllowed: []},
+    {label: 'sideMenu.myQr', link: './my-qr', icon: 're-icon-qr', roleAllowed: []},
+    {label: 'sideMenu.redeemPoints', link: './qr-redeem', icon: 're-icon-qr', roleAllowed: [UserRole.ORGANIZER]},
   ];
 
   closeMenu() {

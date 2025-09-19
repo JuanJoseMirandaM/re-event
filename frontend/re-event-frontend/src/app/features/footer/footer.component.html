@@ -1,4 +1,8 @@
-<button class="re-btn flex flex--col items-center" aria-label="Home" routerLink="./home">
+<button
+  class="re-btn flex flex--col items-center"
+  [class.re-btn--active]="isActiveRoute('home')"
+  aria-label="Home"
+  routerLink="./home">
   <span class="text-2xl re-icon-footer re-icon-home"></span>
   <span class="text-sm">{{ 'footer.home' | translate }}</span>
 </button>
@@ -8,21 +12,37 @@
   <span class="text-sm">{{ 'footer.agenda' | translate }}</span>
 </button> -->
 
-<button class="re-btn flex flex--col items-center" routerLink="./sessions" aria-label="Sessions">
+<button
+  class="re-btn flex flex--col items-center"
+  [class.re-btn--active]="isActiveRoute('sessions')"
+  routerLink="./sessions"
+  aria-label="Sessions">
   <span class="material-symbols-outlined">event</span>
   <span class="text-sm">{{ 'footer.agenda' | translate }}</span>
 </button>
 
-<button class="re-btn flex items-center justify-center re-points" routerLink="./points" aria-label="Points">
+<button
+  class="re-btn flex items-center justify-center re-points"
+  [class.re-btn--active]="isActiveRoute('points')"
+  routerLink="./points"
+  aria-label="Points">
   <span class="material-symbols-outlined">rewarded_ads</span>
 </button>
 
-<button class="re-btn flex flex--col items-center" routerLink="./gallery" disabled aria-label="Gallery">
+<button
+  class="re-btn flex flex--col items-center"
+  [class.re-btn--active]="isActiveRoute('gallery')"
+  routerLink="./gallery"
+  aria-label="Gallery">
   <span class="material-symbols-outlined">photo</span>
   <span class="text-sm">{{ 'footer.gallery' | translate }}</span>
 </button>
 
-<button class="re-btn flex flex--col items-center" routerLink="./account" aria-label="Account">
+<button
+  class="re-btn flex flex--col items-center"
+  [class.re-btn--active]="isActiveRoute('account') || isActiveRoute('my-account')"
+  routerLink="./account"
+  aria-label="Account">
   <span class="material-symbols-outlined">manage_accounts</span>
   <span class="text-sm">{{ 'footer.account' | translate }}</span>
 </button>

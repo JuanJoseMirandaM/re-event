@@ -274,6 +274,8 @@
 .mr-auto { margin-right: auto; }
 
 /* ===== WIDTH & HEIGHT UTILITIES ===== */
+.w-20 { width: 20%; }
+.w-30 { width: 30%; }
 .w-full { width: 100%; }
 .w-auto { width: auto; }
 .w-fit { width: fit-content; }
@@ -378,6 +380,8 @@
 .border-success { border-color: var(--success); }
 .border-warning { border-color: var(--warning); }
 .border-error { border-color: var(--error); }
+
+.object-cover{object-fit: cover;}
 
 /* ===== RESPONSIVE DISPLAY ===== */
 @media (max-width: 767px) {
