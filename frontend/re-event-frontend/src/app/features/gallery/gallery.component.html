@@ -2,8 +2,8 @@
   <div class="card-header">
     <div class="flex items-center justify-between flex--col">
       <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-primary">collections</span>
-        <h1 class="re-h1-title text-2xl font-bold text-primary">
+        <span class="material-symbols-outlined text-primary font-semibold">collections</span>
+        <h1 class="text-2xl font-semibold text-primary">
           {{ 'gallery.title' | translate }}
         </h1>
       </div>
@@ -129,7 +129,7 @@
     </div>
   }
 } @else {
-  <div class="card text-center p-12">
+  <div class="card flex flex--col gap-4 text-center p-12">
     <div class="mb-4">
       <span class="material-symbols-outlined text-6xl text-muted">photo_library</span>
     </div>
@@ -137,7 +137,7 @@
     <p class="text-muted mb-4">{{ 'gallery.empty.description' | translate }}</p>
     <label for="file-input-empty" class="btn btn--primary">
       <span class="material-symbols-outlined">add_a_photo</span>
-      <span>{{ 'gallery.upload.first' | translate }}</span>
+      <span>{{ 'gallery.uploadFirst' | translate }}</span>
     </label>
     <input
       id="file-input-empty"

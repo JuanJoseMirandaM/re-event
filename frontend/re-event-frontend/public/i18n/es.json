@@ -277,6 +277,7 @@
     "upload": "Subir Foto",
     "uploading": "Subiendo foto...",
     "error": "Error al cargar la galería",
+    "uploadFirst": "Subir Primera Foto",
     "empty": {
       "title": "Aún no hay fotos",
       "description": "Comienza a construir tu galería del evento subiendo tu primera foto"

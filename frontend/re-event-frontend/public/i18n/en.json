@@ -275,6 +275,7 @@
     "upload": "Upload Photo",
     "uploading": "Uploading photo...",
     "error": "Error loading gallery",
+    "uploadFirst": "Upload First Photo",
     "empty": {
       "title": "No photos yet",
       "description": "Start building your event gallery by uploading your first photo"
