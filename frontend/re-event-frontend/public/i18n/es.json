@@ -271,9 +271,6 @@
     "empty": {
       "title": "Aún no hay fotos",
       "description": "Comienza a construir tu galería del evento subiendo tu primera foto"
-    },
-    "upload": {
-      "first": "Subir Primera Foto"
     }
   },
   "faceSearch": {
