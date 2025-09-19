@@ -5,7 +5,8 @@ resource "aws_lambda_function" "generate_codes" {
   role            = aws_iam_role.lambda_role.arn
   handler         = "generate-codes.handler"
   runtime         = "nodejs18.x"
-  timeout         = 120
+  timeout         = 240
+  memory_size     = 512
 
   environment {
     variables = {
