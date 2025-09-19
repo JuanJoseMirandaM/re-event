@@ -64,7 +64,6 @@ export default class GalleryComponent implements OnInit {
     this.#galleryService.getFacesFromAPI(this.currentPage(), this.pageSize()).subscribe({
       next: (response: GroupedFacesResponse) => {
         let filteredImages = response.items;
-
         if (this.searchTerm()) {
           filteredImages = response.items.filter(image =>
             image.imageName.toLowerCase().includes(this.searchTerm().toLowerCase())
@@ -147,32 +146,14 @@ export default class GalleryComponent implements OnInit {
     this.selectedPhoto.set(null);
   }
 
-  deletePhoto(photo: Photo): void {
-    if (confirm(`¿Estás seguro de que quieres eliminar "${photo.title || 'esta foto'}"?`)) {
-      // Note: Delete functionality would need to be implemented in the backend
-      console.log('Delete functionality not implemented in backend');
-    }
-  }
-
-  getDisplayRange(): string {
-    const start = this.currentPage() * this.pageSize() + 1;
-    const end = Math.min((this.currentPage() + 1) * this.pageSize(), this.totalPhotos());
-    return `${start}-${end}`;
-  }
-
-  getTotalDetectedFaces(): number {
-    return this.images().reduce((total, image) => total + image.faceCount, 0);
-  }
-
   getPageNumbers(): number[] {
     const total = this.totalPages();
     const current = this.currentPage();
-    const range = 5; // Show 5 page numbers at most
+    const range = 5;
 
     let start = Math.max(0, current - Math.floor(range / 2));
     let end = Math.min(total, start + range);
 
-    // Adjust start if we're near the end
     if (end - start < range && start > 0) {
       start = Math.max(0, end - range);
     }

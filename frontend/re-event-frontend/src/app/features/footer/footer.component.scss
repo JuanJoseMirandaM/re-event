@@ -100,3 +100,41 @@
 span {
   transition: var(--transition-fast);
 }
+
+// Media query para pantallas pequeñas
+@media (max-width: 382px) {
+  :host {
+    gap: 4px;
+    padding: var(--space-2) var(--space-1);
+    justify-content: space-around;
+  }
+
+  .re-btn {
+    padding: var(--space-1);
+    min-width: 0;
+    flex: 1;
+    max-width: calc(20% - 4px);
+
+    span.text-sm {
+      font-size: 0.7rem;
+      line-height: 1;
+    }
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.8rem;
+  }
+
+  .re-icon-footer {
+    font-size: 1.8rem;
+  }
+
+  .re-points {
+    padding: 0.8rem;
+    top: -3px;
+
+    .material-symbols-outlined {
+      font-size: 1.6rem;
+    }
+  }
+}
