@@ -18,8 +18,6 @@ const messaging = firebase.messaging();
 
 // Maneja mensajes en background
 messaging.onBackgroundMessage((payload) => {
-    console.log('[firebase-messaging-sw.js] Received background message', payload);
-
     const notificationTitle = payload.notification?.title || 'Nueva Notificación';
     const notificationOptions = {
         body: payload.notification?.body || 'Tienes una nueva notificacion',
@@ -46,8 +44,6 @@ messaging.onBackgroundMessage((payload) => {
 
 // Manejar click en notificación
 self.addEventListener('notificationclick', function(event) {
-    console.log('[firebase-messaging-sw.js] Clicked notification:', event);
-
     event.notification.close();
 
     const actionData = event.notification.data;
@@ -70,9 +66,9 @@ self.addEventListener('notificationclick', function(event) {
             if (clientList.length > 0) {
                 const client = clientList[0];
                 client.focus();
-                client.postMessage({ 
-                    type: 'NOTIFICATION_CLICK', 
-                    data: { ...actionData, targetUrl } 
+                client.postMessage({
+                    type: 'NOTIFICATION_CLICK',
+                    data: { ...actionData, targetUrl }
                 });
             } else {
                 // Abrir nueva ventana

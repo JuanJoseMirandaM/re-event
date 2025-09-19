@@ -1,0 +1,173 @@
+<!-- Header -->
+<div class="card mb-4">
+  <div class="card-header">
+    <div class="flex items-center">
+      <div class="flex items-center gap-3 re-w-100">
+        <button class="btn btn--ghost btn--sm w-fit" (click)="goBack()">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+
+        <div class="flex justify-center items-center gap-2">
+          <h1 class="re-h1-title text-2xl font-bold text-primary">
+            {{ 'faceSearch.title' | translate }}
+          </h1>
+          <span class="material-symbols-outlined text-primary">face_retouching_natural</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Camera Section -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h2 class="text-lg font-semibold">{{ 'faceSearch.takePhoto' | translate }}</h2>
+  </div>
+  <div class="card-body">
+    @if (!showCamera() && !capturedImage()) {
+      <div class="text-center p-8">
+        <div class="mb-4">
+          <span class="material-symbols-outlined text-6xl text-muted">photo_camera</span>
+        </div>
+        <p class="text-muted mb-4">{{ 'faceSearch.instructions' | translate }}</p>
+        <button class="btn btn--primary" (click)="startCamera()">
+          <span class="material-symbols-outlined">camera_alt</span>
+          {{ 'faceSearch.startCamera' | translate }}
+        </button>
+      </div>
+    }
+
+    @if (showCamera()) {
+      <div class="camera-container">
+        <video #videoElement class="camera-preview" autoplay playsinline></video>
+        <canvas #canvasElement class="hidden"></canvas>
+
+        <div class="camera-controls top-0">
+          <div class="flex justify-center gap-4 mb-4 w-fit absolute top-0 w-full left-0 h-full">
+            <button class="btn btn--secondary camera-controls__switch w-fit" style="width: fit-content" (click)="switchCamera()">
+              <span class="material-symbols-outlined">flip_camera_ios</span>
+            </button>
+            <button class="btn btn--primary btn--lg camera-controls__capture w-fit" style="width: fit-content" (click)="capturePhoto()">
+              <span class="material-symbols-outlined">camera</span>
+              </button>
+            <button class="btn btn--ghost camera-controls__close w-fit" style="width: fit-content" (click)="stopCamera()">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (capturedImage()) {
+      <div class="captured-image-container">
+        <div class="mb-4 text-center">
+          <img [src]="capturedImage()" class="captured-image" alt="Captured selfie">
+        </div>
+        <div class="flex justify-center gap-4">
+          <button class="btn btn--secondary" (click)="retakePhoto()">
+            <span class="material-symbols-outlined">refresh</span>
+            {{ 'faceSearch.retake' | translate }}
+          </button>
+          <button class="btn btn--primary" (click)="searchByFace()" [disabled]="searching()">
+            @if (searching()) {
+              <div class="spinner spinner--sm"></div>
+            } @else {
+              <span class="material-symbols-outlined">search</span>
+            }
+            {{ 'faceSearch.search' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Manual Upload Section -->
+<div class="card mb-4">
+  <div class="card-header">
+    <h2 class="text-lg font-semibold">{{ 'faceSearch.uploadPhoto' | translate }}</h2>
+  </div>
+  <div class="card-body">
+    <div class="text-center p-4">
+      <label for="face-file-input" class="btn btn--outline cursor-pointer">
+        <span class="material-symbols-outlined">upload</span>
+        {{ 'faceSearch.selectFromGallery' | translate }}
+      </label>
+      <input
+        id="face-file-input"
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        class="hidden">
+      <p class="text-sm text-muted mt-2">{{ 'faceSearch.uploadInstructions' | translate }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Error Display -->
+@if (error()) {
+  <div class="alert alert--error mb-4">
+    <span class="material-symbols-outlined">error</span>
+    {{ error() }}
+  </div>
+}
+
+<!-- Results -->
+@if (searchResults().length > 0) {
+  <div class="card">
+    <div class="card-header">
+      <h2 class="text-lg font-semibold">
+        {{ 'faceSearch.results' | translate }} ({{ searchResults().length }})
+      </h2>
+    </div>
+    <div class="card-body">
+      <div class="results-grid">
+        @for (photo of searchResults(); track photo.id) {
+          <div class="result-item" (click)="openPhoto(photo)">
+            <div class="aspect-square overflow-hidden rounded-lg bg-gray-100 relative">
+              <img
+                [src]="photo.thumbnailUrl || photo.url"
+                [alt]="photo.title || 'Photo'"
+                class="w-full h-full object-cover">
+              <div
+                class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-4xl">fullscreen</span>
+              </div>
+              @if (photo.confidence) {
+                <div class="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs">
+                  {{ (photo.confidence * 100) | number:'1.0-0' }}%
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Photo Modal (reuse from gallery) -->
+@if (showPhotoModal() && selectedPhoto()) {
+  <div class="modal-overlay" (click)="closePhotoModal()">
+    <div class="modal max-w-4xl p-0" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between p-6 border-b">
+        <div>
+          <h3 class="text-xl font-bold">{{ selectedPhoto()!.title || 'Photo' }}</h3>
+          @if (selectedPhoto()!.uploadedAt) {
+            <p class="text-sm text-muted">{{ selectedPhoto()!.uploadedAt | date:'medium' }}</p>
+          }
+
+        </div>
+        <button class="btn btn--ghost btn--sm" (click)="closePhotoModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <img
+          [src]="selectedPhoto()!.url"
+          [alt]="selectedPhoto()!.title || 'Photo'"
+          class="w-full max-h-96 object-contain rounded-lg">
+      </div>
+    </div>
+  </div>
+}

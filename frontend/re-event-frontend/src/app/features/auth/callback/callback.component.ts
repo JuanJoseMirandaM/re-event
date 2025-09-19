@@ -85,7 +85,6 @@ export default class AuthCallbackComponent {
   private initializeAuth(): void {
     this.#authService.handleAuthRedirect().subscribe({
       next: ({user, session}) => {
-        console.log('Autenticación exitosa:', user);
         this.authStateSubject.next({
           status: 'success',
           user,

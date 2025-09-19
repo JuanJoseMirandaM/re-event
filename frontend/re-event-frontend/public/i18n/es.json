@@ -274,6 +274,27 @@
     "empty": {
       "title": "Aún no hay fotos",
       "description": "Comienza a construir tu galería del evento subiendo tu primera foto"
+    },
+    "upload": {
+      "first": "Subir Primera Foto"
     }
+  },
+  "faceSearch": {
+    "title": "Búsqueda Facial",
+    "takePhoto": "Tomar una Selfie",
+    "uploadPhoto": "Subir Foto",
+    "instructions": "Toma una selfie para encontrar fotos donde apareces",
+    "uploadInstructions": "Selecciona una foto con tu rostro para buscar imágenes similares",
+    "startCamera": "Iniciar Cámara",
+    "switchCamera": "Cambiar Cámara",
+    "capture": "Capturar",
+    "retake": "Volver a tomar",
+    "search": "Buscar",
+    "selectFromGallery": "Seleccionar de Galería",
+    "results": "Resultados de Búsqueda",
+    "confidence": "Confianza"
+  },
+  "common": {
+    "cancel": "Cancelar"
   }
 }

@@ -18,6 +18,8 @@ export const environment = {
     appId: "1:62396424616:web:145f9df7cf9270105ebd9d",
     measurementId: "G-YFNCEBPK0H"
   },
-  vapidKey: "BCdlo4iN4zupMhxIgU34yjeu_0tELgJ-0vjPSJTrfgMQ4xx4omta6QaAsyeURXsVCB13rh5xjXaIw41tqVa9BvY",
-  cloudfrontUrl: "https://d3jqv6vhm0wiae.cloudfront.net"
+  vapidKey: "BPQV-lieDnlXX6eTj85i0XbNwhsjRXYcXUcTPAEL4sGyGDXGmRkVMWEzi1ob3OQYyLZcfUHngU15kvoCN9JB9nM",
+  cloudfrontUrl: "https://d3jqv6vhm0wiae.cloudfront.net",
+  bucketNameAws: "kinua-aws-community-day-bolivia-2025-dev",
+  collection_id: "kinua-faces-dev"
 };

@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {map, Observable, switchMap, of, catchError, tap} from "rxjs";
+import {catchError, map, Observable, of, switchMap, tap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
 import {environment} from "../../../environments/environment";
@@ -56,9 +56,31 @@ export interface PresignedUrlResponse {
   flowType: string;
 }
 
+export interface SearchByFaceRequest {
+  data: {
+    bucket: string;
+    key: string;
+    collection_id: string;
+  };
+}
+
 export interface GeneratePresignedBatchRequest {
   fileName: string;
-  type: 'to-rekognize';
+  type: 'to-rekognize' | 'face-scans';
+}
+
+export interface SearchResponse extends Array<Face> {
+}
+
+export interface Face {
+  faceId: string;
+  created_at: string;
+  imageId: string;
+  share_path: string;
+  confidence: number;
+  imageName: string;
+  collectionId: string;
+  boundingBox: BoundingBox;
 }
 
 const BASE_URL = `${environment.apiUrl}`;
@@ -74,7 +96,8 @@ export class GalleryService {
   constructor(
     private http: HttpClient,
     private authService: AuthService
-  ) {}
+  ) {
+  }
 
   private getHeaders(): Observable<HttpHeaders> {
     return this.authService.getAuthToken().pipe(
@@ -91,7 +114,6 @@ export class GalleryService {
   }
 
   uploadPhoto(params: UploadPhotoParams): Observable<Photo> {
-    // For now, return mock uploaded photo since the backend endpoint doesn't exist yet
     return this.getMockUploadedPhoto(params);
   }
 
@@ -100,11 +122,10 @@ export class GalleryService {
     return of(void 0);
   }
 
-  // faceFinder API methods
   getFacesFromAPI(page: number, size: number): Observable<GroupedFacesResponse> {
     return this.getHeaders().pipe(
       switchMap(headers =>
-        this.http.get<GroupedFacesResponse>(`${this.facefinderApiUrl}/faces/get-faces/${page}/${size}`, { headers })
+        this.http.get<GroupedFacesResponse>(`${this.facefinderApiUrl}/faces/get-faces/${page}/${size}`, {headers})
       )
     );
   }
@@ -112,13 +133,45 @@ export class GalleryService {
   generatePresignedBatch(request: GeneratePresignedBatchRequest): Observable<PresignedUrlResponse> {
     return this.getHeaders().pipe(
       switchMap(headers =>
-        this.http.post<PresignedUrlResponse>(`${this.facefinderApiUrl}/faces/generate-presigned-batch`, request, { headers })
+        this.http.post<PresignedUrlResponse>(`${this.facefinderApiUrl}/faces/generate-presigned-batch`, request, {headers})
+      )
+    );
+  }
+
+  generatePresignedBatchFace(request: GeneratePresignedBatchRequest): Observable<PresignedUrlResponse> {
+    return this.getHeaders().pipe(
+      switchMap(headers =>
+        this.http.post<PresignedUrlResponse>(`${this.facefinderApiUrl}/faces/generate-presigned-search`, request, {headers})
+      )
+    );
+  }
+
+  searchByFace(request: SearchByFaceRequest): Observable<SearchResponse> {
+    return this.getHeaders().pipe(
+      switchMap(headers => this.http.post<SearchResponse>(`${this.baseUrl}/faces/search-by-face`, request, {headers}))
+    )
+  }
+
+  getFaces(file: File): Observable<SearchResponse> {
+    return this.generatePresignedBatchFace({fileName: file.name, type: 'face-scans'}).pipe(
+      switchMap(resp =>
+        this.uploadFileToS3(resp, file).pipe(
+          switchMap(() => {
+            const searchRequest = {
+              data: {
+                bucket: environment.bucketNameAws,
+                key: resp.s3Key,
+                collection_id: environment.collection_id
+              }
+            };
+            return this.searchByFace(searchRequest);
+          })
+        )
       )
     );
   }
 
   uploadFileToS3(presignedUrl: PresignedUrlResponse, file: File): Observable<any> {
-    console.log(presignedUrl,file)
     return this.http.put(presignedUrl.uploadUrl, file, {
       headers: {
         'Content-Type': file.type
@@ -132,6 +185,16 @@ export class GalleryService {
         throw error;
       })
     );
+  }
+
+
+  private getImageUrlFromPath(imagePath: string): string {
+    if (!imagePath) return '';
+
+    const cleanPath = imagePath.startsWith('share/')
+      ? imagePath.substring(6)
+      : imagePath;
+    return `${this.cloudfrontUrl}/${cleanPath}`;
   }
 
   // Helper functions
@@ -267,58 +330,4 @@ export class GalleryService {
 
     return of(mockPhoto);
   }
-
-  // Future implementation for real API calls
-  /*
-  getPhotos(params?: GalleryParams): Observable<GalleryResponse> {
-    return this.getHeaders().pipe(
-      switchMap(headers => {
-        let url = `${this.baseUrl}/gallery`;
-        const queryParams = new URLSearchParams();
-
-        if (params?.limit) queryParams.append('limit', params.limit.toString());
-        if (params?.lastKey) queryParams.append('lastKey', params.lastKey);
-        if (params?.eventId) queryParams.append('eventId', params.eventId);
-        if (params?.userId) queryParams.append('userId', params.userId);
-
-        if (queryParams.toString()) {
-          url += `?${queryParams.toString()}`;
-        }
-
-        return this.http.get<ApiResponse>(url, { headers }).pipe(
-          map(response => response.data)
-        );
-      })
-    );
-  }
-
-  uploadPhoto(params: UploadPhotoParams): Observable<Photo> {
-    return this.getHeaders().pipe(
-      switchMap(headers => {
-        const formData = new FormData();
-        formData.append('file', params.file);
-        if (params.title) formData.append('title', params.title);
-        if (params.description) formData.append('description', params.description);
-        if (params.eventId) formData.append('eventId', params.eventId);
-        if (params.tags) formData.append('tags', JSON.stringify(params.tags));
-
-        const uploadHeaders = new HttpHeaders({
-          'Authorization': headers.get('Authorization')!
-        });
-
-        return this.http.post<{success: boolean; data: Photo}>(`${this.baseUrl}/gallery/upload`, formData, { headers: uploadHeaders }).pipe(
-          map(response => response.data)
-        );
-      })
-    );
-  }
-
-  deletePhoto(photoId: string): Observable<void> {
-    return this.getHeaders().pipe(
-      switchMap(headers =>
-        this.http.delete<void>(`${this.baseUrl}/gallery/${photoId}`, { headers })
-      )
-    );
-  }
-  */
 }

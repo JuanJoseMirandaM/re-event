@@ -5,7 +5,8 @@
       "Bash(mkdir:*)",
       "Bash(find:*)",
       "Bash(npm start)",
-      "Read(//mnt/f/2025/AWS/re-event/**)"
+      "Read(//mnt/f/2025/AWS/re-event/**)",
+      "Bash(ng generate component:*)"
     ],
     "deny": [],
     "ask": []

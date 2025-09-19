@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angul
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
+import {Router} from '@angular/router';
 import {Photo} from '../../core/store/store/gallery.state';
 import {GalleryService, GroupedFacesResponse, ImageWithFaces} from '../../core/services/gallery.service';
 import {debounceTime, delay, distinctUntilChanged, Subject} from 'rxjs';
@@ -22,6 +23,7 @@ import {debounceTime, delay, distinctUntilChanged, Subject} from 'rxjs';
 })
 export default class GalleryComponent implements OnInit {
   #galleryService = inject(GalleryService);
+  #router = inject(Router);
   #searchSubject = new Subject<string>();
 
   photos = signal<Photo[]>([]);
@@ -37,6 +39,7 @@ export default class GalleryComponent implements OnInit {
   totalPages = signal(0);
 
   searchTerm = signal('');
+  isFaceSearchMode = signal(false);
 
   showPhotoModal = signal(false);
   showUploadModal = signal(false);
@@ -97,7 +100,7 @@ export default class GalleryComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0]; // Solo tomar el primer archivo
+      const file = input.files[0];
       this.uploadFile(file);
       input.value = '';
     }
@@ -106,7 +109,6 @@ export default class GalleryComponent implements OnInit {
   uploadFile(file: File) {
     this.uploading.set(true);
     this.error.set(null);
-    console.log('Uploading file:', file.name);
 
     const request = {
       fileName: file.name,
@@ -181,5 +183,12 @@ export default class GalleryComponent implements OnInit {
     }
 
     return pages;
+  }
+
+  toggleFaceSearchMode() {
+    this.isFaceSearchMode.update(current => !current);
+    if (this.isFaceSearchMode()) {
+      this.#router.navigate(['/secure/face-search']);
+    }
   }
 }
