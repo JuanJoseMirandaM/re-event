@@ -51,12 +51,13 @@ exports.handler = async (event) => {
                 const roleCodes = await generateCodesForRole(role, quantity, userId);
                 allCodes.push(...roleCodes);
                 
-                // Preparar batch write
-                if (batchWrites.length === 0 || batchWrites[batchWrites.length - 1].length >= 25) {
-                    batchWrites.push([]);
-                }
-                
+                // Agregar códigos a batches
                 roleCodes.forEach(codeItem => {
+                    // Crear nuevo batch si no existe o si el actual está lleno
+                    if (batchWrites.length === 0 || batchWrites[batchWrites.length - 1].length >= 25) {
+                        batchWrites.push([]);
+                    }
+                    
                     batchWrites[batchWrites.length - 1].push({
                         PutRequest: { Item: codeItem }
                     });
@@ -115,8 +116,6 @@ async function generateCodesForRole(role, quantity, generatedBy) {
             role: role,
             initialPoints: initialPoints,
             used: "false",
-            usedBy: null,
-            usedAt: null,
             createdAt: new Date().toISOString(),
             generatedBy: generatedBy,
             expiresAt: getExpirationDate()
@@ -141,11 +140,11 @@ function generateUniqueCode() {
 
 function getInitialPointsByRole(role) {
     const pointsMap = {
-        'ATTENDEE': 50,
+        'ATTENDEE': 200,
         'SPEAKER': 200,
-        'SPONSOR': 300,
-        'VOLUNTEER': 150,
-        'ORGANIZER': 500
+        'SPONSOR': 200,
+        'VOLUNTEER': 200,
+        'ORGANIZER': 200
     };
     
     return pointsMap[role] || 50;
@@ -163,7 +162,7 @@ async function generateQRPDF(codes) {
         const codesWithQR = [];
         for (const code of codes) {
             const qrDataURL = await QRCode.toDataURL(code.verificationCode, {
-                width: 120,
+                width: 150,
                 margin: 2,
                 color: {
                     dark: '#000000',
@@ -177,7 +176,7 @@ async function generateQRPDF(codes) {
             });
         }
 
-        // Crear contenido HTML con 8 códigos por página
+        // Crear contenido HTML con 12 códigos por página (3 por fila)
         const htmlContent = generateHTMLContent(codesWithQR);
         
         // Guardar en S3
@@ -218,7 +217,7 @@ function generateHTMLContent(codesWithQR) {
         <style>
             @page {
                 size: letter;
-                margin: 0.5in;
+                margin: 0.25in;
             }
             
             body { 
@@ -231,7 +230,7 @@ function generateHTMLContent(codesWithQR) {
             .page {
                 width: 8.5in;
                 height: 11in;
-                padding: 0.5in;
+                padding: 0.25in;
                 box-sizing: border-box;
                 page-break-after: always;
             }
@@ -240,30 +239,12 @@ function generateHTMLContent(codesWithQR) {
                 page-break-after: avoid;
             }
             
-            .header {
-                text-align: center;
-                margin-bottom: 20px;
-                border-bottom: 2px solid #333;
-                padding-bottom: 10px;
-            }
-            
-            .header h1 {
-                margin: 0;
-                font-size: 24px;
-                color: #333;
-            }
-            
-            .header p {
-                margin: 5px 0;
-                color: #666;
-            }
-            
             .codes-grid {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: repeat(4, 1fr);
-                gap: 15px;
-                height: calc(11in - 2in - 80px);
+                gap: 10px;
+                height: calc(11in - 0.5in);
             }
             
             .code-item {
@@ -275,25 +256,25 @@ function generateHTMLContent(codesWithQR) {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                background: #f9f9f9;
+                background: #FFFFFF;
                 position: relative;
             }
             
             .code-item .role {
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: bold;
                 color: #333;
-                margin-bottom: 8px;
+                margin-bottom: 10px;
                 text-transform: uppercase;
             }
             
             .code-item .qr-code {
-                margin: 8px 0;
+                margin: 10px 0;
             }
             
             .code-item .qr-code img {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
                 border: 1px solid #ccc;
             }
             
@@ -302,16 +283,7 @@ function generateHTMLContent(codesWithQR) {
                 font-weight: bold;
                 color: #000;
                 letter-spacing: 2px;
-                margin-top: 8px;
-            }
-            
-            .footer {
-                text-align: center;
-                margin-top: 20px;
-                font-size: 10px;
-                color: #666;
-                border-top: 1px solid #ccc;
-                padding-top: 10px;
+                margin-top: 10px;
             }
             
             @media print {
@@ -323,14 +295,14 @@ function generateHTMLContent(codesWithQR) {
     <body>
     `;
 
-    // Generar páginas con 8 códigos cada una
+    // Generar páginas con 12 códigos cada una (3 por fila)
     let allCodes = [];
     for (const [role, roleCodes] of Object.entries(roleGroups)) {
         allCodes.push(...roleCodes);
     }
 
-    // Dividir en páginas de 8 códigos
-    const codesPerPage = 8;
+    // Dividir en páginas de 12 códigos
+    const codesPerPage = 12;
     const pages = [];
     for (let i = 0; i < allCodes.length; i += codesPerPage) {
         pages.push(allCodes.slice(i, i + codesPerPage));
@@ -339,11 +311,6 @@ function generateHTMLContent(codesWithQR) {
     pages.forEach((pageCodes, pageIndex) => {
         html += `
         <div class="page">
-            <div class="header">
-                <h1>Códigos de Verificación - Kinua</h1>
-                <p>Página ${pageIndex + 1} de ${pages.length} | Generado: ${new Date().toLocaleDateString()}</p>
-            </div>
-            
             <div class="codes-grid">
         `;
         
@@ -362,20 +329,16 @@ function generateHTMLContent(codesWithQR) {
         // Rellenar espacios vacíos si la página no está completa
         const emptySlots = codesPerPage - pageCodes.length;
         for (let i = 0; i < emptySlots; i++) {
-            html += `<div class="code-item" style="border: 2px dashed #ccc; background: #f0f0f0;">
+            html += `<div class="code-item" style="border: 2px dashed #ccc; background: #FFFFFF;">
                 <div class="role" style="color: #999;">VACÍO</div>
                 <div class="qr-code">
-                    <div style="width: 80px; height: 80px; background: #f0f0f0; border: 1px solid #ccc;"></div>
+                    <div style="width: 100px; height: 100px; background: #f0f0f0; border: 1px solid #ccc;"></div>
                 </div>
                 <div class="verification-code" style="color: #999;">------</div>
             </div>`;
         }
         
         html += `
-            </div>
-            
-            <div class="footer">
-                <p>Total de códigos: ${allCodes.length} | Los códigos expiran 30 días después de la generación</p>
             </div>
         </div>
         `;
