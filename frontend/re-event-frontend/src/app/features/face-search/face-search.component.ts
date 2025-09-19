@@ -16,6 +16,7 @@ interface PhotoResult {
   confidence?: number;
   description?: string;
   tags?: string[];
+  originalPath?: string;
 }
 
 @Component({
@@ -212,7 +213,8 @@ export default class FaceSearchComponent implements OnDestroy {
             thumbnailUrl: this.getCloudFrontUrl(face.share_path),
             title: face.imageName,
             uploadedAt: new Date(face.created_at),
-            confidence: face.confidence
+            confidence: face.confidence,
+            originalPath: face.share_path
           }));
           this.searchResults.set(photoResults);
           this.hasSearched.set(true);
@@ -262,5 +264,20 @@ export default class FaceSearchComponent implements OnDestroy {
       ? imagePath.substring(6)
       : imagePath;
     return `${environment.cloudfrontUrl}/${cleanPath}`;
+  }
+
+  downloadPhoto(photo: PhotoResult): void {
+    const downloadUrl = photo.originalPath
+      ? this.getCloudFrontUrl(photo.originalPath)
+      : photo.url;
+
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = photo.title!;
+    link.target = '_blank';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
