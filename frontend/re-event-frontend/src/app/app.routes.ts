@@ -63,6 +63,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/gallery/gallery.component')
       },
       {
+        path: 'face-search',
+        loadComponent: () => import('./features/face-search/face-search.component')
+      },
+      {
         path: 'account',
         loadComponent: () => import('./features/my-account/my-account.component')
       },

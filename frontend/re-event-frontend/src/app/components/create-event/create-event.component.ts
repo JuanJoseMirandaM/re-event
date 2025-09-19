@@ -150,7 +150,6 @@ export class CreateEventComponent {
 
       this.#eventsService.createEvent(eventData).subscribe({
         next: event => {
-          console.log('Evento creado exitosamente');
           this.resetForm();
           this.onClose();
         }, error: (error) => {

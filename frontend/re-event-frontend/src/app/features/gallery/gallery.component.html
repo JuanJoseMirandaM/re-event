@@ -21,7 +21,12 @@
           (change)="onFileSelected($event)"
           class="hidden">
 
-        <button class="btn btn--primary w-20">
+        <button
+          class="btn w-20"
+          [class.btn--primary]="!isFaceSearchMode()"
+          [class.btn--secondary]="isFaceSearchMode()"
+          (click)="toggleFaceSearchMode()"
+          [title]="isFaceSearchMode() ? 'Buscar fotos normales' : 'Buscar por rostro'">
           <span class="material-symbols-outlined">familiar_face_and_zone</span>
         </button>
       </div>

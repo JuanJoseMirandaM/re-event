@@ -185,17 +185,14 @@ export class CreateNotificationComponent {
       try {
         this.#notificationsService.createNotification(notificationData).subscribe({
           next: (response) => {
-            console.log('Notificación creada:', response);
             this.resetForm();
             this.onClose();
           },
           error: (error) => {
             console.error('Error creando notificación:', error);
-            // Desactivar loading en caso de error
             this.isLoading.set(false);
           },
           complete: () => {
-            // Asegurar que el loading se desactive al completar
             this.isLoading.set(false);
           }
         });

@@ -19,5 +19,7 @@ export const environment = {
     measurementId: "G-DN6DXETYRM"
   },
   vapidKey: "BPQV-lieDnlXX6eTj85i0XbNwhsjRXYcXUcTPAEL4sGyGDXGmRkVMWEzi1ob3OQYyLZcfUHngU15kvoCN9JB9nM",
-  cloudfrontUrl: "https://d3jqv6vhm0wiae.cloudfront.net"
+  cloudfrontUrl: "https://d3jqv6vhm0wiae.cloudfront.net",
+  bucketNameAws: "kinua-aws-community-day-bolivia-2025-dev",
+  collection_id: "kinua-faces-dev"
 };

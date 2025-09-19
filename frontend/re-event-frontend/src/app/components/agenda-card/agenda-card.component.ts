@@ -35,7 +35,7 @@ export class AgendaCardComponent implements OnInit {
   ngOnInit() {
     // Initialize user data from event
     this.initializeUserData();
-    
+
     // Check if this is the target session for rating
     if (this.targetSessionId() && this.targetSessionId() === this.event().eventId) {
       // Small delay to ensure the component is fully rendered
@@ -71,22 +71,21 @@ export class AgendaCardComponent implements OnInit {
     const now = new Date();
     const startDate = new Date(this.event().startDate);
     const endDate = new Date(this.event().endDate);
-    
+
     // Si no hay endDate, calcular basado en startDate + time (duración en minutos)
     if (!endDate || isNaN(endDate.getTime())) {
       const durationMs = this.event().time * 60 * 1000; // Convertir minutos a milisegundos
       endDate.setTime(startDate.getTime() + durationMs);
     }
-    
+
     // La calificación está disponible desde que empieza el evento hasta 15 minutos después de que termine
     const ratingEndTime = new Date(endDate.getTime() + 15 * 60 * 1000); // 15 minutos después del final
-    
+
     return now >= startDate && now <= ratingEndTime;
   }
 
   onLocationClick(): void {
     if (this.event().locationLink) {
-      console.log('Redirigiendo a ubicación:', this.event().locationLink);
     }
   }
 
@@ -96,11 +95,11 @@ export class AgendaCardComponent implements OnInit {
     const day = startDate.getDate();
     const monthName = startDate.toLocaleDateString('es-ES', { month: 'long' });
     const time = startDate.toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit', hour12: false});
-    
+
     // Capitalize first letter of day and month
     const capitalizedDay = dayName.charAt(0).toUpperCase() + dayName.slice(1);
     const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-    
+
     return `${capitalizedDay}, ${day} ${capitalizedMonth}, ${time}`;
   }
 
@@ -139,12 +138,11 @@ export class AgendaCardComponent implements OnInit {
     }
     this.#evaluationService.createEvaluation(request).subscribe({
       next: (response) => {
-        console.log('Evaluation submitted:', response);
         this.evaluation.set(response);
         this.isEvaluated.set(true);
         this.ratingSubmitted.emit(response);
         this.closeRatingPanel();
-        
+
         // Remove sessionId parameter from URL after successful rating
         this.removeSessionIdFromUrl();
       }

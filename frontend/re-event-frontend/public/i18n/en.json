@@ -269,6 +269,27 @@
     "empty": {
       "title": "No photos yet",
       "description": "Start building your event gallery by uploading your first photo"
+    },
+    "upload": {
+      "first": "Upload First Photo"
     }
+  },
+  "faceSearch": {
+    "title": "Face Search",
+    "takePhoto": "Take a Selfie",
+    "uploadPhoto": "Upload Photo",
+    "instructions": "Take a selfie to find photos where you appear",
+    "uploadInstructions": "Select a photo with your face to search for similar images",
+    "startCamera": "Start Camera",
+    "switchCamera": "Switch Camera",
+    "capture": "Capture",
+    "retake": "Retake",
+    "search": "Search",
+    "selectFromGallery": "Select from Gallery",
+    "results": "Search Results",
+    "confidence": "Confidence"
+  },
+  "common": {
+    "cancel": "Cancel"
   }
 }
