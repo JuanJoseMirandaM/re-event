@@ -12,13 +12,55 @@
   width: 100%;
 }
 
+.re-btn {
+  transition: var(--transition-fast);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-2);
+  position: relative;
+
+  &:hover {
+    background-color: var(--gray-100);
+  }
+
+  // Active state styles - minimalista
+  &.re-btn--active {
+    .re-icon-footer {
+      color: var(--primary-lilac);
+    }
+
+    .material-symbols-outlined {
+      color: var(--primary-lilac);
+    }
+
+    span {
+      color: var(--primary-lilac);
+      font-weight: 500;
+    }
+
+    // Pequeño indicador en la parte inferior
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background-color: var(--primary-lilac);
+      border-radius: 50%;
+    }
+  }
+}
+
 .re-icon-footer {
   @extend .re-big-font !optional;
   color: var(--text-secondary);
+  transition: var(--transition-fast);
 }
 
 .re-footer-text {
   color: var(--text-secondary);
+  transition: var(--transition-fast);
 }
 
 .re-points {
@@ -28,4 +70,33 @@
   top: -5px;
   background: var(--primary-lilac);
   color: white;
+
+  // Special handling for points button when active
+  &.re-btn--active {
+    background: var(--primary-lilac);
+
+    // Pequeño indicador más sutil para el botón de puntos
+    &::after {
+      width: 6px;
+      height: 6px;
+      bottom: 4px;
+      background-color: var(--primary-white);
+    }
+
+    &:hover {
+      background: var(--primary-lilac-dark);
+    }
+  }
+}
+
+// Material symbols styling
+.material-symbols-outlined {
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+  font-size: 2.4rem;
+}
+
+// Text styling
+span {
+  transition: var(--transition-fast);
 }

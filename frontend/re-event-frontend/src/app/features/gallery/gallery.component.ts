@@ -191,4 +191,15 @@ export default class GalleryComponent implements OnInit {
       this.#router.navigate(['/secure/face-search']);
     }
   }
+
+  downloadPhoto(photo: Photo): void {
+    const link = document.createElement('a');
+    link.href = photo.url;
+    link.download = photo.title || `photo-${photo.id}.jpg`;
+    link.target = '_blank';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 }

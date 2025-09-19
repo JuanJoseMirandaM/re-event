@@ -158,6 +158,11 @@
         </div>
         <div class="flex items-center gap-2">
           <button
+            class="btn btn--secondary btn--sm"
+            (click)="downloadPhoto(selectedPhoto()!)">
+            <span class="material-symbols-outlined">download</span>
+          </button>
+          <button
             class="btn btn--ghost btn--sm"
             (click)="closePhotoModal()">
             <span class="material-symbols-outlined">close</span>
