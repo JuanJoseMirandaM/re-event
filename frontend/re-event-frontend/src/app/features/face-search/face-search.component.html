@@ -1,6 +1,6 @@
-<!-- Header -->
-<div class="card mb-4">
-  <div class="card-header">
+<div class="p-2">
+  <!-- Header -->
+  <div class="mb-4">
     <div class="flex items-center">
       <div class="flex items-center gap-3 re-w-100">
         <button class="btn btn--ghost btn--sm w-fit" (click)="goBack()">
@@ -8,28 +8,22 @@
         </button>
 
         <div class="flex justify-center items-center gap-2">
-          <h1 class="re-h1-title text-2xl font-bold text-primary">
+          <h1 class="text-2xl font-medium">
             {{ 'faceSearch.title' | translate }}
           </h1>
-          <span class="material-symbols-outlined text-primary">face_retouching_natural</span>
+          <span class="material-symbols-outlined">face_retouching_natural</span>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Camera Section -->
-<div class="card mb-4">
-  <div class="card-header">
-    <h2 class="text-lg font-semibold">{{ 'faceSearch.takePhoto' | translate }}</h2>
-  </div>
-  <div class="card-body">
+  <!-- Camera Section -->
+  <div class="card flex flex--col gap-2 mb-4">
+    <h2 class="text-xl font-medium">{{ 'faceSearch.takePhoto' | translate }}</h2>
     @if (!showCamera() && !capturedImage()) {
-      <div class="text-center p-8">
-        <div class="mb-4">
-          <span class="material-symbols-outlined text-6xl text-muted">photo_camera</span>
-        </div>
-        <p class="text-muted mb-4">{{ 'faceSearch.instructions' | translate }}</p>
+      <div class="flex flex--col gap-4 text-center py-2">
+        <span class="material-symbols-outlined text-3xl text-muted">photo_camera</span>
+        <p class="text-lg text-muted mb-4">{{ 'faceSearch.instructions' | translate }}</p>
         <button class="btn btn--primary" (click)="startCamera()">
           <span class="material-symbols-outlined">camera_alt</span>
           {{ 'faceSearch.startCamera' | translate }}
@@ -44,13 +38,16 @@
 
         <div class="camera-controls top-0">
           <div class="flex justify-center gap-4 mb-4 w-fit absolute top-0 w-full left-0 h-full">
-            <button class="btn btn--secondary camera-controls__switch w-fit" style="width: fit-content" (click)="switchCamera()">
+            <button class="btn btn--secondary camera-controls__switch w-fit" style="width: fit-content"
+                    (click)="switchCamera()">
               <span class="material-symbols-outlined">flip_camera_ios</span>
             </button>
-            <button class="btn btn--primary btn--lg camera-controls__capture w-fit" style="width: fit-content" (click)="capturePhoto()">
+            <button class="btn btn--primary btn--lg camera-controls__capture w-fit" style="width: fit-content"
+                    (click)="capturePhoto()">
               <span class="material-symbols-outlined">camera</span>
-              </button>
-            <button class="btn btn--ghost camera-controls__close w-fit" style="width: fit-content" (click)="stopCamera()">
+            </button>
+            <button class="btn btn--ghost camera-controls__close w-fit" style="width: fit-content"
+                    (click)="stopCamera()">
               <span class="material-symbols-outlined">close</span>
             </button>
           </div>
@@ -79,111 +76,110 @@
         </div>
       </div>
     }
-  </div>
-</div>
 
-@if (!capturedImage()) {
-  <div class="card mb-4">
-    <div class="card-header">
-      <h2 class="text-lg font-semibold">{{ 'faceSearch.uploadPhoto' | translate }}</h2>
-    </div>
-    <div class="card-body">
-      <div class="text-center p-4">
-        <label for="face-file-input" class="btn btn--outline cursor-pointer">
-          <span class="material-symbols-outlined">upload</span>
-          {{ 'faceSearch.selectFromGallery' | translate }}
-        </label>
-        <input
-          id="face-file-input"
-          type="file"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          class="hidden">
-        <p class="text-sm text-muted mt-2">{{ 'faceSearch.uploadInstructions' | translate }}</p>
-      </div>
-    </div>
   </div>
-}
 
-<!-- Error Display -->
-@if (error()) {
-  <div class="alert alert--error mb-4">
-    <span class="material-symbols-outlined">error</span>
-    {{ error() }}
-  </div>
-}
-
-@if (capturedImage() && !searching()) {
-  @if (searchResults().length > 0) {
-    <div class="card">
-      <div class="card-header">
-        <h2 class="text-lg font-semibold">
-          {{ 'faceSearch.results' | translate }} ({{ searchResults().length }})
-        </h2>
-      </div>
+  @if (!capturedImage()) {
+    <div class="card flex flex--col gap-2 mb-4">
+      <h2 class="text-xl font-medium">{{ 'faceSearch.uploadPhoto' | translate }}</h2>
       <div class="card-body">
-        <div class="gallery-grid mb-6">
-          @for (photo of searchResults(); track photo.id) {
-            <div
-              class="gallery-item card p-2 cursor-pointer hover:shadow-lg transition-all"
-              (click)="openPhoto(photo)">
-              <div class="aspect-square overflow-hidden rounded-lg bg-gray-100 relative">
-                <img
-                  [src]="photo.thumbnailUrl || photo.url"
-                  [alt]="photo.title || 'Photo'"
-                  class="w-full h-full object-cover">
-                <div
-                  class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span class="material-symbols-outlined text-white text-4xl">fullscreen</span>
-                </div>
-                @if (photo.confidence) {
-                  <div class="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs">
-                    {{ (photo.confidence * 100) | number:'1.0-0' }}%
-                  </div>
-                }
-              </div>
-            </div>
-          }
+        <div class="flex flex--col gap-2 text-center p-4">
+          <label for="face-file-input" class="btn btn--outline cursor-pointer">
+            <span class="material-symbols-outlined">upload</span>
+            {{ 'faceSearch.selectFromGallery' | translate }}
+          </label>
+          <input
+                  id="face-file-input"
+                  type="file"
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                  class="hidden">
+          <p class="text-md text-muted mt-2">{{ 'faceSearch.uploadInstructions' | translate }}</p>
         </div>
       </div>
-    </div>
-  } @else if (hasSearched()) {
-    <div class="card text-center p-12">
-      <div class="mb-4">
-        <span class="material-symbols-outlined text-6xl text-muted">search_off</span>
-      </div>
-      <h3 class="text-lg font-medium mb-2">{{ 'faceSearch.noResults.title' | translate }}</h3>
-      <p class="text-muted mb-4">{{ 'faceSearch.noResults.description' | translate }}</p>
     </div>
   }
-}
 
-@if (showPhotoModal() && selectedPhoto()) {
-  <div class="modal-overlay" (click)="closePhotoModal()">
-    <div class="modal max-w-4xl p-0" (click)="$event.stopPropagation()">
-      <div class="flex items-center justify-between p-6 border-b">
-        <div>
-          @if (selectedPhoto()!.uploadedAt) {
-            <p class="text-sm text-muted">{{ selectedPhoto()!.uploadedAt | date:'medium' }}</p>
-          }
+  <!-- Error Display -->
+  @if (error()) {
+    <div class="alert alert--error mb-4">
+      <span class="material-symbols-outlined">error</span>
+      {{ error() }}
+    </div>
+  }
+
+  @if (capturedImage() && !searching()) {
+    @if (searchResults().length > 0) {
+      <div class="card">
+        <div class="card-header">
+          <h2 class="text-lg font-semibold">
+            {{ 'faceSearch.results' | translate }} ({{ searchResults().length }})
+          </h2>
         </div>
-        <div class="flex items-center gap-2">
-          <button
-            class="btn btn--secondary btn--sm"
-            (click)="downloadPhoto(selectedPhoto()!)">
-            <span class="material-symbols-outlined">download</span>
-          </button>
-          <button class="btn btn--ghost btn--sm" (click)="closePhotoModal()">
-            <span class="material-symbols-outlined">close</span>
-          </button>
+        <div class="card-body">
+          <div class="gallery-grid mb-6">
+            @for (photo of searchResults(); track photo.id) {
+              <div
+                      class="gallery-item card p-2 cursor-pointer hover:shadow-lg transition-all"
+                      (click)="openPhoto(photo)">
+                <div class="aspect-square overflow-hidden rounded-lg bg-gray-100 relative">
+                  <img
+                          [src]="photo.thumbnailUrl || photo.url"
+                          [alt]="photo.title || 'Photo'"
+                          class="w-full h-full object-cover">
+                  <div
+                          class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-4xl">fullscreen</span>
+                  </div>
+                  @if (photo.confidence) {
+                    <div class="absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs">
+                      {{ (photo.confidence * 100) | number:'1.0-0' }}%
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </div>
-      <div class="p-6">
-        <img
-          [src]="selectedPhoto()!.url"
-          [alt]="selectedPhoto()!.title || 'Photo'"
-          class="w-full max-h-96 object-contain rounded-lg">
+    } @else if (hasSearched()) {
+      <div class="card text-center p-12">
+        <div class="mb-4">
+          <span class="material-symbols-outlined text-6xl text-muted">search_off</span>
+        </div>
+        <h3 class="text-lg font-medium mb-2">{{ 'faceSearch.noResults.title' | translate }}</h3>
+        <p class="text-muted mb-4">{{ 'faceSearch.noResults.description' | translate }}</p>
+      </div>
+    }
+  }
+
+  @if (showPhotoModal() && selectedPhoto()) {
+    <div class="modal-overlay" (click)="closePhotoModal()">
+      <div class="modal max-w-4xl p-0" (click)="$event.stopPropagation()">
+        <div class="flex items-center justify-between p-6 border-b">
+          <div>
+            @if (selectedPhoto()!.uploadedAt) {
+              <p class="text-sm text-muted">{{ selectedPhoto()!.uploadedAt | date:'medium' }}</p>
+            }
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+                    class="btn btn--secondary btn--sm"
+                    (click)="downloadPhoto(selectedPhoto()!)">
+              <span class="material-symbols-outlined">download</span>
+            </button>
+            <button class="btn btn--ghost btn--sm" (click)="closePhotoModal()">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+        <div class="p-6">
+          <img
+                  [src]="selectedPhoto()!.url"
+                  [alt]="selectedPhoto()!.title || 'Photo'"
+                  class="w-full max-h-96 object-contain rounded-lg">
+        </div>
       </div>
     </div>
-  </div>
-}
+  }
+</div>

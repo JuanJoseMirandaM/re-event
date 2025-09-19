@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {map, Observable, switchMap} from "rxjs";
+import {catchError, map, Observable, switchMap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
 import {environment} from "../../../environments/environment";
@@ -62,6 +62,7 @@ export interface Favorite {
 export interface FavoriteResponse {
   success: boolean;
   data: Favorite;
+  error?: string;
 }
 
 export interface FavoritesResponse {
@@ -138,7 +139,17 @@ export class EventsService {
 
         const url = `${this.baseUrl}/favorites`;
         return this.http.post<FavoriteResponse>(url, { eventId }, {headers}).pipe(
-          map(response => response.data)
+          map(response => {
+            if (!response.success) {
+              throw new Error(response.error || 'Failed to add favorite');
+            }
+            return response.data;
+          }),
+          catchError(error => {
+            // Re-throw with more context
+            const errorMessage = error.error?.error || error.message || 'Unknown error';
+            throw { ...error, error: { error: errorMessage } };
+          })
         );
       })
     );
@@ -153,7 +164,19 @@ export class EventsService {
         });
 
         const url = `${this.baseUrl}/favorites/${eventId}`;
-        return this.http.delete<{ success: boolean }>(url, {headers});
+        return this.http.delete<{ success: boolean; error?: string }>(url, {headers}).pipe(
+          map(response => {
+            if (!response.success) {
+              throw new Error(response.error || 'Failed to remove favorite');
+            }
+            return response;
+          }),
+          catchError(error => {
+            // Re-throw with more context
+            const errorMessage = error.error?.error || error.message || 'Unknown error';
+            throw { ...error, error: { error: errorMessage } };
+          })
+        );
       })
     );
   }

@@ -22,6 +22,7 @@ export class AgendaCardComponent implements OnInit {
   isFavorite = signal<boolean>(false);
   isEvaluated = signal<boolean>(false);
   evaluation = signal<SingleEvaluationResponse | null>(null);
+  isToggling = false;
 
   ratingSubmitted = output<Evaluation>();
   favoriteToggled = output<{ eventId: string; isFavorite: boolean }>();
@@ -179,6 +180,12 @@ export class AgendaCardComponent implements OnInit {
     const currentFavoriteStatus = this.isFavorite();
     const newFavoriteStatus = !currentFavoriteStatus;
 
+    // Prevent multiple rapid clicks
+    if (this.isToggling) {
+      return;
+    }
+    this.isToggling = true;
+
     // Optimistic UI update - change color immediately
     this.isFavorite.set(newFavoriteStatus);
     this.favoriteToggled.emit({ eventId, isFavorite: newFavoriteStatus });
@@ -189,13 +196,24 @@ export class AgendaCardComponent implements OnInit {
         next: () => {
           // Success notification
           this.#toast.success('Evento eliminado de favoritos');
+          this.isToggling = false;
         },
         error: (error) => {
           console.error('Error removing favorite:', error);
-          // Rollback on error
-          this.isFavorite.set(currentFavoriteStatus);
-          this.favoriteToggled.emit({ eventId, isFavorite: currentFavoriteStatus });
-          this.#toast.error('Error al eliminar de favoritos');
+          this.isToggling = false;
+          
+          // Handle specific error cases
+          if (error.error?.error === 'Favorite not found') {
+            // If favorite not found, it means it was already removed - keep the UI state
+            this.isFavorite.set(false);
+            this.favoriteToggled.emit({ eventId, isFavorite: false });
+            this.#toast.info('El evento ya no estaba en favoritos');
+          } else {
+            // Rollback on error
+            this.isFavorite.set(currentFavoriteStatus);
+            this.favoriteToggled.emit({ eventId, isFavorite: currentFavoriteStatus });
+            this.#toast.error('Error al eliminar de favoritos');
+          }
         }
       });
     } else {
@@ -204,13 +222,24 @@ export class AgendaCardComponent implements OnInit {
         next: () => {
           // Success notification
           this.#toast.success('Evento añadido a favoritos');
+          this.isToggling = false;
         },
         error: (error) => {
           console.error('Error adding favorite:', error);
-          // Rollback on error
-          this.isFavorite.set(currentFavoriteStatus);
-          this.favoriteToggled.emit({ eventId, isFavorite: currentFavoriteStatus });
-          this.#toast.error('Error al añadir a favoritos');
+          this.isToggling = false;
+          
+          // Handle specific error cases
+          if (error.error?.error === 'Event already in favorites') {
+            // If already in favorites, update UI to reflect correct state
+            this.isFavorite.set(true);
+            this.favoriteToggled.emit({ eventId, isFavorite: true });
+            this.#toast.info('El evento ya estaba en favoritos');
+          } else {
+            // Rollback on error
+            this.isFavorite.set(currentFavoriteStatus);
+            this.favoriteToggled.emit({ eventId, isFavorite: currentFavoriteStatus });
+            this.#toast.error('Error al añadir a favoritos');
+          }
         }
       });
     }
