@@ -197,12 +197,12 @@ export class GalleryService {
     return `${this.cloudfrontUrl}/${cleanPath}`;
   }
 
-  // Helper functions
   convertImageWithFacesToPhotos(images: ImageWithFaces[]): Photo[] {
+    console.log(images)
     return images.map(image => ({
       id: image.imageId,
       url: this.getImageUrl(image),
-      thumbnailUrl: this.getImageUrl(image),
+      thumbnailUrl: this.#convertToThumbnail(this.getImageUrl(image)),
       title: image.imageName,
       description: `${image.faceCount} face${image.faceCount !== 1 ? 's' : ''} detected`,
       uploadedBy: 'system',
@@ -220,7 +220,13 @@ export class GalleryService {
     const cleanPath = image.share_path.startsWith('share/')
       ? image.share_path.substring(6)
       : image.share_path;
+
+    console.log(cleanPath)
     return `${this.cloudfrontUrl}/${cleanPath}`;
+  }
+
+  #convertToThumbnail(url: string): string {
+    return url.replace(/\/[^\/]+\.(png|jpg|jpeg|gif|webp)$/i, "/thumbnail.webp");
   }
 
   // Mock data methods for development

@@ -64,6 +64,7 @@
           <img
             [src]="photo.thumbnailUrl || photo.url"
             [alt]="photo.title || 'Photo'"
+            loading="lazy"
             class="w-full h-full object-cover ">
           <div
             class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
