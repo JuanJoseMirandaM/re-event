@@ -70,6 +70,12 @@
     "close": "Cerrar menú",
     "mainMenu": "Menú principal"
   },
+  "sideMenu": {
+    "account": "Cuenta",
+    "qr": "Ganar Puntos",
+    "myQr": "Mi QR",
+    "redeemPoints": "Canjear Puntos de Usuario"
+  },
   "home": {
     "welcomeTitle": "AWS Community Day Bolivia",
     "points": "Puntos",
